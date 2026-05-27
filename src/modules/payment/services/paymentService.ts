@@ -1,0 +1,261 @@
+import ApiError from "../../../shared/utils/apiError";
+import shipmentRepository from "../../shipment/repositories/shipmentRepository";
+import paymentRepository from "../repositories/paymentRepository";
+import autoAssignService from "../../shipment/services/autoAssignService";
+import razorpayUtil from "../../../shared/utils/razorpayUtil";
+
+class PaymentService {
+  // Returns order ID to be used by frontend checkout
+  initiatePaymentService = async (shipmentId: number, customerId: number) => {
+    //  Validate shipment exists
+    const shipment = await shipmentRepository.findShipmentById(shipmentId);
+    if (!shipment) throw new ApiError(404, "Shipment not found");
+
+    // Validate customer owns shipment
+    if (shipment.customerId !== customerId) {
+      throw new ApiError(403, "You can only pay for your own shipments");
+    }
+
+    // Validate shipment status allows payment
+    if (shipment.shipmentStatus !== "PENDING") {
+      throw new ApiError(
+        400,
+        `Payment cannot be made. Shipment is already ${shipment.shipmentStatus}`,
+      );
+    }
+
+    //  Check if payment already completed
+    const existingPayment =
+      await paymentRepository.findPaymentByShipmentId(shipmentId);
+    if (existingPayment && existingPayment.paymentStatus === "PAID") {
+      throw new ApiError(400, "Payment is already completed for this shipment");
+    }
+
+    //  If payment record exists but PENDING, delete old one and create new
+
+    if (existingPayment && existingPayment.paymentStatus !== "PAID") {
+      await paymentRepository.deletePayment(existingPayment.id);
+    }
+
+    try {
+      //  Create Razorpay order using utility
+      const razorpayOrder = await razorpayUtil.createOrder(
+        shipment.amount,
+        shipmentId,
+        customerId,
+        "", // Email would come from user model in real implementation
+        "", // Phone would come from user model in real implementation
+      );
+
+      //  Create payment record with Razorpay order ID
+      const payment = await paymentRepository.createPaymentWithRazorpayOrder({
+        shipmentId,
+        customerId,
+        amount: shipment.amount,
+        razorpayOrderId: razorpayOrder.orderId,
+      });
+
+      return {
+        orderId: razorpayOrder.orderId,
+        amount: razorpayOrder.amount,
+        currency: razorpayOrder.currency,
+        keyId: razorpayOrder.keyId,
+        shipmentId,
+        paymentId: payment.id,
+      };
+    } catch (error) {
+      console.error("Error initiating payment:", error);
+      throw new ApiError(500, "Failed to initiate payment");
+    }
+  };
+  // - Verify payment
+
+  verifyPaymentService = async (
+    shipmentId: number,
+    customerId: number,
+    razorpayOrderId: string,
+    razorpayPaymentId: string,
+    razorpaySignature: string,
+  ) => {
+    try {
+      const payment =
+        await paymentRepository.findPaymentByRazorpayOrderId(razorpayOrderId);
+      if (!payment) {
+        throw new ApiError(404, "Payment record not found");
+      }
+
+      // Verify customer is authorized to complete this payment
+      if (payment.customerId !== customerId) {
+        throw new ApiError(403, "Unauthorized payment verification");
+      }
+
+      // Verify payment signature using Razorpay utility
+      const isSignatureValid = razorpayUtil.verifyPaymentSignature(
+        razorpayOrderId,
+        razorpayPaymentId,
+        razorpaySignature,
+      );
+
+      if (!isSignatureValid) {
+        throw new ApiError(400, "Payment signature verification failed");
+      }
+
+      //  Fetch payment details from Razorpay to confirm status
+      const razorpayPayment =
+        await razorpayUtil.fetchPaymentDetails(razorpayPaymentId);
+
+      //  Check if payment is actually authorized by Razorpay
+      if (
+        razorpayPayment.status !== "captured" &&
+        razorpayPayment.status !== "authorized"
+      ) {
+        throw new ApiError(400, "Payment not captured by Razorpay");
+      }
+
+      //  Update payment record with Razorpay payment ID
+      await paymentRepository.updateWithRazorpayPaymentId(
+        payment.id,
+        razorpayPaymentId,
+      );
+
+      // Mark payment as PAID in database
+      await paymentRepository.markAsPaidWithRazorpay(
+        payment.id,
+        razorpayPaymentId,
+        razorpayPaymentId,
+      );
+
+      // Update shipment payment status to PAID and status to CONFIRMED
+      await shipmentRepository.updatePaymentAndStatus(
+        shipmentId,
+        "PAID",
+        "CONFIRMED",
+      );
+
+      // Trigger auto-assignment of delivery agent and slot
+      await autoAssignService.autoAssignAgentAndSlot(shipmentId, customerId);
+
+      const updatedPayment =
+        await paymentRepository.findPaymentByShipmentId(shipmentId);
+      const updatedShipment =
+        await shipmentRepository.findShipmentById(shipmentId);
+
+      return {
+        id: updatedPayment?.id,
+        shipmentId: updatedPayment?.shipmentId,
+        customerId: updatedPayment?.customerId,
+        transactionId: updatedPayment?.transactionId,
+        amount: updatedPayment?.amount,
+        paymentStatus: updatedPayment?.paymentStatus,
+        paidAt: updatedPayment?.paidAt,
+        razorpayPaymentId: updatedPayment?.razorpayPaymentId,
+        shipmentStatus: updatedShipment?.shipmentStatus,
+        deliveryAgentId: updatedShipment?.deliveryAgentId,
+        deliverySlotId: updatedShipment?.deliverySlotId,
+      };
+    } catch (error) {
+      console.error("Error verifying payment:", error);
+      // Mark payment as FAILED if verification failed
+      const payment =
+        await paymentRepository.findPaymentByRazorpayOrderId(razorpayOrderId);
+      if (payment) {
+        await paymentRepository.markAsFailed(payment.id);
+      }
+      throw error;
+    }
+  };
+
+  // Fetch payment details for a shipment
+  getPaymentByShipmentService = async (
+    shipmentId: number,
+    customerId: number,
+    role: string,
+  ) => {
+    const shipment = await shipmentRepository.findShipmentById(shipmentId);
+    if (!shipment) throw new ApiError(404, "Shipment not found");
+
+    if (role !== "ADMIN" && shipment.customerId !== customerId) {
+      throw new ApiError(403, "Access denied");
+    }
+
+    const payment = await paymentRepository.findPaymentByShipmentId(shipmentId);
+    if (!payment) throw new ApiError(404, "No payment found for this shipment");
+
+    return payment;
+  };
+
+  // This was the old single-step payment without Razorpay
+  payService = async (shipmentId: number, customerId: number) => {
+    //  Check shipment exists
+    const shipment = await shipmentRepository.findShipmentById(shipmentId);
+    if (!shipment) throw new ApiError(404, "Shipment not found");
+
+    //  Customer can only pay for their own shipment
+    if (shipment.customerId !== customerId) {
+      throw new ApiError(403, "You can only pay for your own shipments");
+    }
+
+    //  Shipment must be PENDING to accept payment
+    if (shipment.shipmentStatus !== "PENDING") {
+      throw new ApiError(
+        400,
+        `Payment cannot be made. Shipment is already ${shipment.shipmentStatus}`,
+      );
+    }
+
+    //  Prevent duplicate payment
+    const existingPayment =
+      await paymentRepository.findPaymentByShipmentId(shipmentId);
+    if (existingPayment && existingPayment.paymentStatus === "PAID") {
+      throw new ApiError(400, "Payment is already completed for this shipment");
+    }
+
+    // Generate a simulated transaction ID
+    // In a real project this comes from Razorpay / Stripe webhook response
+    const transactionId = `TXN-${Date.now()}-${Math.random()
+      .toString(36)
+      .substring(2, 7)
+      .toUpperCase()}`;
+
+    // Create payment record directly as PAID -  simulation
+    const payment = await paymentRepository.createPayment({
+      shipmentId,
+      customerId,
+      amount: shipment.amount,
+    });
+
+    await paymentRepository.markAsPaid(payment.id, transactionId);
+
+    //  Update shipment: paymentStatus  PAID, shipmentStatus CONFIRMED
+    await shipmentRepository.updatePaymentAndStatus(
+      shipmentId,
+      "PAID",
+      "CONFIRMED",
+    );
+
+    //  TRIGGER AUTO-ASSIGNMENT immediately after payment
+    await autoAssignService.autoAssignAgentAndSlot(shipmentId, customerId);
+
+    //  Fetch updated payment + shipment
+    const updatedPayment =
+      await paymentRepository.findPaymentByShipmentId(shipmentId);
+
+    const updatedShipment =
+      await shipmentRepository.findShipmentById(shipmentId);
+
+    return {
+      id: updatedPayment?.id,
+      shipmentId: updatedPayment?.shipmentId,
+      customerId: updatedPayment?.customerId,
+      transactionId: updatedPayment?.transactionId,
+      amount: updatedPayment?.amount,
+      paymentStatus: updatedPayment?.paymentStatus,
+      paidAt: updatedPayment?.paidAt,
+      shipmentStatus: updatedShipment?.shipmentStatus,
+      deliveryAgentId: updatedShipment?.deliveryAgentId,
+      deliverySlotId: updatedShipment?.deliverySlotId,
+    };
+  };
+}
+
+export default new PaymentService();
