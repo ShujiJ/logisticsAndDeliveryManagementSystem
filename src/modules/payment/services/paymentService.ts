@@ -3,6 +3,8 @@ import shipmentRepository from "../../shipment/repositories/shipmentRepository";
 import paymentRepository from "../repositories/paymentRepository";
 import autoAssignService from "../../shipment/services/autoAssignService";
 import razorpayUtil from "../../../shared/utils/razorpayUtil";
+import Notification from "../../notifications/models/notificationModel";
+import { NOTIFICATION_TYPE } from "../../notifications/constants/notificationConstants";
 
 class PaymentService {
   // Returns order ID to be used by frontend checkout
@@ -140,6 +142,15 @@ class PaymentService {
       const updatedShipment =
         await shipmentRepository.findShipmentById(shipmentId);
 
+      // NOTIFY CUSTOMER — PAYMENT SUCCESSFUL
+      await Notification.create({
+        userId: customerId,
+        shipmentId,
+        title: "Payment Successful",
+        message: `Payment for shipment ${updatedShipment?.trackingId} was successful`,
+        type: NOTIFICATION_TYPE.PAYMENT_UPDATE,
+      });
+
       return {
         id: updatedPayment?.id,
         shipmentId: updatedPayment?.shipmentId,
@@ -242,6 +253,15 @@ class PaymentService {
 
     const updatedShipment =
       await shipmentRepository.findShipmentById(shipmentId);
+
+    // payment success notification
+    await Notification.create({
+      userId: customerId,
+      shipmentId,
+      title: "Payment Successful",
+      message: `Payment for shipment ${updatedShipment?.trackingId} was successful`,
+      type: NOTIFICATION_TYPE.PAYMENT_UPDATE,
+    });
 
     return {
       id: updatedPayment?.id,

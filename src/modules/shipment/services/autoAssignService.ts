@@ -3,6 +3,9 @@ import DeliverySlot from "../../deliverySlot/models/deliverySlotModel";
 import Shipment from "../models/shipmentModel";
 import ShipmentTimeline from "../../shipmentTimeline/models/shipmentTimeLineModel";
 import { Op } from "sequelize";
+import User from "../../auth/models/userModel";
+import Notification from "../../notifications/models/notificationModel";
+import { NOTIFICATION_TYPE } from "../../notifications/constants/notificationConstants";
 
 // Each agent handles at most this many active shipments at once.
 const MAX_AGENT_LOAD = 8;
@@ -171,7 +174,18 @@ class AutoAssignService {
         remarks: `Auto-assigned to agent ${chosenAgent.id} (zone: ${chosenAgent.serviceZone ?? "any"}). Slot: ${date} ${startTime}–${endTime}`,
       });
 
-      
+      // NOTIFY CUSTOMER — AGENT ASSIGNED
+      const agentUser = await User.findByPk(chosenAgent.userId, {
+        attributes: ["name"],
+      });
+      await Notification.create({
+        userId: systemUserId,
+        shipmentId,
+        title: "Agent Assigned",
+        message: `Your shipment ${shipment.trackingId} has been assigned to ${agentUser?.name ?? `Agent #${chosenAgent.id}`}`,
+        type: NOTIFICATION_TYPE.AGENT_ASSIGNED,
+      });
+
     } catch (error) {
       
       console.error(error);

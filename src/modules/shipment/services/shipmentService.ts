@@ -9,6 +9,8 @@ import ApiError from "../../../shared/utils/apiError";
 import deliverySlotRepository from "../../deliverySlot/repositories/deliverySlotRepository";
 import deliveryAgentRepository from "../../deliveryAgent/repositories/deliveryAgentRepository";
 import ShipmentTimeline from "../../shipmentTimeline/models/shipmentTimeLineModel";
+import Notification from "../../notifications/models/notificationModel";
+import { NOTIFICATION_TYPE } from "../../notifications/constants/notificationConstants";
 
 class ShipmentService {
   // CREATE SHIPMENT
@@ -31,6 +33,15 @@ class ShipmentService {
     };
 
     const shipment = await shipmentRepository.createShipment(shipmentPayload);
+
+    // NOTIFY CUSTOMER — SHIPMENT CREATED
+    await Notification.create({
+      userId: customerId,
+      shipmentId: shipment.id,
+      title: "Shipment Created",
+      message: `Your shipment ${trackingId} has been created successfully`,
+      type: NOTIFICATION_TYPE.SHIPMENT_CREATED,
+    });
 
     return shipment;
   };
@@ -212,6 +223,41 @@ class ShipmentService {
       await deliveryAgentRepository.decrementShipmentCount(
         shipment.deliveryAgentId,
       );
+    }
+
+    // notification for CUSTOMER — STATUS BASED
+    const statusNotificationMap: Record<string, { type: string; title: string; message: string }> = {
+      [SHIPMENT_STATUS.IN_TRANSIT]: {
+        type: NOTIFICATION_TYPE.SHIPMENT_IN_TRANSIT,
+        title: "Shipment In Transit",
+        message: `Your shipment ${shipment.trackingId} is now in transit`,
+      },
+      [SHIPMENT_STATUS.DELAYED]: {
+        type: NOTIFICATION_TYPE.SHIPMENT_DELAYED,
+        title: "Shipment Delayed",
+        message: `Your shipment ${shipment.trackingId} has been delayed`,
+      },
+      [SHIPMENT_STATUS.DELIVERED]: {
+        type: NOTIFICATION_TYPE.SHIPMENT_DELIVERED,
+        title: "Shipment Delivered",
+        message: `Your shipment ${shipment.trackingId} has been delivered successfully`,
+      },
+      [SHIPMENT_STATUS.COMPLETED]: {
+        type: NOTIFICATION_TYPE.SHIPMENT_COMPLETED,
+        title: "Shipment Completed",
+        message: `Your shipment ${shipment.trackingId} has been completed`,
+      },
+    };
+
+    const notifData = statusNotificationMap[newStatus];
+    if (notifData) {
+      await Notification.create({
+        userId: shipment.customerId,
+        shipmentId,
+        title: notifData.title,
+        message: notifData.message,
+        type: notifData.type,
+      });
     }
 
     // FETCH UPDATED SHIPMENT WITH AGENT DETAILS
