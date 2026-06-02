@@ -2,9 +2,9 @@
 import shipmentTimelineRepository from "../repositories/shipmentTimelineRepository";
 import shipmentRepository from "../../shipment/repositories/shipmentRepository";
 import ApiError from "../../../shared/utils/apiError";
+import { Roles } from "../../auth/constants/roles";
 
 class ShipmentTimelineService {
-  
   // ADMIN: can view any shipment's timeline
   // CUSTOMER: can only view their own shipment's timeline
   // DELIVERY_AGENT: can view timeline for shipments assigned to them
@@ -20,7 +20,14 @@ class ShipmentTimelineService {
     }
 
     // CUSTOMER can only view their own shipment's timeline
-    if (role === "CUSTOMER" && shipment.customerId !== userId) {
+    if (role === Roles.CUSTOMER && shipment.customerId !== userId) {
+      throw new ApiError(
+        403,
+        "You are not authorized to view this shipment's timeline",
+      );
+    }
+    // After fixing the CUSTOMER check, add this:
+    if (role === Roles.DELIVERY_AGENT && shipment.deliveryAgentId !== userId) {
       throw new ApiError(
         403,
         "You are not authorized to view this shipment's timeline",

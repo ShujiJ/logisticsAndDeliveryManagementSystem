@@ -25,12 +25,8 @@ class AutoAssignService {
     systemUserId: number, // customer's userId — used as timeline actor
   ): Promise<void> => {
     try {
-      
-
       // Read the ACTUAL current status of the shipment and reads real status
       const shipment = await Shipment.findOne({ where: { id: shipmentId } });
-
-      console.log("[STEP 0] Shipment fetched:", shipment?.toJSON());
 
       if (!shipment) {
         console.warn(`[AutoAssign] Shipment ${shipmentId} not found.`);
@@ -41,22 +37,12 @@ class AutoAssignService {
 
       const deliveryCity = shipment.deliveryCity;
 
-      console.log("[STEP 1] Delivery City:", deliveryCity);
-
       // two-pass agent selection — prefer same-zone agent, then any agent
       let agent = await this.findAgent(deliveryCity);
 
-      console.log("[STEP 2] Zone matched agent:", agent?.toJSON());
-
       if (!agent) {
-        console.log(
-          "[STEP 2 FALLBACK] No zone matched agent found. Trying any available agent...",
-        );
-
         // Fallback: any active available agent regardless of zone
         agent = await this.findAgent(null);
-
-        console.log("[STEP 2 FALLBACK] Fallback agent:", agent?.toJSON());
       }
 
       if (!agent) {
@@ -66,8 +52,8 @@ class AutoAssignService {
 
         const allAgents = await DeliveryAgent.findAll();
 
-        console.log("[DEBUG] All delivery agents:");
         console.log(
+          "[DEBUG] All delivery agents:",
           allAgents.map((a) => ({
             id: a.id,
             isActive: a.isActive,
@@ -80,15 +66,12 @@ class AutoAssignService {
         return;
       }
 
-      // Find a non-conflicting slot with retry across agents 
-    
+      // Find a non-conflicting slot with retry across agents
       const slotResult = await this.findNonConflictingSlot(
         agent.id,
         deliveryCity,
         shipmentId,
       );
-
-      console.log("[STEP 3] Slot Result:", slotResult);
 
       if (!slotResult) {
         console.warn(
@@ -97,8 +80,8 @@ class AutoAssignService {
 
         const allSlots = await DeliverySlot.findAll();
 
-        console.log("[DEBUG] Existing slots:");
         console.log(
+          "[DEBUG] Existing slots:",
           allSlots.map((s) => ({
             id: s.id,
             deliveryAgentId: s.deliveryAgentId,
@@ -114,14 +97,6 @@ class AutoAssignService {
 
       const { chosenAgent, date, startTime, endTime } = slotResult;
 
-      console.log("[STEP 4] Creating slot...");
-      console.log({
-        chosenAgentId: chosenAgent.id,
-        date,
-        startTime,
-        endTime,
-      });
-
       //  Create the delivery slot (status: ASSIGNED immediately
       const slot = await DeliverySlot.create({
         deliveryAgentId: chosenAgent.id,
@@ -131,10 +106,8 @@ class AutoAssignService {
         slotStatus: "ASSIGNED",
       });
 
-      console.log("[STEP 4 SUCCESS] Slot created:", slot.toJSON());
-
-      // Update shipment: link agent + slot, move status to ASSIGNED 
-      const updateResult = await Shipment.update(
+      // Update shipment: link agent + slot, move status to ASSIGNED
+      await Shipment.update(
         {
           deliveryAgentId: chosenAgent.id,
           deliverySlotId: slot.id,
@@ -143,26 +116,10 @@ class AutoAssignService {
         { where: { id: shipmentId } },
       );
 
-      console.log("[STEP 5] Shipment update result:", updateResult);
-
-      // VERIFY UPDATE
-      const updatedShipment = await Shipment.findOne({
-        where: { id: shipmentId },
-      });
-
-      console.log(
-        "[STEP 5 VERIFY] Updated shipment:",
-        updatedShipment?.toJSON(),
-      );
-
-      //  Increment agent workload counter 
+      //  Increment agent workload counter
       await DeliveryAgent.increment(
         { shipmentCount: 1 },
         { where: { id: chosenAgent.id } },
-      );
-
-      console.log(
-        `[STEP 6] Incremented shipment count for agent ${chosenAgent.id}`,
       );
 
       // Write timeline entry with REAL fromStatus
@@ -185,11 +142,8 @@ class AutoAssignService {
         message: `Your shipment ${shipment.trackingId} has been assigned to ${agentUser?.name ?? `Agent #${chosenAgent.id}`}`,
         type: NOTIFICATION_TYPE.AGENT_ASSIGNED,
       });
-
     } catch (error) {
-      
       console.error(error);
-
       throw error;
     }
   };
@@ -211,14 +165,10 @@ class AutoAssignService {
       whereClause.serviceZone = zone;
     }
 
-    console.log("[findAgent] Where clause:", whereClause);
-
     const agent = await DeliveryAgent.findOne({
       where: whereClause,
       order: [["shipmentCount", "ASC"]],
     });
-
-    console.log("[findAgent] Found agent:", agent?.toJSON());
 
     return agent;
   };
@@ -245,24 +195,9 @@ class AutoAssignService {
       limit: MAX_AGENT_RETRIES,
     });
 
-    console.log(
-      "[findNonConflictingSlot] Candidates:",
-      candidates.map((c) => c.toJSON()),
-    );
-
     const { date, startTime, endTime } = this.generateNextSlot();
 
-    console.log("[findNonConflictingSlot] Generated slot:", {
-      date,
-      startTime,
-      endTime,
-    });
-
     for (const candidate of candidates) {
-      console.log(
-        `[findNonConflictingSlot] Checking conflicts for agent ${candidate.id}`,
-      );
-
       const conflict = await DeliverySlot.findOne({
         where: {
           deliveryAgentId: candidate.id,
@@ -273,13 +208,7 @@ class AutoAssignService {
         },
       });
 
-      console.log("[findNonConflictingSlot] Conflict:", conflict?.toJSON());
-
       if (!conflict) {
-        console.log(
-          `[findNonConflictingSlot] Agent ${candidate.id} is free`,
-        );
-
         return {
           chosenAgent: candidate,
           date,
@@ -307,9 +236,6 @@ class AutoAssignService {
     // Round up to the next even hour (e.g. 14:35 to  15:00)
     const startHour =
       now.getMinutes() > 0 ? now.getHours() + 1 : now.getHours();
-
-    console.log("[generateNextSlot] Current time:", now);
-    console.log("[generateNextSlot] Start hour:", startHour);
 
     // Working hours: 8 AM – 8 PM. If past window, push to tomorrow 9 AM.
     if (startHour >= 20 || startHour < 8) {

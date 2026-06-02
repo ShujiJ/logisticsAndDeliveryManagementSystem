@@ -12,6 +12,7 @@ router.get(
   authMiddleware,
   roleMiddleware(Roles.ADMIN),
   dashboardController.getAdminDashboard,
+  
 );
 
 // GET /api/v1/dashboard/agent — TODO: implement agent dashboard
