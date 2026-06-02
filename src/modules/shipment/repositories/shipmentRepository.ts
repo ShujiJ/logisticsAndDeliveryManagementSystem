@@ -58,6 +58,31 @@ class ShipmentRepository {
 
   async findAllShipments() {
     return await Shipment.findAll({
+      include: [
+        {
+          model: User,
+          as: "customer",
+          attributes: ["id", "name", "email", "phoneNumber"],
+        },
+        {
+          model: DeliveryAgent,
+          as: "deliveryAgent",
+          required: false,
+          include: [
+            {
+              model: User,
+              as: "user",
+              attributes: ["id", "name", "email", "phoneNumber"],
+            },
+          ],
+        },
+        {
+          model: DeliverySlot,
+          as: "deliverySlot",
+          required: false,
+          attributes: ["date", "startTime", "endTime"],
+        },
+      ],
       order: [["createdAt", "DESC"]],
     });
   }

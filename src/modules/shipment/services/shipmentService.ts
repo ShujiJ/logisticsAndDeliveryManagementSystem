@@ -126,7 +126,55 @@ class ShipmentService {
 
   // ADMIN — GET ALL SHIPMENTS
   getAllShipmentsService = async () => {
-    return await shipmentRepository.findAllShipments();
+    const shipments = await shipmentRepository.findAllShipments();
+
+    return shipments.map((s: any) => ({
+      shipmentId: s.id,
+      trackingId: s.trackingId,
+      itemName: s.itemName,
+      quantity: s.quantity,
+      packageWeight: s.packageWeight,
+      isFragile: s.isFragile,
+      description: s.description,
+      senderName: s.senderName ?? null,
+      senderPhone: s.senderPhone ?? null,
+      pickupAddress: s.pickupAddress,
+      pickupCity: s.pickupCity,
+      pickupPincode: s.pickupPincode,
+      deliveryAddress: s.deliveryAddress,
+      deliveryCity: s.deliveryCity,
+      deliveryPincode: s.deliveryPincode,
+      receiverName: s.receiverName,
+      receiverPhone: s.receiverPhone,
+      shipmentPriority: s.shipmentPriority,
+      shipmentStatus: s.shipmentStatus,
+      amount: s.amount,
+      paymentStatus: s.paymentStatus,
+      customer: s.customer
+        ? {
+            customerId: s.customer.id,
+            name: s.customer.name,
+            email: s.customer.email,
+            phoneNumber: s.customer.phoneNumber ?? null,
+          }
+        : null,
+      assignedAgent: s.deliveryAgent
+        ? {
+            agentId: s.deliveryAgent.id,
+            name: s.deliveryAgent.user?.name ?? null,
+            email: s.deliveryAgent.user?.email ?? null,
+            phoneNumber: s.deliveryAgent.user?.phoneNumber ?? null,
+            vehicleType: s.deliveryAgent.vehicleType ?? null,
+            vehicleNumber: s.deliveryAgent.vehicleNumber ?? null,
+            serviceZone: s.deliveryAgent.serviceZone ?? null,
+          }
+        : null,
+      assignedSlotStart: s.deliverySlot?.startTime ?? null,
+      assignedSlotEnd: s.deliverySlot?.endTime ?? null,
+      assignedDate: s.deliverySlot?.date ?? null,
+      createdAt: s.createdAt,
+      updatedAt: s.updatedAt,
+    }));
   };
 
   // AGENT / ADMIN — UPDATE SHIPMENT STATUS
