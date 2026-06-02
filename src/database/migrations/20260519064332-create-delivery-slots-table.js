@@ -3,6 +3,9 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
+    const tables = await queryInterface.showAllTables();
+    if (tables.includes("delivery_slots")) return;
+
     await queryInterface.createTable("delivery_slots", {
       id: {
         type: Sequelize.INTEGER,

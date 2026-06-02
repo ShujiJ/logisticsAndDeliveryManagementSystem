@@ -6,12 +6,6 @@ module.exports = {
     await queryInterface.addColumn("shipments", "deliverySlotId", {
       type: Sequelize.INTEGER,
       allowNull: true,
-      references: {
-        model: "delivery_slots",
-        key: "id",
-      },
-      onUpdate: "CASCADE",
-      onDelete: "SET NULL",
     });
 
     await queryInterface.addColumn("shipments", "deliveryRemarks", {

@@ -3,20 +3,19 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.addColumn("shipments", "deliverySlotId", {
+    await queryInterface.addColumn("shipments", "deliveryAgentId", {
       type: Sequelize.INTEGER,
       allowNull: true,
-    });
-
-    await queryInterface.addColumn("shipments", "deliveryRemarks", {
-      type: Sequelize.TEXT,
-      allowNull: true,
+      references: {
+        model: "delivery_agents",
+        key: "id",
+      },
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL",
     });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeColumn("shipments", "deliveryRemarks");
-
-    await queryInterface.removeColumn("shipments", "deliverySlotId");
+    await queryInterface.removeColumn("shipments", "deliveryAgentId");
   },
 };
