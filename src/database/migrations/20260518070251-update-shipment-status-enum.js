@@ -13,11 +13,13 @@ module.exports = {
           "PENDING",
           "ASSIGNED",
           "CONFIRMED",
+          "OUT_FOR_PICKUP",
           "PICKED_UP",
           "IN_TRANSIT",
           "OUT_FOR_DELIVERY",
           "DELIVERED",
           "DELAYED",
+          "COMPLETED",
           "CANCELLED",
         ),
 
