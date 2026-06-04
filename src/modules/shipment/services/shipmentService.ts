@@ -43,7 +43,8 @@ class ShipmentService {
       type: NOTIFICATION_TYPE.SHIPMENT_CREATED,
     });
 
-    return shipment;
+    const { id, ...rest } = shipment.dataValues;
+    return { shipmentId: id, ...rest };
   };
 
   // CUSTOMER — GET MY SHIPMENTS
@@ -125,10 +126,11 @@ class ShipmentService {
   };
 
   // ADMIN — GET ALL SHIPMENTS
-  getAllShipmentsService = async () => {
-    const shipments = await shipmentRepository.findAllShipments();
+  getAllShipmentsService = async (page: number, limit: number) => {
+    const offset = (page - 1) * limit;
+    const { count, rows: shipments } = await shipmentRepository.findAllShipments(limit, offset);
 
-    return shipments.map((s: any) => ({
+    const data = shipments.map((s: any) => ({
       shipmentId: s.id,
       trackingId: s.trackingId,
       itemName: s.itemName,
@@ -175,6 +177,16 @@ class ShipmentService {
       createdAt: s.createdAt,
       updatedAt: s.updatedAt,
     }));
+
+    return {
+      shipments: data,
+      pagination: {
+        total: count,
+        page,
+        limit,
+        totalPages: Math.ceil(count / limit),
+      },
+    };
   };
 
   // AGENT / ADMIN — UPDATE SHIPMENT STATUS

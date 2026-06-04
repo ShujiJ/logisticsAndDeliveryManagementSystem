@@ -37,14 +37,11 @@ class ShipmentController {
     return responseHandler(res, 200, "Shipment fetched successfully", shipment);
   });
 
-  getAllShipments = asyncHandler(async (_req: Request, res: Response) => {
-    const shipments = await shipmentService.getAllShipmentsService();
-    return responseHandler(
-      res,
-      200,
-      "All shipments fetched successfully",
-      shipments,
-    );
+  getAllShipments = asyncHandler(async (req: Request, res: Response) => {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const result = await shipmentService.getAllShipmentsService(page, limit);
+    return responseHandler(res, 200, "All shipments fetched successfully", result);
   });
 
   updateShipmentStatus = asyncHandler(async (req: Request, res: Response) => {

@@ -1,14 +1,17 @@
 import notificationRepository from "../repositories/notificationRepository";
+import ApiError from "../../../shared/utils/apiError";
 
 class NotificationService {
-  getMyNotificationsService = async (userId: number) => {
-    const notifications =
-      await notificationRepository.findNotificationsByUserId(userId);
+  getMyNotificationsService = async (userId: number, page: number, limit: number) => {
+    const offset = (page - 1) * limit;
 
-    const unreadCount = notifications.filter((n) => !n.isRead).length;
+    const [{ count, rows }, unreadCount] = await Promise.all([
+      notificationRepository.findNotificationsByUserId(userId, limit, offset),
+      notificationRepository.countUnreadByUserId(userId),
+    ]);
 
-    const formatted = notifications.map((n: any) => ({
-      id: n.id,
+    const notifications = rows.map((n: any) => ({
+      notificationId: n.id,
       shipmentId: n.shipmentId ?? null,
       trackingId: n.shipment?.trackingId ?? null,
       title: n.title,
@@ -20,8 +23,25 @@ class NotificationService {
 
     return {
       unreadCount,
-      notifications: formatted,
+      notifications,
+      pagination: {
+        total: count,
+        page,
+        limit,
+        totalPages: Math.ceil(count / limit),
+      },
     };
+  };
+
+  markAsReadService = async (notificationId: number, userId: number) => {
+    const notification = await notificationRepository.findNotificationById(notificationId);
+
+    if (!notification) throw new ApiError(404, "Notification not found");
+
+    // User can only mark their own notification as read
+    if (notification.userId !== userId) throw new ApiError(403, "You are not authorized to update this notification");
+
+    await notificationRepository.markAsReadById(notificationId);
   };
 
   markAllAsReadService = async (userId: number) => {

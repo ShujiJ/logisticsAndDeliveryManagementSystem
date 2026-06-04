@@ -5,6 +5,7 @@ import autoAssignService from "../../shipment/services/autoAssignService";
 import razorpayUtil from "../../../shared/utils/razorpayUtil";
 import Notification from "../../notifications/models/notificationModel";
 import { NOTIFICATION_TYPE } from "../../notifications/constants/notificationConstants";
+import { env } from "../../../config/env";
 
 class PaymentService {
   // Returns order ID to be used by frontend checkout
@@ -26,16 +27,28 @@ class PaymentService {
       );
     }
 
-    //  Check if payment already completed
     const existingPayment =
       await paymentRepository.findPaymentByShipmentId(shipmentId);
-    if (existingPayment && existingPayment.paymentStatus === "PAID") {
-      throw new ApiError(400, "Payment is already completed for this shipment");
-    }
 
-    //  If payment record exists but PENDING, delete old one and create new
+    if (existingPayment) {
+      // Block if already paid
+      if (existingPayment.paymentStatus === "PAID") {
+        throw new ApiError(400, "Payment is already completed for this shipment");
+      }
 
-    if (existingPayment && existingPayment.paymentStatus !== "PAID") {
+      // PENDING — return existing Razorpay order, no need to recreate
+      if (existingPayment.paymentStatus === "PENDING" && existingPayment.razorpayOrderId) {
+        return {
+          orderId: existingPayment.razorpayOrderId,
+          amount: existingPayment.amount * 100, // paise
+          currency: "INR",
+          keyId: env.RAZORPAY_KEY_ID,
+          shipmentId,
+          paymentId: existingPayment.id,
+        };
+      }
+
+      // FAILED — delete and allow a fresh Razorpay order to be created below
       await paymentRepository.deletePayment(existingPayment.id);
     }
 

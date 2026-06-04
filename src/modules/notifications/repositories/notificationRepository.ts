@@ -7,8 +7,8 @@ class NotificationRepository {
     return await Notification.create(payload);
   }
 
-  async findNotificationsByUserId(userId: number) {
-    return await Notification.findAll({
+  async findNotificationsByUserId(userId: number, limit: number, offset: number) {
+    return await Notification.findAndCountAll({
       where: { userId },
       include: [
         {
@@ -19,7 +19,21 @@ class NotificationRepository {
         },
       ],
       order: [["createdAt", "DESC"]],
+      limit,
+      offset,
     });
+  }
+
+  async countUnreadByUserId(userId: number) {
+    return await Notification.count({ where: { userId, isRead: false } });
+  }
+
+  async findNotificationById(id: number) {
+    return await Notification.findByPk(id);
+  }
+
+  async markAsReadById(id: number) {
+    return await Notification.update({ isRead: true }, { where: { id } });
   }
 
   async markAllAsReadByUserId(userId: number) {

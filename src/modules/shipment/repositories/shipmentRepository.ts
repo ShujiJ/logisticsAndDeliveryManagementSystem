@@ -56,8 +56,8 @@ class ShipmentRepository {
     });
   }
 
-  async findAllShipments() {
-    return await Shipment.findAll({
+  async findAllShipments(limit: number, offset: number) {
+    return await Shipment.findAndCountAll({
       include: [
         {
           model: User,
@@ -84,6 +84,8 @@ class ShipmentRepository {
         },
       ],
       order: [["createdAt", "DESC"]],
+      limit,
+      offset,
     });
   }
 
