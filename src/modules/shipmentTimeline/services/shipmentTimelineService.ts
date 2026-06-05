@@ -3,6 +3,7 @@ import shipmentTimelineRepository from "../repositories/shipmentTimelineReposito
 import shipmentRepository from "../../shipment/repositories/shipmentRepository";
 import ApiError from "../../../shared/utils/apiError";
 import { Roles } from "../../auth/constants/roles";
+import deliveryAgentRepository from "../../deliveryAgent/repositories/deliveryAgentRepository";
 
 class ShipmentTimelineService {
   // ADMIN: can view any shipment's timeline
@@ -27,13 +28,22 @@ class ShipmentTimelineService {
       );
     }
     // After fixing the CUSTOMER check, add this:
-    if (role === Roles.DELIVERY_AGENT && shipment.deliveryAgentId !== userId) {
-      throw new ApiError(
-        403,
-        "You are not authorized to view this shipment's timeline",
-      );
+    // if (role === Roles.DELIVERY_AGENT && shipment.deliveryAgentId !== userId) {
+    //   throw new ApiError(
+    //     403,
+    //     "You are not authorized to view this shipment's timeline",
+    //   );
+    // }
+    if (role === Roles.DELIVERY_AGENT) {
+      const agentRecord =
+        await deliveryAgentRepository.findAgentByUserId(userId);
+      if (!agentRecord || shipment.deliveryAgentId !== agentRecord.id) {
+        throw new ApiError(
+          403,
+          "You are not authorized to view this shipment's timeline",
+        );
+      }
     }
-
     const timeline =
       await shipmentTimelineRepository.findTimelineByShipmentId(shipmentId);
 
@@ -43,7 +53,7 @@ class ShipmentTimelineService {
       trackingId: shipment.trackingId,
       currentStatus: shipment.shipmentStatus,
       timeline: timeline.map((entry: any) => ({
-        id: entry.id,
+        timelineId: entry.id,
         fromStatus: entry.fromStatus ?? null,
         toStatus: entry.toStatus,
         remarks: entry.remarks ?? null,

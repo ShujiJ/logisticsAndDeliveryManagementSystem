@@ -25,7 +25,7 @@ class ShipmentTimeline extends Model<
   declare remarks: CreationOptional<string> | null;
 
   declare createdAt: CreationOptional<Date>;
-  declare updatedAt: CreationOptional<Date>;
+  // declare updatedAt: CreationOptional<Date>;
 }
 
 ShipmentTimeline.init(
@@ -64,9 +64,9 @@ ShipmentTimeline.init(
     createdAt: {
       type: DataTypes.DATE,
     },
-    updatedAt: {
-      type: DataTypes.DATE,
-    },
+    // updatedAt: {
+    //   type: DataTypes.DATE,
+    // },
   },
   {
     sequelize,

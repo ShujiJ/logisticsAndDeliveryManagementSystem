@@ -123,9 +123,19 @@ class AutoAssignService {
       );
 
       // Write timeline entry with REAL fromStatus
+      // await ShipmentTimeline.create({
+      //   shipmentId,
+      //   updatedByUserId: systemUserId,
+      //   fromStatus: actualFromStatus,
+      //   toStatus: "ASSIGNED",
+      //   remarks: `Auto-assigned to agent ${chosenAgent.id} (zone: ${chosenAgent.serviceZone ?? "any"}). Slot: ${date} ${startTime}–${endTime}`,
+      // });
+      const adminUser = await User.findOne({ where: { role: "admin" } });
+      const actorId = adminUser?.id ?? systemUserId;
+
       await ShipmentTimeline.create({
         shipmentId,
-        updatedByUserId: systemUserId,
+        updatedByUserId: actorId,
         fromStatus: actualFromStatus,
         toStatus: "ASSIGNED",
         remarks: `Auto-assigned to agent ${chosenAgent.id} (zone: ${chosenAgent.serviceZone ?? "any"}). Slot: ${date} ${startTime}–${endTime}`,
