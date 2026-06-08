@@ -27,7 +27,7 @@ class ShipmentTimelineService {
         "You are not authorized to view this shipment's timeline",
       );
     }
-    // After fixing the CUSTOMER check, add this:
+    // After fixing the CUSTOMER check, 
     // if (role === Roles.DELIVERY_AGENT && shipment.deliveryAgentId !== userId) {
     //   throw new ApiError(
     //     403,
