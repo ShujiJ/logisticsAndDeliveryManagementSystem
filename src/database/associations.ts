@@ -5,6 +5,8 @@ import DeliverySlot from "../modules/deliverySlot/models/deliverySlotModel";
 import ShipmentTimeline from "../modules/shipmentTimeline/models/shipmentTimeLineModel";
 import Payment from "../modules/payment/models/paymentModel";
 import Notification from "../modules/notifications/models/notificationModel";
+import Complaint from "../modules/complaints/models/complaintModel";
+
 
 // USER - DELIVERY AGENT PROFILE
 User.hasOne(DeliveryAgent, {
@@ -135,4 +137,11 @@ Notification.belongsTo(User, { foreignKey: "userId", as: "user" });
 // Shipment - Notifications
 Shipment.hasMany(Notification, { foreignKey: "shipmentId", as: "notifications" });
 Notification.belongsTo(Shipment, { foreignKey: "shipmentId", as: "shipment" });
+
+//complaint monitoring
+Shipment.hasMany(Complaint, { foreignKey: "shipmentId", as: "complaints" });
+Complaint.belongsTo(Shipment, { foreignKey: "shipmentId", as: "shipment" });
+
+User.hasMany(Complaint, { foreignKey: "customerId", as: "complaints" });
+Complaint.belongsTo(User, { foreignKey: "customerId", as: "customer" });
 
