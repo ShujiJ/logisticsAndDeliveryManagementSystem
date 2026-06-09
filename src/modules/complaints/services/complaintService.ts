@@ -89,6 +89,76 @@ class ComplaintService {
       },
     };
   };
+  getMyComplaintsService = async (
+    customerId: number,
+    page: number,
+    limit: number,
+  ) => {
+    const { count, rows } =
+      await complaintRepository.findComplaintsByCustomerId(
+        customerId,
+        page,
+        limit,
+      );
+
+    const complaints = rows.map((c: any) => ({
+      complaintId: c.id,
+      shipmentId: c.shipmentId,
+      trackingId: c.shipment?.trackingId ?? null,
+      subject: c.subject,
+      description: c.description,
+      status: c.status,
+      createdAt: c.createdAt,
+      updatedAt: c.updatedAt,
+    }));
+
+    return {
+      complaints,
+      pagination: {
+        total: count,
+        page,
+        limit,
+        totalPages: Math.ceil(count / limit),
+      },
+    };
+  };
+
+  updateComplaintStatusService = async (
+    complaintId: number,
+    newStatus: string,
+  ) => {
+    const complaint = await complaintRepository.findComplaintById(complaintId);
+
+    if (!complaint) {
+      throw new ApiError(404, "Complaint not found");
+    }
+
+    const currentStatus = complaint.status!;
+    const allowedNext = COMPLAINT_STATUS_TRANSITIONS[currentStatus];
+
+    if (allowedNext !== newStatus) {
+      throw new ApiError(
+        400,
+        `Invalid status transition. ${currentStatus} can only move to ${allowedNext}`,
+      );
+    }
+
+    const previousStatus = currentStatus;
+    const updated: any = await complaintRepository.updateComplaintStatus(
+      complaintId,
+      newStatus,
+    );
+
+    return {
+      complaintId: updated.id,
+      shipmentId: updated.shipmentId,
+      trackingId: updated.shipment?.trackingId ?? null,
+      subject: updated.subject,
+      previousStatus,
+      currentStatus: updated.status,
+      updatedAt: updated.updatedAt,
+    };
+  };
 }
 
 export default new ComplaintService();

@@ -19,15 +19,24 @@ router.post(
   complaintController.raiseComplaint,
 );
 
-
-
 router.get(
   "/",
   authMiddleware,
   roleMiddleware(Roles.ADMIN),
   complaintController.getAllComplaints,
 );
-
-
+router.get(
+  "/me",
+  authMiddleware,
+  roleMiddleware(Roles.CUSTOMER),
+  complaintController.getMyComplaints,
+);
+router.patch(
+  "/:complaintId/status",
+  authMiddleware,
+  roleMiddleware(Roles.ADMIN),
+  validate(updateComplaintStatusSchema),
+  complaintController.updateComplaintStatus,
+);
 
 export default router;
