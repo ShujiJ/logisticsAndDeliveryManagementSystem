@@ -33,6 +33,25 @@ class ComplaintController {
 
     return responseHandler(res, 200, "Complaints fetched successfully", result);
   });
-}
 
+  getMyComplaints = asyncHandler(async (req: Request, res: Response) => {
+    const customerId = (req as any).user.id;
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+
+    const result = await complaintService.getMyComplaintsService(customerId, page, limit);
+
+    return responseHandler(res, 200, "Your complaints fetched successfully", result);
+  });
+
+  updateComplaintStatus = asyncHandler(async (req: Request, res: Response) => {
+    const complaintId = Number(req.params.complaintId);
+    const { status } = req.body;
+
+    const result = await complaintService.updateComplaintStatusService(complaintId, status);
+
+    return responseHandler(res, 200, "Complaint status updated successfully", result);
+  });
+
+}
 export default new ComplaintController();

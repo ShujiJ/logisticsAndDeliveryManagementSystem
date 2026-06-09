@@ -57,6 +57,39 @@ class ComplaintRepository {
 
     return { count, rows };
   }
+  async findComplaintsByCustomerId(customerId: number, page: number, limit: number) {
+    const offset = (page - 1) * limit;
+
+    const { count, rows } = await Complaint.findAndCountAll({
+      where: { customerId },
+      include: [
+        {
+          model: Shipment,
+          as: "shipment",
+          attributes: ["id", "trackingId"],
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+      limit,
+      offset,
+    });
+
+    return { count, rows };
+  }
+
+  async updateComplaintStatus(complaintId: number, status: string) {
+    await Complaint.update({ status }, { where: { id: complaintId } });
+    return await Complaint.findOne({
+      where: { id: complaintId },
+      include: [
+        {
+          model: Shipment,
+          as: "shipment",
+          attributes: ["id", "trackingId"],
+        },
+      ],
+    });
+  }
 }
 
 export default new ComplaintRepository();
