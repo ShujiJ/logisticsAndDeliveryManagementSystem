@@ -7,19 +7,15 @@ import User from "../../auth/models/userModel";
 import Notification from "../../notifications/models/notificationModel";
 import { NOTIFICATION_TYPE } from "../../notifications/constants/notificationConstants";
 
-// Each agent handles at most this many active shipments at once.
 const MAX_AGENT_LOAD = 8;
 
 // 1-hour slots as per requirements (10–11 AM, 11–12 PM etc.)
-// CHANGED: was 8 hours — requirements spec says 1-hour duration slots
 const SLOT_DURATION_HOURS = 1;
 
 // How many different agents to try before giving up (retry logic)
-// retry across multiple agents if a slot conflict is found
 const MAX_AGENT_RETRIES = 5;
 
 class AutoAssignService {
-  // Assigns agent + slot to the shipment and writes a timeline entry.
   autoAssignAgentAndSlot = async (
     shipmentId: number,
     systemUserId: number, // customer's userId — used as timeline actor
@@ -122,14 +118,6 @@ class AutoAssignService {
         { where: { id: chosenAgent.id } },
       );
 
-      // Write timeline entry with REAL fromStatus
-      // await ShipmentTimeline.create({
-      //   shipmentId,
-      //   updatedByUserId: systemUserId,
-      //   fromStatus: actualFromStatus,
-      //   toStatus: "ASSIGNED",
-      //   remarks: `Auto-assigned to agent ${chosenAgent.id} (zone: ${chosenAgent.serviceZone ?? "any"}). Slot: ${date} ${startTime}–${endTime}`,
-      // });
       const adminUser = await User.findOne({ where: { role: "admin" } });
       const actorId = adminUser?.id ?? systemUserId;
 
@@ -158,8 +146,7 @@ class AutoAssignService {
     }
   };
 
-  //  find an available agent, optionally filtered by service zone ─
-  // zone param — pass deliveryCity to match, pass null for any-zone fallback
+  //  find an available agent, optionally filtered by service zone and pass null for any-zone fallback
   private findAgent = async (zone: string | null) => {
     const whereClause: any = {
       isActive: true,
@@ -235,7 +222,7 @@ class AutoAssignService {
     return null;
   };
 
-  // ── Helper: produce today's next 1-hour slot window
+  // Helper: produce today's next 1-hour slot window
   private generateNextSlot(): {
     date: string;
     startTime: string;
@@ -243,18 +230,17 @@ class AutoAssignService {
   } {
     const now = new Date();
 
-    // Round up to the next even hour (e.g. 14:35 to  15:00)
+    // Round up to the next even hour (e.g. 14:35 to 15:00)
     const startHour =
       now.getMinutes() > 0 ? now.getHours() + 1 : now.getHours();
 
     // Working hours: 8 AM – 8 PM. If past window, push to tomorrow 9 AM.
     if (startHour >= 20 || startHour < 8) {
       const tomorrow = new Date(now);
-
       tomorrow.setDate(now.getDate() + 1);
 
       return {
-        date: tomorrow.toISOString().split("T")[0]!,
+        date: this.toLocalDateString(tomorrow), // NEW: local date instead of toISOString()
         startTime: "09:00:00",
         endTime: `${String(9 + SLOT_DURATION_HOURS).padStart(2, "0")}:00:00`,
       };
@@ -263,10 +249,18 @@ class AutoAssignService {
     const endHour = Math.min(startHour + SLOT_DURATION_HOURS, 20);
 
     return {
-      date: now.toISOString().split("T")[0]!,
+      date: this.toLocalDateString(now),  
       startTime: `${String(startHour).padStart(2, "0")}:00:00`,
       endTime: `${String(endHour).padStart(2, "0")}:00:00`,
     };
+  }
+
+  // returns local date string instead of UTC to keep date consistent with local getHours() used for slot times
+  private toLocalDateString(d: Date): string {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
   }
 }
 
