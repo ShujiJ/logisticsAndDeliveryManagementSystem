@@ -1,6 +1,7 @@
 import app from "./app";
 import sequelize from "./config/dataBase";
 import { env } from "./config/env";
+import { startCronJobs } from "./cron";
 
 async function startServer() {
   try {
@@ -16,7 +17,11 @@ async function startServer() {
     app.listen(env.PORT, () => {
       console.log(
         `Server running on port ${env.PORT}`
+        
       );
+        startCronJobs();
+
+      
     });
 
   } catch (error) {
