@@ -6,7 +6,7 @@ import authRoutes from "./modules/auth/routes/authRoutes";
 import shipmentRoutes from "./modules/shipment/routes/shipmentRoutes";
 import deliveryAgentRoutes from "./modules/deliveryAgent/routes/deliveryAgentRoutes";
 import deliverySlotRoutes from "./modules/deliverySlot/routes/deliverySlotRoutes";
-import paymentRoutes from "./modules/payment/routes/paymentRoutes"; 
+import paymentRoutes from "./modules/payment/routes/paymentRoutes";
 import notificationRoutes from "./modules/notifications/routes/notificationRoutes";
 import dashboardRoutes from "./modules/dashboard/routes/dashboardRoutes";
 import errorMiddleware from "./shared/middlewares/errorMiddleware";
@@ -34,5 +34,6 @@ app.use("/api/v1/dashboard", dashboardRoutes);
 app.use("/api/v1/complaints", complaintRoutes);
 
 app.use(errorMiddleware);
+
 
 export default app;

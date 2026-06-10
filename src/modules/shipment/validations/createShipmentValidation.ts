@@ -3,7 +3,7 @@ import { z } from "zod";
 export const createShipmentValidation = z.object({
   itemName: z.string().min(2),
   quantity: z.number().min(1),
-  packageWeight: z.number().min(1),
+  packageWeight: z.number().positive(), // only positive allowed
   description: z.string().optional(),
   senderName: z.string().min(2),
   senderPhone: z.string().min(10),

@@ -16,6 +16,8 @@ const detectDelayedShipments = async () => {
       where: {
         shipmentStatus: {
           [Op.in]: [
+            SHIPMENT_STATUS.OUT_FOR_PICKUP,
+            SHIPMENT_STATUS.PICKED_UP,
             SHIPMENT_STATUS.IN_TRANSIT,
             SHIPMENT_STATUS.OUT_FOR_DELIVERY,
           ],

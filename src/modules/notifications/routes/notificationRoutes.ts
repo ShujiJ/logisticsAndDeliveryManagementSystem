@@ -6,7 +6,6 @@ import roleMiddleware from "../../auth/middlewares/roleMiddleware";
 
 const router = express.Router();
 
-
 router.get(
   "/me",
   authMiddleware,

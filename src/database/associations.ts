@@ -7,7 +7,6 @@ import Payment from "../modules/payment/models/paymentModel";
 import Notification from "../modules/notifications/models/notificationModel";
 import Complaint from "../modules/complaints/models/complaintModel";
 
-
 // USER - DELIVERY AGENT PROFILE
 User.hasOne(DeliveryAgent, {
   foreignKey: "userId",
@@ -135,7 +134,10 @@ User.hasMany(Notification, { foreignKey: "userId", as: "notifications" });
 Notification.belongsTo(User, { foreignKey: "userId", as: "user" });
 
 // Shipment - Notifications
-Shipment.hasMany(Notification, { foreignKey: "shipmentId", as: "notifications" });
+Shipment.hasMany(Notification, {
+  foreignKey: "shipmentId",
+  as: "notifications",
+});
 Notification.belongsTo(Shipment, { foreignKey: "shipmentId", as: "shipment" });
 
 //complaint monitoring
@@ -144,4 +146,3 @@ Complaint.belongsTo(Shipment, { foreignKey: "shipmentId", as: "shipment" });
 
 User.hasMany(Complaint, { foreignKey: "customerId", as: "complaints" });
 Complaint.belongsTo(User, { foreignKey: "customerId", as: "customer" });
-
