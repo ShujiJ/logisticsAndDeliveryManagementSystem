@@ -6,6 +6,7 @@ import {
   SHIPMENT_STATUS,
 } from "../constants/shipmentConstants";
 import ApiError from "../../../shared/utils/apiError";
+import { calculateShippingAmount } from "../../../shared/utils/pricingUtil";
 import deliverySlotRepository from "../../deliverySlot/repositories/deliverySlotRepository";
 import deliveryAgentRepository from "../../deliveryAgent/repositories/deliveryAgentRepository";
 import ShipmentTimeline from "../../shipmentTimeline/models/shipmentTimeLineModel";
@@ -20,14 +21,17 @@ class ShipmentService {
   ) => {
     const trackingId = generateTrackingId();
 
-    // temporary pricing logic
-    const amount = payload.packageWeight * 100;
+    const { breakdown, total } = calculateShippingAmount(
+      payload.packageWeight,
+      payload.shipmentPriority ?? "STANDARD",
+      payload.isFragile ?? false,
+    );
 
     const shipmentPayload = {
       ...payload,
       customerId,
       trackingId,
-      amount,
+      amount: total,
       paymentStatus: PAYMENT_STATUS.PENDING,
       shipmentStatus: SHIPMENT_STATUS.PENDING,
     };
@@ -44,7 +48,8 @@ class ShipmentService {
     });
 
     const { id, ...rest } = shipment.dataValues;
-    return { shipmentId: id, ...rest };
+    // priceBreakdown
+    return { shipmentId: id, ...rest, priceBreakdown: breakdown };
   };
 
   // CUSTOMER — GET MY SHIPMENTS
