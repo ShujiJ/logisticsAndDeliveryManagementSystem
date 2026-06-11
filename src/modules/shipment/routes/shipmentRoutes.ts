@@ -3,6 +3,7 @@ import { Roles } from "../../auth/constants/roles";
 import shipmentController from "../controllers/shipmentController";
 import validate from "../../../shared/middlewares/validateMiddleware";
 import { createShipmentValidation } from "../validations/createShipmentValidation";
+import { updateShipmentValidation } from "../validations/updateShipmentValidation";
 import { updateShipmentStatusValidation } from "../validations/updateShipmentStatusValidation";
 import authMiddleware from "../../auth/middlewares/authMiddleware";
 import roleMiddleware from "../../auth/middlewares/roleMiddleware";
@@ -53,6 +54,15 @@ router.get(
   authMiddleware,
   roleMiddleware(Roles.ADMIN, Roles.CUSTOMER),
   shipmentController.getShipmentById,
+);
+
+// UPDATE SHIPMENT — customer only, allowed while both statuses are PENDING
+router.patch(
+  "/:id",
+  authMiddleware,
+  roleMiddleware(Roles.CUSTOMER),
+  validate(updateShipmentValidation),
+  shipmentController.updateShipment,
 );
 
 // Auto-assignment is now triggered automatically inside paymentService.payService()

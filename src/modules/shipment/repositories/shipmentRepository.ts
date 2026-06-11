@@ -139,6 +139,10 @@ class ShipmentRepository {
     );
   }
 
+  async updateShipment(shipmentId: number, payload: Record<string, any>) {
+    return await Shipment.update(payload, { where: { id: shipmentId } });
+  }
+
   //  used by payment confirmation to mark shipment CONFIRMED
   async updatePaymentAndStatus(
     shipmentId: number,

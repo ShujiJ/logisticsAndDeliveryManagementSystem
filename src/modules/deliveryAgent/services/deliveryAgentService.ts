@@ -88,8 +88,6 @@ class DeliveryAgentService {
 
     //  reassignment only allowed before IN_TRANSIT
     const blockedStatuses = [
-      "IN_TRANSIT",
-      "OUT_FOR_DELIVERY",
       "DELIVERED",
       "COMPLETED",
       "CANCELLED",

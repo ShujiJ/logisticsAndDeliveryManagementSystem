@@ -53,10 +53,18 @@ class ShipmentService {
   };
 
   // CUSTOMER — GET MY SHIPMENTS
-  
-  getMyShipmentsService = async (customerId: number, page: number, limit: number) => {
+
+  getMyShipmentsService = async (
+    customerId: number,
+    page: number,
+    limit: number,
+  ) => {
     const offset = (page - 1) * limit;
-    const { count, rows } = await shipmentRepository.findShipmentsByCustomerId(customerId, limit, offset);
+    const { count, rows } = await shipmentRepository.findShipmentsByCustomerId(
+      customerId,
+      limit,
+      offset,
+    );
 
     const shipments = rows.map((s: any) => ({
       shipmentId: s.id,
@@ -133,7 +141,8 @@ class ShipmentService {
   // ADMIN — GET ALL SHIPMENTS
   getAllShipmentsService = async (page: number, limit: number) => {
     const offset = (page - 1) * limit;
-    const { count, rows: shipments } = await shipmentRepository.findAllShipments(limit, offset);
+    const { count, rows: shipments } =
+      await shipmentRepository.findAllShipments(limit, offset);
 
     const data = shipments.map((s: any) => ({
       shipmentId: s.id,
@@ -194,6 +203,67 @@ class ShipmentService {
     };
   };
 
+  // CUSTOMER — UPDATE SHIPMENT (only while both statuses are PENDING)
+  updateShipmentService = async (
+    shipmentId: number,
+    customerId: number,
+    payload: Record<string, any>,
+  ) => {
+    const shipment = await shipmentRepository.findShipmentById(shipmentId);
+
+    if (!shipment) {
+      throw new ApiError(404, "Shipment not found");
+    }
+
+    if (shipment.customerId !== customerId) {
+      throw new ApiError(403, "You are not authorized to update this shipment");
+    }
+
+    if (
+      shipment.shipmentStatus !== SHIPMENT_STATUS.PENDING ||
+      shipment.paymentStatus !== PAYMENT_STATUS.PENDING
+    ) {
+      throw new ApiError(
+        400,
+        "Shipment can only be updated when both shipment status and payment status are PENDING",
+      );
+    }
+
+    const pricingTouched =
+      "packageWeight" in payload ||
+      "shipmentPriority" in payload ||
+      "isFragile" in payload;
+
+    let updatedAmount: number | undefined;
+    let breakdown: any;
+
+    if (pricingTouched) {
+      const result = calculateShippingAmount(
+        payload.packageWeight ?? shipment.packageWeight,
+        payload.shipmentPriority ?? shipment.shipmentPriority ?? "STANDARD",
+        payload.isFragile ?? shipment.isFragile ?? false,
+      );
+      updatedAmount = result.total;
+      breakdown = result.breakdown;
+    }
+
+    const updatePayload = {
+      ...payload,
+      ...(updatedAmount !== undefined ? { amount: updatedAmount } : {}),
+    };
+
+    await shipmentRepository.updateShipment(shipmentId, updatePayload);
+
+    const updated = await shipmentRepository.findShipmentById(shipmentId);
+
+    const { id, ...rest } = (updated as any).dataValues;
+    return {
+      shipmentId: id,
+      ...rest,
+      ...(breakdown ? { priceBreakdown: breakdown } : {}),
+    };
+  };
+
   // AGENT / ADMIN — UPDATE SHIPMENT STATUS
   updateShipmentStatusService = async (
     shipmentId: number,
@@ -210,7 +280,7 @@ class ShipmentService {
     }
 
     // DELIVERY AGENT CAN ONLY UPDATE SHIPMENTS ASSIGNED TO THEM
-    
+
     if (role === "DELIVERY_AGENT") {
       const agentProfile =
         await deliveryAgentRepository.findAgentByUserId(userId);
@@ -291,7 +361,10 @@ class ShipmentService {
     }
 
     // notification for CUSTOMER — STATUS BASED
-    const statusNotificationMap: Record<string, { type: string; title: string; message: string }> = {
+    const statusNotificationMap: Record<
+      string,
+      { type: string; title: string; message: string }
+    > = {
       [SHIPMENT_STATUS.IN_TRANSIT]: {
         type: NOTIFICATION_TYPE.SHIPMENT_IN_TRANSIT,
         title: "Shipment In Transit",
@@ -345,7 +418,6 @@ class ShipmentService {
     };
   };
 
-  
   getMyDeliveriesService = async (userId: number) => {
     //  resolve users.id -  delivery_agents.id
     const agentProfile =
