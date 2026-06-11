@@ -1,6 +1,5 @@
 export const PRICING_CONFIG = {
   platformFee: 50,
-
   weightSlabs: [
     { upTo: 0.5, rate: 30 },
     { upTo: 2, rate: 50 },
@@ -25,7 +24,7 @@ export function calculateShippingAmount(
 ) {
   //  find slab
   const slab = PRICING_CONFIG.weightSlabs.find((s) => packageWeight <= s.upTo)!;
-  const weightCharge = slab.rate;
+  const weightCharge = slab.rate*packageWeight
 
   const platformFee = PRICING_CONFIG.platformFee;
 
