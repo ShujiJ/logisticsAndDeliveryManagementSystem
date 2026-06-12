@@ -16,6 +16,7 @@ const detectDelayedShipments = async () => {
       where: {
         shipmentStatus: {
           [Op.in]: [
+            SHIPMENT_STATUS.ASSIGNED,
             SHIPMENT_STATUS.OUT_FOR_PICKUP,
             SHIPMENT_STATUS.PICKED_UP,
             SHIPMENT_STATUS.IN_TRANSIT,
@@ -34,7 +35,9 @@ const detectDelayedShipments = async () => {
     });
     //findAll always returns an array so check if it is empty or not
     if (inTransitShipments.length === 0) {
-      console.log("[DelayDetection] No IN_TRANSIT shipments found.");
+      console.log(
+        "[DelayDetection]  no active shipments found for delay monitoring",
+      );
       return;
     }
 
