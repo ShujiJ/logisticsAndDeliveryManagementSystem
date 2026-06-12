@@ -82,8 +82,10 @@ class ShipmentController {
 
   getMyDeliveries = asyncHandler(async (req: Request, res: Response) => {
     const agentId = (req as any).user.id;
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
 
-    const shipments = await shipmentService.getMyDeliveriesService(agentId);
+    const shipments = await shipmentService.getMyDeliveriesService(agentId,page,limit);
     return responseHandler(
       res,
       200,

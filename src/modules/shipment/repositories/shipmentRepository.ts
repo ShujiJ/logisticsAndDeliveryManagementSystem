@@ -8,7 +8,11 @@ class ShipmentRepository {
   }
 
   // added joins (DeliveryAgent, User, DeliverySlot) + findAndCountAll for pagination
-  async findShipmentsByCustomerId(customerId: number, limit: number, offset: number) {
+  async findShipmentsByCustomerId(
+    customerId: number,
+    limit: number,
+    offset: number,
+  ) {
     return await Shipment.findAndCountAll({
       where: { customerId },
       include: [
@@ -37,7 +41,6 @@ class ShipmentRepository {
     });
   }
 
- 
   async findShipmentById(shipmentId: number) {
     return await Shipment.findByPk(shipmentId, {
       include: [
@@ -90,15 +93,16 @@ class ShipmentRepository {
   }
 
   // agent finds their own shipments
-  async findShipmentsByAgentId(deliveryAgentId: number) {
-    return await Shipment.findAll({
+  async findShipmentsByAgentId(
+    deliveryAgentId: number,
+    page: number,
+    limit: number,
+  ) {
+    const offset = (page - 1) * limit;
+
+    const { rows, count } = await Shipment.findAndCountAll({
       where: { deliveryAgentId },
       include: [
-        // {
-        //   model: User,
-        //   as: "customer",
-        //   attributes: ["id", "name", "phoneNumber"],
-        // },
         {
           model: DeliverySlot,
           as: "deliverySlot",
@@ -106,7 +110,10 @@ class ShipmentRepository {
         },
       ],
       order: [["createdAt", "DESC"]],
+      limit,
+      offset,
     });
+    return { shipments: rows, total: count };
   }
 
   // existing — used by auto-assign

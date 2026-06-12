@@ -418,7 +418,11 @@ class ShipmentService {
     };
   };
 
-  getMyDeliveriesService = async (userId: number) => {
+  getMyDeliveriesService = async (
+    userId: number,
+    page: number,
+    limit: number,
+  ) => {
     //  resolve users.id -  delivery_agents.id
     const agentProfile =
       await deliveryAgentRepository.findAgentByUserId(userId);
@@ -426,39 +430,50 @@ class ShipmentService {
       throw new ApiError(404, "Delivery agent profile not found");
 
     //  fetch with joins
-    const shipments = await shipmentRepository.findShipmentsByAgentId(
-      agentProfile.id,
-    );
+    const { shipments, total } =
+      await shipmentRepository.findShipmentsByAgentId(
+        agentProfile.id,
+        page,
+        limit,
+      );
 
-    return shipments.map((s: any) => ({
-      shipmentId: s.id,
-      trackingId: s.trackingId,
-      customerId: s.customerId,
-      senderName: s.senderName ?? null,
-      senderPhone: s.senderPhone ?? null,
-      quantity: s.quantity,
-      itemName: s.itemName,
-      packageWeight: s.packageWeight,
-      isFragile: s.isFragile,
-      description: s.description,
-      pickupAddress: s.pickupAddress,
-      pickupCity: s.pickupCity,
-      pickupPincode: s.pickupPincode,
-      deliveryAddress: s.deliveryAddress,
-      deliveryCity: s.deliveryCity,
-      deliveryPincode: s.deliveryPincode,
-      receiverName: s.receiverName,
-      receiverPhone: s.receiverPhone,
-      shipmentPriority: s.shipmentPriority,
-      shipmentStatus: s.shipmentStatus,
-      amount: s.amount,
-      paymentStatus: s.paymentStatus,
-      assignedSlotStart: s.deliverySlot?.startTime ?? null,
-      assignedSlotEnd: s.deliverySlot?.endTime ?? null,
-      assignedDate: s.deliverySlot?.date ?? null,
-      createdAt: s.createdAt,
-      updatedAt: s.updatedAt,
-    }));
+    return {
+      shipments: shipments.map((s: any) => ({
+        shipmentId: s.id,
+        trackingId: s.trackingId,
+        customerId: s.customerId,
+        senderName: s.senderName ?? null,
+        senderPhone: s.senderPhone ?? null,
+        quantity: s.quantity,
+        itemName: s.itemName,
+        packageWeight: s.packageWeight,
+        isFragile: s.isFragile,
+        description: s.description,
+        pickupAddress: s.pickupAddress,
+        pickupCity: s.pickupCity,
+        pickupPincode: s.pickupPincode,
+        deliveryAddress: s.deliveryAddress,
+        deliveryCity: s.deliveryCity,
+        deliveryPincode: s.deliveryPincode,
+        receiverName: s.receiverName,
+        receiverPhone: s.receiverPhone,
+        shipmentPriority: s.shipmentPriority,
+        shipmentStatus: s.shipmentStatus,
+        amount: s.amount,
+        paymentStatus: s.paymentStatus,
+        assignedSlotStart: s.deliverySlot?.startTime ?? null,
+        assignedSlotEnd: s.deliverySlot?.endTime ?? null,
+        assignedDate: s.deliverySlot?.date ?? null,
+        createdAt: s.createdAt,
+        updatedAt: s.updatedAt,
+      })),
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   };
 }
 
