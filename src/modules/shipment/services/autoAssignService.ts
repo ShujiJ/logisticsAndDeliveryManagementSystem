@@ -8,12 +8,11 @@ import Notification from "../../notifications/models/notificationModel";
 import { NOTIFICATION_TYPE } from "../../notifications/constants/notificationConstants";
 
 const MAX_AGENT_LOAD = 8;
-
-// 1-hour slots as per requirements (10–11 AM, 11–12 PM etc.)
 const SLOT_DURATION_HOURS = 1;
-
-// How many different agents to try before giving up (retry logic)
 const MAX_AGENT_RETRIES = 5;
+
+const WORK_START_HOUR = 9;   // 9 AM
+const WORK_END_HOUR = 21;    // 9 PM
 
 class AutoAssignService {
   autoAssignAgentAndSlot = async (
@@ -21,7 +20,6 @@ class AutoAssignService {
     systemUserId: number, // customer's userId — used as timeline actor
   ): Promise<void> => {
     try {
-      // Read the ACTUAL current status of the shipment and reads real status
       const shipment = await Shipment.findOne({ where: { id: shipmentId } });
 
       if (!shipment) {
@@ -63,11 +61,7 @@ class AutoAssignService {
       }
 
       // Find a non-conflicting slot with retry across agents
-      const slotResult = await this.findNonConflictingSlot(
-        agent.id,
-        deliveryCity,
-        shipmentId,
-      );
+      const slotResult = await this.findNonConflictingSlot();
 
       if (!slotResult) {
         console.warn(
@@ -151,7 +145,6 @@ class AutoAssignService {
     const whereClause: any = {
       isActive: true,
 
-      //  availabilityStatus check was missing - "Unavailable agents cannot receive new assignments"
       availabilityStatus: "AVAILABLE",
 
       shipmentCount: { [Op.lt]: MAX_AGENT_LOAD },
@@ -172,11 +165,7 @@ class AutoAssignService {
 
   // Helper: try up to MAX_AGENT_RETRIES agents to find a conflict-free slot
   // full retry logic — if agent A has a conflict, tries agent B, C etc.
-  private findNonConflictingSlot = async (
-    firstAgentId: number,
-    deliveryCity: string,
-    shipmentId: number,
-  ): Promise<{
+  private findNonConflictingSlot = async (): Promise<{
     chosenAgent: DeliveryAgent;
     date: string;
     startTime: string;
@@ -192,67 +181,68 @@ class AutoAssignService {
       limit: MAX_AGENT_RETRIES,
     });
 
-    const { date, startTime, endTime } = this.generateNextSlot();
+    const slots = this.generateAllSlots();
 
-    for (const candidate of candidates) {
-      const conflict = await DeliverySlot.findOne({
-        where: {
-          deliveryAgentId: candidate.id,
-          date,
-          slotStatus: { [Op.in]: ["AVAILABLE", "ASSIGNED", "IN_PROGRESS"] },
-          startTime: { [Op.lt]: endTime },
-          endTime: { [Op.gt]: startTime },
-        },
-      });
+    for (const { date, startTime, endTime } of slots) {
+      for (const candidate of candidates) {
+        const conflict = await DeliverySlot.findOne({
+          where: {
+            deliveryAgentId: candidate.id,
+            date,
+            slotStatus: { [Op.in]: ["AVAILABLE", "ASSIGNED", "IN_PROGRESS"] },
+            startTime: { [Op.lt]: endTime },
+            endTime: { [Op.gt]: startTime },
+          },
+        });
 
-      if (!conflict) {
-        return {
-          chosenAgent: candidate,
-          date,
-          startTime,
-          endTime,
-        };
+        if (!conflict) {
+          return { chosenAgent: candidate, date, startTime, endTime };
+        }
+
+        console.warn(
+          `[AutoAssign] Slot conflict for agent ${candidate.id} on ${date} ${startTime}–${endTime}. Trying next agent.`,
+        );
       }
-
-      console.warn(
-        `[AutoAssign] Slot conflict for agent ${candidate.id} on ${date} ${startTime}–${endTime}. Trying next agent.`,
-      );
     }
 
     return null;
   };
 
-  // Helper: produce today's next 1-hour slot window
-  private generateNextSlot(): {
-    date: string;
-    startTime: string;
-    endTime: string;
-  } {
+  // Returns all remaining 1-hour windows for today starting from the next full hour.
+  // Skips lunch (LUNCH_HOUR). If past working hours, returns tomorrow's full day slots.
+  private generateAllSlots(): { date: string; startTime: string; endTime: string }[] {
     const now = new Date();
+    const startHour = now.getMinutes() > 0 ? now.getHours() + 1 : now.getHours();
+    const slots: { date: string; startTime: string; endTime: string }[] = [];
 
-    // Round up to the next even hour (e.g. 14:35 to 15:00)
-    const startHour =
-      now.getMinutes() > 0 ? now.getHours() + 1 : now.getHours();
-
-    // Working hours: 8 AM – 8 PM. If past window, push to tomorrow 9 AM.
-    if (startHour >= 20 || startHour < 8) {
+    if (startHour >= WORK_END_HOUR) {
       const tomorrow = new Date(now);
       tomorrow.setDate(now.getDate() + 1);
+      const tomorrowDate = this.toLocalDateString(tomorrow);
 
-      return {
-        date: this.toLocalDateString(tomorrow), // NEW: local date instead of toISOString()
-        startTime: "09:00:00",
-        endTime: `${String(9 + SLOT_DURATION_HOURS).padStart(2, "0")}:00:00`,
-      };
+      for (let hour = WORK_START_HOUR; hour + SLOT_DURATION_HOURS <= WORK_END_HOUR; hour += SLOT_DURATION_HOURS) {
+
+        slots.push({
+          date: tomorrowDate,
+          startTime: `${String(hour).padStart(2, "0")}:00:00`,
+          endTime: `${String(hour + SLOT_DURATION_HOURS).padStart(2, "0")}:00:00`,
+        });
+      }
+    } else {
+      const todayDate = this.toLocalDateString(now);
+      const firstHour = Math.max(startHour, WORK_START_HOUR);
+
+      for (let hour = firstHour; hour + SLOT_DURATION_HOURS <= WORK_END_HOUR; hour += SLOT_DURATION_HOURS) {
+
+        slots.push({
+          date: todayDate,
+          startTime: `${String(hour).padStart(2, "0")}:00:00`,
+          endTime: `${String(hour + SLOT_DURATION_HOURS).padStart(2, "0")}:00:00`,
+        });
+      }
     }
 
-    const endHour = Math.min(startHour + SLOT_DURATION_HOURS, 20);
-
-    return {
-      date: this.toLocalDateString(now),  
-      startTime: `${String(startHour).padStart(2, "0")}:00:00`,
-      endTime: `${String(endHour).padStart(2, "0")}:00:00`,
-    };
+    return slots;
   }
 
   // returns local date string instead of UTC to keep date consistent with local getHours() used for slot times
