@@ -52,12 +52,14 @@ const detectDelayedShipments = async () => {
       const deadline = new Date(deadlineStr);
 
       if (now > deadline) {
+        const previousStatus = shipment.shipmentStatus;
+
         await shipment.update({ shipmentStatus: SHIPMENT_STATUS.DELAYED });
 
         await ShipmentTimeline.create({
           shipmentId: shipment.id!,
           updatedByUserId: systemActorId,
-          fromStatus: shipment.shipmentStatus,
+          fromStatus: previousStatus,
           toStatus: SHIPMENT_STATUS.DELAYED,
           remarks: "Shipment delayed — delivery window exceeded",
         });
