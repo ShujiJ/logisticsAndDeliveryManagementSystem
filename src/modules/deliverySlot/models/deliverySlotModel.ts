@@ -13,6 +13,7 @@ export const SLOT_STATUS = {
   ASSIGNED: "ASSIGNED",
   IN_PROGRESS: "IN_PROGRESS",
   COMPLETED: "COMPLETED",
+  MISSED: "MISSED",
 } as const;
 
 class DeliverySlot extends Model<
