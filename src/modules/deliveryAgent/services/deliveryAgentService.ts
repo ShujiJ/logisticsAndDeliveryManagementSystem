@@ -79,6 +79,17 @@ class DeliveryAgentService {
     };
   };
 
+  // Admin deactivates a delivery agent
+  deactivateAgentService = async (agentId: number) => {
+    const agent = await deliveryAgentRepository.findDeliveryAgentById(agentId);
+    if (!agent) throw new ApiError(404, "Delivery agent not found");
+    if (!agent.isActive) throw new ApiError(400, "Delivery agent is already deactivated");
+
+    await deliveryAgentRepository.deactivateAgentRepository(agentId);
+
+    return { id: agentId, isActive: false };
+  };
+
   //  Admin reassigns a different agent to a shipment
 
   reassignAgentService = async (

@@ -104,6 +104,13 @@ class DeliveryAgentRepository {
       { where: { id: agentId } },
     );
   };
+
+  deactivateAgentRepository = async (agentId: number) => {
+    return await DeliveryAgent.update(
+      { isActive: false },
+      { where: { id: agentId } },
+    );
+  };
 }
 
 export default new DeliveryAgentRepository();

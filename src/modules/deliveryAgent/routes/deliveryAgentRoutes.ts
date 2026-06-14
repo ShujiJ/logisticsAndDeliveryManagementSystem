@@ -34,6 +34,14 @@ router.patch(
   deliveryAgentController.toggleMyAvailability,
 );
 
+// Deactivate a delivery agent — Admin only
+router.patch(
+  "/:id/deactivate",
+  authMiddleware,
+  roleMiddleware(Roles.ADMIN),
+  deliveryAgentController.deactivateAgent,
+);
+
 //Reassign a different agent to a shipment — Admin only
 
 router.patch(

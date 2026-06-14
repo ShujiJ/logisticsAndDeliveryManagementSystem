@@ -39,6 +39,13 @@ class DeliveryAgentController {
     return responseHandler(res, 200, result.message, result);
   });
 
+  // Admin deactivates a delivery agent
+  deactivateAgent = asyncHandler(async (req: Request, res: Response) => {
+    const agentId = Number(req.params.id);
+    const result = await deliveryAgentService.deactivateAgentService(agentId);
+    return responseHandler(res, 200, "Delivery agent deactivated successfully", result);
+  });
+
   // Reassign a different agent to a shipment - admin only
   reassignAgent = asyncHandler(async (req: Request, res: Response) => {
     const shipmentId = Number(req.params.shipmentId);
