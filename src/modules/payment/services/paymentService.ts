@@ -198,7 +198,7 @@ class PaymentService {
     const shipment = await shipmentRepository.findShipmentById(shipmentId);
     if (!shipment) throw new ApiError(404, "Shipment not found");
 
-    if (role !== "ADMIN" && shipment.customerId !== customerId) {
+    if (role !== "admin" && shipment.customerId !== customerId) {
       throw new ApiError(403, "Access denied");
     }
 
