@@ -40,11 +40,12 @@ class DeliveryAgentController {
     return responseHandler(res, 200, result.message, result);
   });
 
-  // Admin deactivates a delivery agent
-  deactivateAgent = asyncHandler(async (req: Request, res: Response) => {
+  // Admin toggles a delivery agent's active status
+  toggleAgentStatus = asyncHandler(async (req: Request, res: Response) => {
     const agentId = Number(req.params.id);
-    const result = await deliveryAgentService.deactivateAgentService(agentId);
-    return responseHandler(res, 200, "Delivery agent deactivated successfully", result);
+    const result = await deliveryAgentService.toggleAgentStatusService(agentId);
+    const message = result.isActive ? "Delivery agent activated successfully" : "Delivery agent deactivated successfully";
+    return responseHandler(res, 200, message, result);
   });
 
   // Reassign a different agent to a shipment - admin only
