@@ -1,4 +1,5 @@
 import Payment from "../models/paymentModel";
+import Shipment from "../../shipment/models/shipmentModel";
 
 class PaymentRepository {
   // Create the initial payment record when customer initiates payment
@@ -85,6 +86,17 @@ return await Payment.destroy({
 where: { id: paymentId },
 });
 };
+
+  getMyPaymentsRepository = async (customerId: number, limit: number, offset: number) => {
+    return await Payment.findAndCountAll({
+      where: { customerId },
+      attributes: ["id", "shipmentId", "amount", "paymentStatus", "transactionId", "paidAt"],
+      include: [{ model: Shipment, as: "shipment", attributes: ["trackingId"] }],
+      order: [["paidAt", "DESC"]],
+      limit,
+      offset,
+    });
+  };
 
   // Update payment with Razorpay payment ID Called after frontend verifies signature and sends payment ID
   updateWithRazorpayPaymentId = async (

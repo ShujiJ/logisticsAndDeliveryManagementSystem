@@ -208,6 +208,30 @@ class PaymentService {
     return payment;
   };
 
+  // Customer fetches their own payment history with pagination
+  getMyPaymentsService = async (customerId: number, page: number, limit: number) => {
+    const offset = (page - 1) * limit;
+    const { rows, count } = await paymentRepository.getMyPaymentsRepository(customerId, limit, offset);
+
+    return {
+      payments: rows.map((p: any) => ({
+        id: p.id,
+        shipmentId: p.shipmentId,
+        trackingId: p.shipment?.trackingId ?? null,
+        amount: p.amount,
+        paymentStatus: p.paymentStatus,
+        transactionId: p.transactionId,
+        paidAt: p.paidAt,
+      })),
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(count / limit),
+        totalRecords: count,
+        limit,
+      },
+    };
+  };
+
   // This was the old single-step payment without Razorpay
   payService = async (shipmentId: number, customerId: number) => {
     //  Check shipment exists

@@ -22,6 +22,14 @@ router.post(
   paymentController.verifyPayment,
 );
 
+// Customer fetches their own payment history with pagination
+router.get(
+  "/myPayments",
+  authMiddleware,
+  roleMiddleware(Roles.CUSTOMER),
+  paymentController.getMyPayments,
+);
+
 // Get payment details for a shipment
 router.get(
   "/:shipmentId",

@@ -51,6 +51,15 @@ class PaymentController {
     );
   });
 
+  // Customer fetches their own payment history
+  getMyPayments = asyncHandler(async (req: Request, res: Response) => {
+    const customerId = (req as any).user.id;
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 20;
+    const result = await paymentService.getMyPaymentsService(customerId, page, limit);
+    return responseHandler(res, 200, "Payment history fetched successfully", result);
+  });
+
   // Customer or admin fetches payment details
   getPayment = asyncHandler(async (req: Request, res: Response) => {
     const shipmentId = Number(req.params.shipmentId);
