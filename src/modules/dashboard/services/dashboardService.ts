@@ -28,6 +28,7 @@ class DashboardService {
       totalPerAgent,
       completedPerAgent,
       recentShipmentsRaw,
+      complaintsRaw,
     ] = await Promise.all([
       dashboardRepository.getShipmentCounts(fromDate, toDate),
       dashboardRepository.getPaymentSummary(fromDate, toDate),
@@ -37,6 +38,7 @@ class DashboardService {
       dashboardRepository.getTotalShipmentsPerAgent(),
       dashboardRepository.getCompletedShipmentsPerAgent(),
       dashboardRepository.getRecentShipments(),
+      dashboardRepository.getRecentComplaints(),
     ]);
 
     // Compute totalRevenue and revenueStats from the same payment rows — no extra DB query
@@ -119,8 +121,17 @@ class DashboardService {
       agentPerformance,
       recentShipments,
 
-      // complaints: []
-      // TODO: add complaints once the complaint module is built
+      complaints: complaintsRaw.map((c: any) => ({
+        complaintId: c.id,
+        trackingId: c.shipment?.trackingId ?? null,
+        customerName: c.customer?.name ?? null,
+        message: c.description,
+        status: c.status,
+        shipmentStatus: c.shipment?.shipmentStatus ?? null,
+        isDelayed: c.shipment?.shipmentStatus === "DELAYED",
+        resolvedAt: c.status === "RESOLVED" ? c.updatedAt : null,
+        createdAt: c.createdAt,
+      })),
     };
   };
 }

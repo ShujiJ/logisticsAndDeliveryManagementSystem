@@ -3,6 +3,7 @@ import Shipment from "../../shipment/models/shipmentModel";
 import Payment from "../../payment/models/paymentModel";
 import DeliveryAgent from "../../deliveryAgent/models/deliveryAgentModel";
 import User from "../../auth/models/userModel";
+import Complaint from "../../complaints/models/complaintModel";
 
 class DashboardRepository {
   // Counts of shipments by status within the date range — separate count() per status, run in parallel
@@ -80,6 +81,19 @@ class DashboardRepository {
       },
       group: ["deliveryAgentId"],
     }) as any[];
+  }
+
+  // Latest 10 complaints with shipment and customer joined
+  async getRecentComplaints() {
+    return await Complaint.findAll({
+      attributes: ["id", "description", "status", "createdAt", "updatedAt"],
+      include: [
+        { model: Shipment, as: "shipment", attributes: ["trackingId", "shipmentStatus"] },
+        { model: User, as: "customer", attributes: ["name"] },
+      ],
+      order: [["createdAt", "DESC"]],
+      limit: 10,
+    });
   }
 
   // Latest 10 shipments with the customer's name joined
