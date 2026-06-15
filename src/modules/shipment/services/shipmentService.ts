@@ -1,3 +1,4 @@
+import { Roles } from "../../auth/constants/roles";
 import { CreateShipmentDto } from "../dto/createShipmentDto";
 import shipmentRepository from "../repositories/shipmentRepository";
 import generateTrackingId from "../utils/generateTrackingId";
@@ -131,7 +132,7 @@ class ShipmentService {
     }
 
     // CUSTOMER CAN ONLY VIEW THEIR OWN SHIPMENT
-    if (role !== "ADMIN" && shipment.customerId !== userId) {
+    if (role !== Roles.ADMIN && shipment.customerId !== userId) {
       throw new ApiError(403, "You are not authorized to access this shipment");
     }
 
@@ -281,7 +282,7 @@ class ShipmentService {
 
     // DELIVERY AGENT CAN ONLY UPDATE SHIPMENTS ASSIGNED TO THEM
 
-    if (role === "DELIVERY_AGENT") {
+    if (role === Roles.DELIVERY_AGENT) {
       const agentProfile =
         await deliveryAgentRepository.findAgentByUserId(userId);
       if (!agentProfile || shipment.deliveryAgentId !== agentProfile.id) {
@@ -325,7 +326,7 @@ class ShipmentService {
     }
 
     // ONLY ADMIN CAN MARK COMPLETED
-    if (newStatus === SHIPMENT_STATUS.COMPLETED && role !== "ADMIN") {
+    if (newStatus === SHIPMENT_STATUS.COMPLETED && role !== Roles.ADMIN) {
       throw new ApiError(403, "Only admin can mark shipment as COMPLETED");
     }
 
