@@ -22,8 +22,13 @@ class DeliveryAgentController {
     async (req: Request, res: Response): Promise<void> => {
       const page = Number(req.query.page) || 1;
       const limit = Number(req.query.limit) || 20;
-      const result = await deliveryAgentService.getAllDeliveryAgentsService(page, limit);
-      responseHandler(res, 200, "Delivery agents fetched successfully", result);
+      const { agents, pagination } = await deliveryAgentService.getAllDeliveryAgentsService(page, limit);
+      res.status(200).json({
+        success: true,
+        message: "Delivery agents fetched successfully",
+        data: agents,
+        pagination,
+      });
     },
   );
 
