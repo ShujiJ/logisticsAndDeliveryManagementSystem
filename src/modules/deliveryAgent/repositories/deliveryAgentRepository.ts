@@ -1,4 +1,4 @@
-import { Op } from "sequelize";
+import { Op, literal } from "sequelize";
 import User from "../../auth/models/userModel";
 import DeliveryAgent from "../models/deliveryAgentModel";
 
@@ -65,17 +65,25 @@ class DeliveryAgentRepository {
     });
   };
 
-  getAllDeliveryAgentsRepository = async () => {
-    return await DeliveryAgent.findAll({
+  getAllDeliveryAgentsRepository = async (limit: number, offset: number) => {
+    return await DeliveryAgent.findAndCountAll({
       attributes: [
         "id",
         "phoneNumber",
         "vehicleType",
         "shipmentCount",
-        "availabilityStatus", 
+        "availabilityStatus",
         "isActive",
-        "serviceZone", 
+        "serviceZone",
         "createdAt",
+        [
+          literal(`(SELECT COUNT(*) FROM shipments WHERE shipments.deliveryAgentId = DeliveryAgent.id AND shipments.shipmentStatus = 'DELIVERED')`),
+          "deliveredCount",
+        ],
+        [
+          literal(`(SELECT COUNT(*) FROM shipments WHERE shipments.deliveryAgentId = DeliveryAgent.id AND shipments.shipmentStatus = 'DELAYED')`),
+          "delayedCount",
+        ],
       ],
       include: [
         {
@@ -83,6 +91,8 @@ class DeliveryAgentRepository {
           attributes: ["id", "name", "email"],
         },
       ],
+      limit,
+      offset,
     });
   };
 

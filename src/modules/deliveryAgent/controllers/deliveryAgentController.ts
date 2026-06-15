@@ -20,14 +20,10 @@ class DeliveryAgentController {
 
   getAllDeliveryAgents = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const deliveryAgents =
-        await deliveryAgentService.getAllDeliveryAgentsService();
-      responseHandler(
-        res,
-        200,
-        "Delivery agents fetched successfully",
-        deliveryAgents,
-      );
+      const page = Number(req.query.page) || 1;
+      const limit = Number(req.query.limit) || 20;
+      const result = await deliveryAgentService.getAllDeliveryAgentsService(page, limit);
+      responseHandler(res, 200, "Delivery agents fetched successfully", result);
     },
   );
 

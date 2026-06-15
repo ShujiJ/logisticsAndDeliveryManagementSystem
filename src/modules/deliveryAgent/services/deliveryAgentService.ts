@@ -47,16 +47,31 @@ class DeliveryAgentService {
     };
   };
 
-  getAllDeliveryAgentsService = async () => {
-    const agents =
-      await deliveryAgentRepository.getAllDeliveryAgentsRepository();
-    return agents.map((agent: any) => ({
-      ...agent.toJSON(),
-      agentId: agent.user?.id,
-      agentName: agent.user?.name,
-      agentEmail: agent.user?.email,
-      user: undefined,
-    }));
+  getAllDeliveryAgentsService = async (page: number, limit: number) => {
+    const offset = (page - 1) * limit;
+    const { rows, count } =
+      await deliveryAgentRepository.getAllDeliveryAgentsRepository(limit, offset);
+
+    return {
+      agents: rows.map((agent: any) => {
+        const json = agent.toJSON();
+        return {
+          ...json,
+          agentId: agent.user?.id,
+          agentName: agent.user?.name,
+          agentEmail: agent.user?.email,
+          deliveredCount: Number(json.deliveredCount ?? 0),
+          delayedCount: Number(json.delayedCount ?? 0),
+          user: undefined,
+        };
+      }),
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(count / limit),
+        totalRecords: count,
+        limit,
+      },
+    };
   };
 
   //  Agent toggles their OWN availability from their dashboard
