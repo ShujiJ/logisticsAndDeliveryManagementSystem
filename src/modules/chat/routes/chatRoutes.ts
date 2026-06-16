@@ -25,7 +25,7 @@ router.get(
   chatController.getChatHistory,
 );
 
-// get conversation (all roles)
+// get conversation (all roles) top to bottom
 router.get(
   "/:shipmentId",
   authMiddleware,

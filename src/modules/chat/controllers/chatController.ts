@@ -27,7 +27,7 @@ class ChatController {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 20;
 
-    const result = await chatService.getMessagesService(
+    const { messages, pagination } = await chatService.getMessagesService(
       shipmentId,
       userId,
       userRole,
@@ -35,7 +35,12 @@ class ChatController {
       limit,
     );
 
-    return responseHandler(res, 200, "Chat fetched successfully", result);
+    return res.status(200).json({
+      success: true,
+      message: "Chat fetched successfully",
+      data: messages,
+      pagination,
+    });
   });
 
   getChatHistory = asyncHandler(async (req: Request, res: Response) => {
@@ -43,13 +48,19 @@ class ChatController {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 50;
 
-    const result = await chatService.getChatHistoryService(
+    const { messages, shipmentInfo, pagination } = await chatService.getChatHistoryService(
       shipmentId,
       page,
       limit,
     );
 
-    return responseHandler(res, 200, "Chat history fetched successfully", result);
+    return res.status(200).json({
+      success: true,
+      message: "Chat history fetched successfully",
+      data: messages,
+      shipmentInfo,
+      pagination,
+    });
   });
 }
 

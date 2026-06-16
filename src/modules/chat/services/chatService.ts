@@ -116,7 +116,6 @@ class ChatService {
     }));
 
     return {
-      shipmentId,
       messages,
       pagination: {
         total: count,
@@ -175,14 +174,16 @@ class ChatService {
     const s = shipment as any;
 
     return {
-      shipmentId,
-      shipmentStatus: shipment.shipmentStatus,
-      customer: s.customer ? { id: s.customer.id, name: s.customer.name } : null,
-      assignedAgent:
-        s.deliveryAgent?.user
-          ? { id: s.deliveryAgent.user.id, name: s.deliveryAgent.user.name }
-          : null,
       messages,
+      shipmentInfo: {
+        shipmentId,
+        shipmentStatus: shipment.shipmentStatus,
+        customer: s.customer ? { id: s.customer.id, name: s.customer.name } : null,
+        assignedAgent:
+          s.deliveryAgent?.user
+            ? { id: s.deliveryAgent.user.id, name: s.deliveryAgent.user.name }
+            : null,
+      },
       pagination: {
         total: count,
         page,
