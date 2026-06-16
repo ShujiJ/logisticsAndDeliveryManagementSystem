@@ -115,9 +115,9 @@ class DeliveryAgentRepository {
     );
   };
 
-  deactivateAgentRepository = async (agentId: number) => {
+  toggleAgentStatusRepository = async (agentId: number, isActive: boolean) => {
     return await DeliveryAgent.update(
-      { isActive: false },
+      { isActive },
       { where: { id: agentId } },
     );
   };

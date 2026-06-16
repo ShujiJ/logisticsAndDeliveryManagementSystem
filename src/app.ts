@@ -12,6 +12,7 @@ import dashboardRoutes from "./modules/dashboard/routes/dashboardRoutes";
 import errorMiddleware from "./shared/middlewares/errorMiddleware";
 import complaintRoutes from "./modules/complaints/routes/complaintRoutes";
 import chatRoutes from "./modules/chat/routes/chatRoutes";
+import pricingRoutes from "./modules/pricing/routes/pricingRoutes";
 
 
 const app = express();
@@ -34,6 +35,7 @@ app.use("/api/v1/notifications", notificationRoutes);
 app.use("/api/v1/dashboard", dashboardRoutes);
 app.use("/api/v1/complaints", complaintRoutes);
 app.use("/api/v1/chat", chatRoutes);
+app.use("/api/v1/pricing", pricingRoutes);
 
 app.use(errorMiddleware);
 
