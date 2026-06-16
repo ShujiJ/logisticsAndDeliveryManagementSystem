@@ -6,6 +6,7 @@ import ShipmentTimeline from "../modules/shipmentTimeline/models/shipmentTimeLin
 import Payment from "../modules/payment/models/paymentModel";
 import Notification from "../modules/notifications/models/notificationModel";
 import Complaint from "../modules/complaints/models/complaintModel";
+import ChatMessage from "../modules/chat/models/chatModel";
 
 // USER - DELIVERY AGENT PROFILE
 User.hasOne(DeliveryAgent, {
@@ -146,3 +147,11 @@ Complaint.belongsTo(Shipment, { foreignKey: "shipmentId", as: "shipment" });
 
 User.hasMany(Complaint, { foreignKey: "customerId", as: "complaints" });
 Complaint.belongsTo(User, { foreignKey: "customerId", as: "customer" });
+
+// ChatMessage - Shipment
+Shipment.hasMany(ChatMessage, { foreignKey: "shipmentId", as: "chatMessages" });
+ChatMessage.belongsTo(Shipment, { foreignKey: "shipmentId", as: "shipment" });
+
+// ChatMessage - User (sender)
+User.hasMany(ChatMessage, { foreignKey: "senderId", as: "sentMessages" });
+ChatMessage.belongsTo(User, { foreignKey: "senderId", as: "sender" });

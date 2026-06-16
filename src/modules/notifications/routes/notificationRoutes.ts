@@ -9,21 +9,21 @@ const router = express.Router();
 router.get(
   "/me",
   authMiddleware,
-  roleMiddleware(Roles.ADMIN, Roles.CUSTOMER),
+  roleMiddleware(Roles.CUSTOMER),
   notificationController.getMyNotifications,
 );
 
 router.patch(
   "/read/:id",
   authMiddleware,
-  roleMiddleware(Roles.ADMIN, Roles.CUSTOMER),
+  roleMiddleware(Roles.CUSTOMER),
   notificationController.markAsRead,
 );
 
 router.patch(
   "/readAll",
   authMiddleware,
-  roleMiddleware(Roles.ADMIN, Roles.CUSTOMER),
+  roleMiddleware(Roles.CUSTOMER),
   notificationController.markAllAsRead,
 );
 
