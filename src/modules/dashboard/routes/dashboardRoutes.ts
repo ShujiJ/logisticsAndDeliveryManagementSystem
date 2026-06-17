@@ -6,7 +6,6 @@ import dashboardController from "../controllers/dashboardController";
 
 const router = express.Router();
 
-// GET /api/v1/dashboard/admin?fromDate=YYYY-MM-DD&toDate=YYYY-MM-DD&groupBy=daily|weekly|monthly
 router.get(
   "/admin",
   authMiddleware,
@@ -15,18 +14,18 @@ router.get(
   
 );
 
-// router.get(
-//   "/customer",
-//   authMiddleware,
-//   roleMiddleware(Roles.CUSTOMER),
-//   dashboardController.getCustomerDashboard,
-// );
+router.get(
+  "/customer",
+  authMiddleware,
+  roleMiddleware(Roles.CUSTOMER),
+  dashboardController.getCustomerDashboard,
+);
 
-// router.get(
-//   "/deliveryAgent",
-//   authMiddleware,
-//   roleMiddleware(Roles.DELIVERY_AGENT),
-//   dashboardController.getAgentDashboard,
-// );
+router.get(
+  "/deliveryAgent",
+  authMiddleware,
+  roleMiddleware(Roles.DELIVERY_AGENT),
+  dashboardController.getAgentDashboard,
+);
 
 export default router;

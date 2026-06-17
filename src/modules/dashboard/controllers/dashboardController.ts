@@ -5,16 +5,12 @@ import asyncHandler from "../../../shared/handlers/asyncHandler";
 
 class DashboardController {
   getAdminDashboard = asyncHandler(async (req: Request, res: Response) => {
-    const { fromDate: fromStr, toDate: toStr, groupBy = "daily" } = req.query as Record<string, string>;
-
-    const toDate = toStr ? new Date(toStr) : new Date();
-    const fromDate = fromStr
-      ? new Date(fromStr)
-      : new Date(toDate.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const toDate = new Date();
+    const fromDate = new Date(toDate.getTime() - 14 * 24 * 60 * 60 * 1000);
 
     toDate.setHours(23, 59, 59, 999);
 
-    const data = await dashboardService.getAdminDashboardService(fromDate, toDate, groupBy);
+    const data = await dashboardService.getAdminDashboardService(fromDate, toDate);
 
     return responseHandler(res, 200, "Admin dashboard fetched successfully", data);
   });
