@@ -15,7 +15,18 @@ router.get(
   
 );
 
-// GET /api/v1/dashboard/agent — TODO: implement agent dashboard
-// router.get("/agent", authMiddleware, roleMiddleware(Roles.DELIVERY_AGENT), dashboardController.getAgentDashboard);
+// router.get(
+//   "/customer",
+//   authMiddleware,
+//   roleMiddleware(Roles.CUSTOMER),
+//   dashboardController.getCustomerDashboard,
+// );
+
+// router.get(
+//   "/deliveryAgent",
+//   authMiddleware,
+//   roleMiddleware(Roles.DELIVERY_AGENT),
+//   dashboardController.getAgentDashboard,
+// );
 
 export default router;

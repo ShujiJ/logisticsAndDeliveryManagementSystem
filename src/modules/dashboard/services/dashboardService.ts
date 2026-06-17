@@ -134,6 +134,107 @@ class DashboardService {
       })),
     };
   };
+
+  getCustomerDashboardService = async (customerId: number) => {
+    const [counts, unreadNotifications, recentShipmentsRaw, paymentHistoryRaw, chatsRaw] = await Promise.all([
+      dashboardRepository.getCustomerShipmentCounts(customerId),
+      dashboardRepository.getCustomerUnreadNotifications(customerId),
+      dashboardRepository.getCustomerRecentShipments(customerId),
+      dashboardRepository.getCustomerPaymentHistory(customerId),
+      dashboardRepository.getCustomerRecentChats(customerId),
+    ]);
+
+    const recentShipments = recentShipmentsRaw.map((s: any) => ({
+      shipmentId: s.id,
+      trackingId: s.trackingId,
+      itemName: s.itemName,
+      shipmentStatus: s.shipmentStatus,
+      paymentStatus: s.paymentStatus,
+      deliveryAddress: s.deliveryAddress,
+      deliveryCity: s.deliveryCity,
+      createdAt: s.createdAt,
+    }));
+
+    const paymentHistory = paymentHistoryRaw.map((p: any) => ({
+      paymentId: p.id,
+      shipmentId: p.shipmentId,
+      amount: p.amount,
+      paymentStatus: p.paymentStatus,
+      paidAt: p.paidAt,
+    }));
+
+    // Keep only the latest message per shipment
+    const seenShipments = new Set<number>();
+    const recentSupportChats = (chatsRaw.messages as any[])
+      .filter((m) => {
+        if (seenShipments.has(m.shipmentId)) return false;
+        seenShipments.add(m.shipmentId);
+        return true;
+      })
+      .slice(0, 5)
+      .map((m) => ({
+        shipmentId: m.shipmentId,
+        trackingId: (chatsRaw.trackingMap as any)[m.shipmentId] ?? null,
+        lastMessage: m.message,
+        lastMessageBy: m.senderRole,
+        updatedAt: m.createdAt,
+      }));
+
+    return {
+      activeShipments: counts.active,
+      totalShipments: counts.total,
+      deliveredShipments: counts.delivered,
+      pendingShipments: counts.pending,
+      pendingPayments: counts.pendingPayments,
+      unreadNotifications,
+      recentShipments,
+      paymentHistory,
+      recentSupportChats,
+    };
+  };
+
+  getAgentDashboardService = async (userId: number) => {
+    const agent = await dashboardRepository.getAgentByUserId(userId);
+    if (!agent) throw new Error("Delivery agent not found");
+
+    const agentId = agent.id as number;
+
+    const [counts, scheduleRaw, messagesRaw] = await Promise.all([
+      dashboardRepository.getAgentShipmentCounts(agentId),
+      dashboardRepository.getAgentTodaysSchedule(agentId),
+      dashboardRepository.getAgentCustomerMessages(agentId),
+    ]);
+
+    const todaysSchedule = (scheduleRaw as any[]).map((s) => ({
+      shipmentId: s.id,
+      trackingId: s.trackingId,
+      receiverName: s.receiverName,
+      deliveryAddress: s.deliveryAddress,
+      deliveryCity: s.deliveryCity,
+      slotStart: s.deliverySlot?.startTime ?? null,
+      slotEnd: s.deliverySlot?.endTime ?? null,
+      slotDate: s.deliverySlot?.date ?? null,
+      shipmentStatus: s.shipmentStatus,
+    }));
+
+    const customerMessages = (messagesRaw.messages as any[]).map((m) => ({
+      shipmentId: m.shipmentId,
+      trackingId: (messagesRaw.trackingMap as any)[m.shipmentId] ?? null,
+      customerName: m.sender?.name ?? null,
+      message: m.message,
+      sentAt: m.createdAt,
+    }));
+
+    return {
+      isActive: agent.isActive,
+      assignedDeliveries: counts.assigned,
+      activeShipments: counts.active,
+      completedDeliveries: counts.completed,
+      pendingAssignments: counts.pending,
+      todaysSchedule,
+      customerMessages,
+    };
+  };
 }
 
 export default new DashboardService();

@@ -2,8 +2,11 @@ import { fn, col, Op } from "sequelize";
 import Shipment from "../../shipment/models/shipmentModel";
 import Payment from "../../payment/models/paymentModel";
 import DeliveryAgent from "../../deliveryAgent/models/deliveryAgentModel";
+import DeliverySlot from "../../deliverySlot/models/deliverySlotModel";
 import User from "../../auth/models/userModel";
 import Complaint from "../../complaints/models/complaintModel";
+import Notification from "../../notifications/models/notificationModel";
+import ChatMessage from "../../chat/models/chatModel";
 
 class DashboardRepository {
   // Counts of shipments by status within the date range — separate count() per status, run in parallel
@@ -104,6 +107,119 @@ class DashboardRepository {
       order: [["createdAt", "DESC"]],
       limit: 10,
     });
+  }
+
+  // ============ CUSTOMER DASHBOARD ============
+
+  async getCustomerShipmentCounts(customerId: number) {
+    const [total, active, delivered, pending, pendingPayments] = await Promise.all([
+      Shipment.count({ where: { customerId } }),
+      Shipment.count({ where: { customerId, shipmentStatus: { [Op.in]: ["ASSIGNED", "CONFIRMED", "OUT_FOR_PICKUP", "PICKED_UP", "IN_TRANSIT", "OUT_FOR_DELIVERY"] } } }),
+      Shipment.count({ where: { customerId, shipmentStatus: { [Op.in]: ["DELIVERED", "COMPLETED"] } } }),
+      Shipment.count({ where: { customerId, shipmentStatus: "PENDING" } }),
+      Payment.count({ where: { customerId, paymentStatus: "PENDING" } }),
+    ]);
+    return { total, active, delivered, pending, pendingPayments };
+  }
+
+  async getCustomerUnreadNotifications(customerId: number) {
+    return await Notification.count({ where: { userId: customerId, isRead: false } });
+  }
+
+  async getCustomerRecentShipments(customerId: number) {
+    return await Shipment.findAll({
+      where: { customerId },
+      attributes: ["id", "trackingId", "itemName", "shipmentStatus", "paymentStatus", "deliveryAddress", "deliveryCity", "createdAt"],
+      order: [["createdAt", "DESC"]],
+      limit: 5,
+    });
+  }
+
+  async getCustomerPaymentHistory(customerId: number) {
+    return await Payment.findAll({
+      where: { customerId },
+      attributes: ["id", "shipmentId", "amount", "paymentStatus", "paidAt"],
+      order: [["createdAt", "DESC"]],
+      limit: 5,
+    });
+  }
+
+  async getCustomerRecentChats(customerId: number) {
+    const shipments = await Shipment.findAll({
+      where: { customerId },
+      attributes: ["id", "trackingId"],
+      raw: true,
+    });
+
+    if (!shipments.length) return { messages: [], trackingMap: {} };
+
+    const ids = (shipments as any[]).map((s) => s.id);
+    const trackingMap: Record<number, string> = {};
+    (shipments as any[]).forEach((s) => { trackingMap[s.id] = s.trackingId; });
+
+    const messages = await ChatMessage.findAll({
+      where: { shipmentId: { [Op.in]: ids } },
+      attributes: ["shipmentId", "message", "senderRole", "createdAt"],
+      order: [["createdAt", "DESC"]],
+    });
+
+    return { messages, trackingMap };
+  }
+
+  // ============ DELIVERY AGENT DASHBOARD ============
+
+  async getAgentByUserId(userId: number) {
+    return await DeliveryAgent.findOne({
+      where: { userId },
+      attributes: ["id", "isActive", "availabilityStatus"],
+    });
+  }
+
+  async getAgentShipmentCounts(agentId: number) {
+    const [assigned, active, completed, pending] = await Promise.all([
+      Shipment.count({ where: { deliveryAgentId: agentId } }),
+      Shipment.count({ where: { deliveryAgentId: agentId, shipmentStatus: { [Op.in]: ["PICKED_UP", "IN_TRANSIT", "OUT_FOR_DELIVERY"] } } }),
+      Shipment.count({ where: { deliveryAgentId: agentId, shipmentStatus: { [Op.in]: ["DELIVERED", "COMPLETED"] } } }),
+      Shipment.count({ where: { deliveryAgentId: agentId, shipmentStatus: { [Op.in]: ["ASSIGNED", "OUT_FOR_PICKUP"] } } }),
+    ]);
+    return { assigned, active, completed, pending };
+  }
+
+  async getAgentTodaysSchedule(agentId: number) {
+    const today = new Date().toISOString().split("T")[0];
+    return await Shipment.findAll({
+      where: { deliveryAgentId: agentId, deliverySlotId: { [Op.not]: null } },
+      attributes: ["id", "trackingId", "receiverName", "deliveryAddress", "deliveryCity", "shipmentStatus"],
+      include: [{
+        model: DeliverySlot,
+        as: "deliverySlot",
+        where: { date: today },
+        attributes: ["startTime", "endTime", "date"],
+      }],
+    });
+  }
+
+  async getAgentCustomerMessages(agentId: number) {
+    const shipments = await Shipment.findAll({
+      where: { deliveryAgentId: agentId },
+      attributes: ["id", "trackingId"],
+      raw: true,
+    });
+
+    if (!shipments.length) return { messages: [], trackingMap: {} };
+
+    const ids = (shipments as any[]).map((s) => s.id);
+    const trackingMap: Record<number, string> = {};
+    (shipments as any[]).forEach((s) => { trackingMap[s.id] = s.trackingId; });
+
+    const messages = await ChatMessage.findAll({
+      where: { shipmentId: { [Op.in]: ids }, senderRole: "CUSTOMER" },
+      include: [{ model: User, as: "sender", attributes: ["name"] }],
+      order: [["createdAt", "DESC"]],
+      limit: 10,
+    });
+
+    return { messages, trackingMap };
   }
 }
 
