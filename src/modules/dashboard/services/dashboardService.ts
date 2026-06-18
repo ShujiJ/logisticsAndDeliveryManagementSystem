@@ -1,10 +1,77 @@
 import dashboardRepository from "../repositories/dashboardRepository";
 
+type Granularity = "daily" | "weekly" | "monthly";
+
+function getWeekStart(date: Date): Date {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() - d.getDay()); // back to Sunday
+  return d;
+}
+
+function buildRevenueStats(
+  paidPayments: any[],
+  fromDate: Date,
+  toDate: Date,
+  granularity: Granularity,
+): { period: string; revenue: number }[] {
+  if (granularity === "daily") {
+    const keys: string[] = [];
+    const cursor = new Date(fromDate);
+    cursor.setHours(0, 0, 0, 0);
+    while (cursor <= toDate) {
+      keys.push(cursor.toLocaleDateString("en-CA"));
+      cursor.setDate(cursor.getDate() + 1);
+    }
+    const map: Record<string, number> = Object.fromEntries(keys.map((k) => [k, 0]));
+    for (const p of paidPayments) {
+      const key = new Date(p.paidAt).toLocaleDateString("en-CA");
+      if (key in map) map[key] = (map[key] ?? 0) + Number(p.amount);
+    }
+    return keys.map((k) => ({ period: k, revenue: map[k] ?? 0 }));
+  }
+
+  if (granularity === "weekly") {
+    const keys: string[] = [];
+    const cursor = new Date(getWeekStart(fromDate));
+    while (cursor <= toDate) {
+      keys.push(cursor.toLocaleDateString("en-CA"));
+      cursor.setDate(cursor.getDate() + 7);
+    }
+    const map: Record<string, number> = Object.fromEntries(keys.map((k) => [k, 0]));
+    for (const p of paidPayments) {
+      const key = getWeekStart(new Date(p.paidAt)).toLocaleDateString("en-CA");
+      if (key in map) map[key] = (map[key] ?? 0) + Number(p.amount);
+    }
+    return keys.map((k) => ({ period: k, revenue: map[k] ?? 0 }));
+  }
+
+  // monthly
+  const keys: string[] = [];
+  const cursor = new Date(fromDate.getFullYear(), fromDate.getMonth(), 1);
+  while (cursor <= toDate) {
+    keys.push(cursor.toLocaleDateString("en-CA").slice(0, 7));
+    cursor.setMonth(cursor.getMonth() + 1);
+  }
+  const map: Record<string, number> = Object.fromEntries(keys.map((k) => [k, 0]));
+  for (const p of paidPayments) {
+    const key = new Date(p.paidAt).toLocaleDateString("en-CA").slice(0, 7);
+    if (key in map) map[key] = (map[key] ?? 0) + Number(p.amount);
+  }
+  return keys.map((k) => ({ period: k, revenue: map[k] ?? 0 }));
+}
+
 class DashboardService {
   getAdminDashboardService = async (
     fromDate: Date,
     toDate: Date,
   ) => {
+    const rangeDays = Math.round(
+      (toDate.getTime() - fromDate.getTime()) / (24 * 60 * 60 * 1000),
+    );
+    const granularity: Granularity =
+      rangeDays <= 31 ? "daily" : rangeDays <= 180 ? "weekly" : "monthly";
+
     const [
       shipmentCounts,
       paymentSummaryRaw,
@@ -27,6 +94,8 @@ class DashboardService {
     for (const payment of paidPayments) {
       totalRevenue += Number(payment.amount);
     }
+
+    const revenueStats = buildRevenueStats(paidPayments, fromDate, toDate, granularity);
 
     const paymentSummary = { paid: 0, pending: 0, failed: 0 };
     for (const row of paymentSummaryRaw) {
@@ -64,6 +133,8 @@ class DashboardService {
       activeDeliveries: Number(shipmentCounts.active ?? 0),
       delayedShipments: Number(shipmentCounts.delayed ?? 0),
       totalRevenue,
+      granularity,
+      revenueStats,
       paymentSummary,
       agentPerformance,
       complaints: complaintsRaw.map((c: any) => ({
@@ -176,6 +247,7 @@ class DashboardService {
 
     return {
       isActive: agent.isActive,
+      availabilityStatus: agent.availabilityStatus,
       assignedDeliveries: counts.assigned,
       activeShipments: counts.active,
       completedDeliveries: counts.completed,
