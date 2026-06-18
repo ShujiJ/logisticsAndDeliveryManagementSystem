@@ -60,6 +60,7 @@ class PaymentRepository {
     paymentId: number,
     razorpayPaymentId: string,
     transactionId: string,
+    priceBreakdown: object, // price breakdown
   ) => {
     return await Payment.update(
       {
@@ -67,6 +68,7 @@ class PaymentRepository {
         transactionId,
         razorpayPaymentId,
         paidAt: new Date(),
+        priceBreakdown, // price breakdown
       },
       { where: { id: paymentId } },
     );

@@ -124,31 +124,6 @@ class RazorpayUtil {
       throw error;
     }
   };
-  // NEW: Refund payment using Razorpay refund API
-  // Called when shipment is cancelled or payment needs reversal
-  refundPayment = async (paymentId: string, amount?: number) => {
-    try {
-      // Prepare refund data
-      const refundData: any = {
-        // Optional notes for tracking
-      };
-      // If partial refund, specify amount
-      if (amount) {
-        // Amount must be in paise
-        refundData.amount = Math.round(amount * 100);
-      }
-
-      // Call Razorpay refund API
-      const refund = await razorpayInstance.payments.refund(
-        paymentId, // Payment ID
-        refundData, // Refund parameters
-      );
-      return refund;
-    } catch (error) {
-      console.error("Error refunding payment:", error);
-      throw error;
-    }
-  };
 }
 
 export default new RazorpayUtil();

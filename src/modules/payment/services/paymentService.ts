@@ -1,4 +1,5 @@
 import ApiError from "../../../shared/utils/apiError";
+import { calculateShippingAmount } from "../../../shared/utils/pricingUtil"; // price breakdown
 import shipmentRepository from "../../shipment/repositories/shipmentRepository";
 import paymentRepository from "../repositories/paymentRepository";
 import autoAssignService from "../../shipment/services/autoAssignService";
@@ -40,7 +41,7 @@ class PaymentService {
       if (existingPayment.paymentStatus === "PENDING" && existingPayment.razorpayOrderId) {
         return {
           orderId: existingPayment.razorpayOrderId,
-          amount: existingPayment.amount * 100, // paise
+          amount: existingPayment.amount, // rupees
           currency: "INR",
           keyId: env.RAZORPAY_KEY_ID,
           shipmentId,
@@ -72,7 +73,7 @@ class PaymentService {
 
       return {
         orderId: razorpayOrder.orderId,
-        amount: razorpayOrder.amount,
+        amount: Number(razorpayOrder.amount) / 100, // convert paise to rupees
         currency: razorpayOrder.currency,
         keyId: razorpayOrder.keyId,
         shipmentId,
@@ -133,11 +134,20 @@ class PaymentService {
         razorpayPaymentId,
       );
 
+      // price breakdown — compute snapshot before marking PAID
+      const shipment = await shipmentRepository.findShipmentById(shipmentId);
+      const { breakdown } = calculateShippingAmount(
+        shipment!.packageWeight,
+        (shipment!.shipmentPriority as "STANDARD" | "EXPRESS" | "SAME_DAY") ?? "STANDARD",
+        shipment!.isFragile ?? false,
+      );
+
       // Mark payment as PAID in database
       await paymentRepository.markAsPaidWithRazorpay(
         payment.id,
         razorpayPaymentId,
         razorpayPaymentId,
+        breakdown, // price breakdown
       );
 
       // Update shipment payment status to PAID and status to CONFIRMED
