@@ -2,12 +2,6 @@ import dashboardRepository from "../repositories/dashboardRepository";
 
 type Granularity = "daily" | "weekly" | "monthly";
 
-function getWeekStart(date: Date): Date {
-  const d = new Date(date);
-  d.setHours(0, 0, 0, 0);
-  d.setDate(d.getDate() - d.getDay()); // back to Sunday
-  return d;
-}
 
 function buildRevenueStats(
   paidPayments: any[],
@@ -33,15 +27,21 @@ function buildRevenueStats(
 
   if (granularity === "weekly") {
     const keys: string[] = [];
-    const cursor = new Date(getWeekStart(fromDate));
+    const cursor = new Date(fromDate);
+    cursor.setHours(0, 0, 0, 0);
+    const startMs = cursor.getTime();
     while (cursor <= toDate) {
       keys.push(cursor.toLocaleDateString("en-CA"));
       cursor.setDate(cursor.getDate() + 7);
     }
     const map: Record<string, number> = Object.fromEntries(keys.map((k) => [k, 0]));
     for (const p of paidPayments) {
-      const key = getWeekStart(new Date(p.paidAt)).toLocaleDateString("en-CA");
-      if (key in map) map[key] = (map[key] ?? 0) + Number(p.amount);
+      const paymentDate = new Date(p.paidAt);
+      paymentDate.setHours(0, 0, 0, 0);
+      const weekIndex = Math.floor((paymentDate.getTime() - startMs) / (7 * 24 * 60 * 60 * 1000));
+      if (weekIndex >= 0 && weekIndex < keys.length) {
+        map[keys[weekIndex]] = (map[keys[weekIndex]] ?? 0) + Number(p.amount);
+      }
     }
     return keys.map((k) => ({ period: k, revenue: map[k] ?? 0 }));
   }
