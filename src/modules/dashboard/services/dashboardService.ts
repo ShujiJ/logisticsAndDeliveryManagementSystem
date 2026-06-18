@@ -39,8 +39,9 @@ function buildRevenueStats(
       const paymentDate = new Date(p.paidAt);
       paymentDate.setHours(0, 0, 0, 0);
       const weekIndex = Math.floor((paymentDate.getTime() - startMs) / (7 * 24 * 60 * 60 * 1000));
-      if (weekIndex >= 0 && weekIndex < keys.length) {
-        map[keys[weekIndex]] = (map[keys[weekIndex]] ?? 0) + Number(p.amount);
+      const weekKey = keys[weekIndex];
+      if (weekIndex >= 0 && weekKey !== undefined) {
+        map[weekKey] = (map[weekKey] ?? 0) + Number(p.amount);
       }
     }
     return keys.map((k) => ({ period: k, revenue: map[k] ?? 0 }));
