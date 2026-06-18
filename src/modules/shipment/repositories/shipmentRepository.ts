@@ -150,6 +150,24 @@ class ShipmentRepository {
     return await Shipment.update(payload, { where: { id: shipmentId } });
   }
 
+  async saveOtp(shipmentId: number, hashedOtp: string, otpExpiresAt: Date) {
+    return await Shipment.update(
+      { deliveryOtp: hashedOtp, otpExpiresAt, otpUsed: false },
+      { where: { id: shipmentId } },
+    );
+  }
+
+  async markDelivered(shipmentId: number, deliveredAt: Date) {
+    return await Shipment.update(
+      {
+        shipmentStatus: "DELIVERED",
+        otpUsed: true,
+        deliveredAt,
+      },
+      { where: { id: shipmentId } },
+    );
+  }
+
   //  used by payment confirmation to mark shipment CONFIRMED
   async updatePaymentAndStatus(
     shipmentId: number,

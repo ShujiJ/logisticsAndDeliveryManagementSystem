@@ -80,6 +80,22 @@ class ShipmentController {
     return responseHandler(res, 200, "Shipment updated successfully", shipment);
   });
 
+  sendOtp = asyncHandler(async (req: Request, res: Response) => {
+    const shipmentId = Number(req.params.id);
+    const userId = (req as any).user.id;
+    const role = (req as any).user.role;
+    const result = await shipmentService.sendOtpService(shipmentId, userId, role);
+    return responseHandler(res, 200, "Delivery OTP sent to customer", result);
+  });
+
+  verifyOtp = asyncHandler(async (req: Request, res: Response) => {
+    const shipmentId = Number(req.params.id);
+    const userId = (req as any).user.id;
+    const { otp } = req.body;
+    const result = await shipmentService.verifyOtpService(shipmentId, otp, userId);
+    return responseHandler(res, 200, "Delivery verified successfully", result);
+  });
+
   getMyDeliveries = asyncHandler(async (req: Request, res: Response) => {
     const agentId = (req as any).user.id;
     const page = parseInt(req.query.page as string) || 1;

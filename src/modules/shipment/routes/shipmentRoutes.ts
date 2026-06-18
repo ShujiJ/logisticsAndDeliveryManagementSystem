@@ -5,6 +5,7 @@ import validate from "../../../shared/middlewares/validateMiddleware";
 import { createShipmentValidation } from "../validations/createShipmentValidation";
 import { updateShipmentValidation } from "../validations/updateShipmentValidation";
 import { updateShipmentStatusValidation } from "../validations/updateShipmentStatusValidation";
+import { verifyOtpValidation } from "../validations/verifyOtpValidation";
 import authMiddleware from "../../auth/middlewares/authMiddleware";
 import roleMiddleware from "../../auth/middlewares/roleMiddleware";
 import shipmentTimelineRoutes from "../../shipmentTimeline/routes/shipmentTimelineRoutes";
@@ -75,6 +76,23 @@ router.patch(
   roleMiddleware(Roles.DELIVERY_AGENT, Roles.ADMIN),
   validate(updateShipmentStatusValidation),
   shipmentController.updateShipmentStatus,
+);
+
+// SEND DELIVERY OTP — assigned agent or admin
+router.post(
+  "/:id/send-otp",
+  authMiddleware,
+  roleMiddleware(Roles.DELIVERY_AGENT, Roles.ADMIN),
+  shipmentController.sendOtp,
+);
+
+// VERIFY DELIVERY OTP — assigned agent only
+router.post(
+  "/:id/verify-otp",
+  authMiddleware,
+  roleMiddleware(Roles.DELIVERY_AGENT),
+  validate(verifyOtpValidation),
+  shipmentController.verifyOtp,
 );
 
 export default router;

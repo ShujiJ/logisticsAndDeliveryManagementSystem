@@ -61,6 +61,11 @@ class Shipment extends Model<
   declare paymentStatus: CreationOptional<string>;
   declare shipmentStatus: CreationOptional<string>;
 
+  declare deliveryOtp: CreationOptional<string | null>;
+  declare otpExpiresAt: CreationOptional<Date | null>;
+  declare otpUsed: CreationOptional<boolean>;
+  declare deliveredAt: CreationOptional<Date | null>;
+
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -200,6 +205,26 @@ Shipment.init(
 
     deliveryRemarks: {
       type: DataTypes.TEXT,
+      allowNull: true,
+    },
+
+    deliveryOtp: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+
+    otpExpiresAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+
+    otpUsed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+
+    deliveredAt: {
+      type: DataTypes.DATE,
       allowNull: true,
     },
 

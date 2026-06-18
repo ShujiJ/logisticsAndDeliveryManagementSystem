@@ -1,3 +1,5 @@
+import bcrypt from "bcrypt";
+import crypto from "crypto";
 import { Roles } from "../../auth/constants/roles";
 import { CreateShipmentDto } from "../dto/createShipmentDto";
 import shipmentRepository from "../repositories/shipmentRepository";
@@ -416,6 +418,127 @@ class ShipmentService {
         (updatedShipment as any).deliveryAgent?.user?.name ?? null,
       deliveryAgentEmail:
         (updatedShipment as any).deliveryAgent?.user?.email ?? null,
+    };
+  };
+
+  // AGENT / ADMIN — SEND DELIVERY OTP TO CUSTOMER
+  sendOtpService = async (
+    shipmentId: number,
+    userId: number,
+    role: string,
+  ) => {
+    const shipment = await shipmentRepository.findShipmentById(shipmentId);
+
+    if (!shipment) throw new ApiError(404, "Shipment not found");
+
+    if (role === Roles.DELIVERY_AGENT) {
+      const agentProfile =
+        await deliveryAgentRepository.findAgentByUserId(userId);
+      if (!agentProfile || shipment.deliveryAgentId !== agentProfile.id) {
+        throw new ApiError(
+          403,
+          "You can only send OTP for shipments assigned to you",
+        );
+      }
+    }
+
+    if (shipment.shipmentStatus !== SHIPMENT_STATUS.OUT_FOR_DELIVERY) {
+      throw new ApiError(
+        400,
+        "OTP can only be sent when shipment is OUT_FOR_DELIVERY",
+      );
+    }
+
+    const otp = crypto.randomInt(1000, 10000).toString();
+    const hashedOtp = await bcrypt.hash(otp, 10);
+    const otpExpiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    await shipmentRepository.saveOtp(shipmentId, hashedOtp, otpExpiresAt);
+
+    await Notification.create({
+      userId: shipment.customerId,
+      shipmentId,
+      title: "Delivery OTP",
+      message: `Your delivery OTP for shipment ${shipment.trackingId} is ${otp}. Valid for 1 hour.`,
+      type: NOTIFICATION_TYPE.DELIVERY_OTP,
+    });
+
+    return { shipmentId, otpExpiresAt };
+  };
+
+  // AGENT — VERIFY DELIVERY OTP AND MARK DELIVERED
+  verifyOtpService = async (
+    shipmentId: number,
+    otp: string,
+    userId: number,
+  ) => {
+    const shipment = await shipmentRepository.findShipmentById(shipmentId);
+
+    if (!shipment) throw new ApiError(404, "Shipment not found");
+
+    const agentProfile =
+      await deliveryAgentRepository.findAgentByUserId(userId);
+    if (!agentProfile || shipment.deliveryAgentId !== agentProfile.id) {
+      throw new ApiError(
+        403,
+        "You can only verify OTP for shipments assigned to you",
+      );
+    }
+
+    if (!shipment.deliveryOtp || !shipment.otpExpiresAt) {
+      throw new ApiError(400, "No OTP found. Please request a new OTP first.");
+    }
+
+    if (shipment.otpUsed) {
+      throw new ApiError(400, "Invalid or expired OTP");
+    }
+
+    if (new Date() > new Date(shipment.otpExpiresAt)) {
+      throw new ApiError(400, "Invalid or expired OTP");
+    }
+
+    const isValid = await bcrypt.compare(otp, shipment.deliveryOtp);
+    if (!isValid) {
+      throw new ApiError(400, "Invalid or expired OTP");
+    }
+
+    const deliveredAt = new Date();
+
+    await shipmentRepository.markDelivered(shipmentId, deliveredAt);
+
+    await ShipmentTimeline.create({
+      shipmentId,
+      updatedByUserId: userId,
+      fromStatus: SHIPMENT_STATUS.OUT_FOR_DELIVERY,
+      toStatus: SHIPMENT_STATUS.DELIVERED,
+      remarks: "Delivery verified via OTP",
+    });
+
+    if (shipment.deliverySlotId) {
+      await deliverySlotRepository.updateSlotStatus(
+        shipment.deliverySlotId,
+        "COMPLETED",
+      );
+    }
+
+    if (shipment.deliveryAgentId) {
+      await deliveryAgentRepository.decrementShipmentCount(
+        shipment.deliveryAgentId,
+      );
+    }
+
+    await Notification.create({
+      userId: shipment.customerId,
+      shipmentId,
+      title: "Shipment Delivered",
+      message: `Your shipment ${shipment.trackingId} has been delivered successfully`,
+      type: NOTIFICATION_TYPE.SHIPMENT_DELIVERED,
+    });
+
+    return {
+      shipmentId,
+      shipmentStatus: SHIPMENT_STATUS.DELIVERED,
+      deliveredAt,
     };
   };
 
