@@ -12,7 +12,7 @@ router.post("/register", validate(registerSchema), authController.register);
 router.post("/refreshToken", authController.refreshToken);
 router.post("/login", validate(loginSchema), authController.login);
 router.post("/logout", authController.logout);
-router.patch("/profile", authMiddleware, validate(updateProfileSchema), authController.updateProfile);
+router.patch("/updateProfile", authMiddleware, validate(updateProfileSchema), authController.updateProfile);
 router.patch("/changePassword", authMiddleware, validate(changePasswordSchema), authController.changePassword);
 
 export default router;
