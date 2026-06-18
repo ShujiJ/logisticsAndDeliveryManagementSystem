@@ -18,9 +18,21 @@ import pricingRoutes from "./modules/pricing/routes/pricingRoutes";
 const app = express();
 
 app.use(express.json());
+const allowedOrigins = [
+  "https://ldms-lac.vercel.app",
+  "http://localhost:3000",
+  "http://localhost:5173",
+];
+
 app.use(
   cors({
-    origin: true,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   }),
 );

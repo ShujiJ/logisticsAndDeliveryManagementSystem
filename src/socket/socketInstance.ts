@@ -3,9 +3,21 @@ import { Server } from "socket.io";
 let io: Server;
 
 export const initSocket = (httpServer: any): Server => {
+  const allowedOrigins = [
+    "https://ldms-lac.vercel.app",
+    "http://localhost:3000",
+    "http://localhost:5173",
+  ];
+
   io = new Server(httpServer, {
     cors: {
-      origin: true,
+      origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
       credentials: true,
     },
   });
