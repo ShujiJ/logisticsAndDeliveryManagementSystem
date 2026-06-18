@@ -31,6 +31,19 @@ class AuthController {
     return responseHandler(res, 200, "Access token refreshed", result);
   });
 
+  updateProfile = asyncHandler(async (req: Request, res: Response) => {
+    const userId = (req as any).user.id;
+    const result = await authService.updateProfile(userId, req.body);
+    return responseHandler(res, 200, "Profile updated successfully", result);
+  });
+
+  changePassword = asyncHandler(async (req: Request, res: Response) => {
+    const userId = (req as any).user.id;
+    const { currentPassword, newPassword } = req.body;
+    await authService.changePassword(userId, currentPassword, newPassword);
+    return responseHandler(res, 200, "Password changed successfully");
+  });
+
   //userlogout
   logout = asyncHandler(async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken;

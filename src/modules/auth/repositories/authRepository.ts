@@ -35,6 +35,21 @@ class AuthRepository {
   async findUserById(id: number) {
     return User.findByPk(id);
   }
+
+  async updateUserById(id: number, data: { name?: string; phoneNumber?: string }) {
+    await User.update(data, { where: { id } });
+    return User.findByPk(id, {
+      attributes: ["id", "name", "email", "role", "phoneNumber"],
+    });
+  }
+
+  async updatePasswordById(id: number, hashedPassword: string) {
+    return User.update({ password: hashedPassword }, { where: { id } });
+  }
+
+  async deleteSessionsByUserId(userId: number) {
+    return Session.destroy({ where: { userId } });
+  }
 }
 
 export default new AuthRepository();

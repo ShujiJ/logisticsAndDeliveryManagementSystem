@@ -115,6 +115,29 @@ class AuthService {
     };
   }
 
+  async updateProfile(userId: number, data: { name?: string; phoneNumber?: string }) {
+    const user = await authRepository.updateUserById(userId, data);
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+    return user;
+  }
+
+  async changePassword(userId: number, currentPassword: string, newPassword: string) {
+    const user = await authRepository.findUserById(userId);
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+    const isValid = await bcrypt.compare(currentPassword, user.password);
+    if (!isValid) {
+      throw new ApiError(401, "Current password is incorrect");
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await authRepository.updatePasswordById(userId, hashedPassword);
+    await authRepository.deleteSessionsByUserId(userId);
+    return null;
+  }
+
   //user logout
   async logout(refreshToken: string) {
     if (!refreshToken) {
