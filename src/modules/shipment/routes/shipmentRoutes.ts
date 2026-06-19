@@ -80,7 +80,7 @@ router.patch(
 
 // SEND DELIVERY OTP — assigned agent or admin
 router.post(
-  "/:id/send-otp",
+  "/:id/sendOtp",
   authMiddleware,
   roleMiddleware(Roles.DELIVERY_AGENT, Roles.ADMIN),
   shipmentController.sendOtp,
@@ -88,7 +88,7 @@ router.post(
 
 // VERIFY DELIVERY OTP — assigned agent only
 router.post(
-  "/:id/verify-otp",
+  "/:id/verifyOtp",
   authMiddleware,
   roleMiddleware(Roles.DELIVERY_AGENT),
   validate(verifyOtpValidation),

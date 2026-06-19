@@ -15,6 +15,7 @@ import deliveryAgentRepository from "../../deliveryAgent/repositories/deliveryAg
 import ShipmentTimeline from "../../shipmentTimeline/models/shipmentTimeLineModel";
 import Notification from "../../notifications/models/notificationModel";
 import { NOTIFICATION_TYPE } from "../../notifications/constants/notificationConstants";
+import { sendOtpEmail } from "../../../shared/utils/emailUtil";
 
 class ShipmentService {
   // CREATE SHIPMENT
@@ -451,15 +452,18 @@ class ShipmentService {
 
     const otp = crypto.randomInt(1000, 10000).toString();
     const hashedOtp = await bcrypt.hash(otp, 10);
-    const otpExpiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    const otpExpiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
 
     await shipmentRepository.saveOtp(shipmentId, hashedOtp, otpExpiresAt);
+
+    // Send OTP directly to receiver's email via Resend
+    await sendOtpEmail(shipment.receiverEmail, shipment.trackingId, otp);
 
     await Notification.create({
       userId: shipment.customerId,
       shipmentId,
       title: "Delivery OTP",
-      message: `Your delivery OTP for shipment ${shipment.trackingId} is ${otp}. Valid for 1 hour.`,
+      message: `Your delivery OTP for shipment ${shipment.trackingId} is ${otp}. Valid for 30 minutes.`,
       type: NOTIFICATION_TYPE.DELIVERY_OTP,
     });
 

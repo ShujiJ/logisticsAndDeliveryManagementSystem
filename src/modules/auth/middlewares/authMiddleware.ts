@@ -4,8 +4,6 @@ import { env } from "../../../config/env";
 
 const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   try {
-    // console.log("AUTH MIDDLEWARE RUNNING");
-
     const authHeader = req.headers.authorization;
     if (!authHeader) {
       return res.status(401).json({
@@ -15,7 +13,6 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     }
 
     const token = authHeader.split(" ")[1];
-    console.log("AUTH MIDDLEWARE RUNNING");
     if (!token) {
       return res.status(401).json({
         success: false,
@@ -23,9 +20,6 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
       });
     }
     const decoded = jwt.verify(token, env.ACCESS_TOKEN_SECRET);
-    //To check what is the role temporarily
-    console.log(decoded);
-    // req.user = decoded as any;
     (req as any).user = decoded;
 
     next();
