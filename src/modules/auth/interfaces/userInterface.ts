@@ -4,6 +4,7 @@ export interface UserAttributes {
   email: string;
   password: string;
   role?: string;
+  phoneNumber?: string | null;
 
   createdAt?: Date;
   updatedAt?: Date;

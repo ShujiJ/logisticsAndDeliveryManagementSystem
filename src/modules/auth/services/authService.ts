@@ -74,8 +74,9 @@ class AuthService {
         id: user.id,
         name: user.name,
         email: user.email,
+        phoneNumber: user.phoneNumber,
         role: user.role,
-      },
+        },
 
       accessToken,
       refreshToken,
@@ -110,12 +111,16 @@ class AuthService {
         id: user.id,
         name: user.name,
         email: user.email,
+        phoneNumber: user.phoneNumber,
         role: user.role,
       },
     };
   }
 
-  async updateProfile(userId: number, data: { name?: string; phoneNumber?: string }) {
+  async updateProfile(
+    userId: number,
+    data: { name?: string; phoneNumber?: string },
+  ) {
     const user = await authRepository.updateUserById(userId, data);
     if (!user) {
       throw new ApiError(404, "User not found");
@@ -123,7 +128,11 @@ class AuthService {
     return user;
   }
 
-  async changePassword(userId: number, currentPassword: string, newPassword: string) {
+  async changePassword(
+    userId: number,
+    currentPassword: string,
+    newPassword: string,
+  ) {
     const user = await authRepository.findUserById(userId);
     if (!user) {
       throw new ApiError(404, "User not found");
