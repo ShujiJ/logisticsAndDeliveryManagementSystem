@@ -20,13 +20,14 @@ A comprehensive, feature-rich backend system for managing end-to-end logistics o
 - [Real-Time Features](#real-time-features)
 - [Background Jobs](#background-jobs)
 - [Environment Variables](#environment-variables)
+- [Troubleshooting](#troubleshooting)
 
 ## Overview
 
 This is a production-ready logistics and delivery management backend that handles comprehensive end-to-end operations:
 
-- **User Management**: Multi-role support (Admin, Customer, Delivery Agent) with JWT-based authentication
-- **Shipment Lifecycle Management**: Complete shipment tracking from creation to delivery with status progression (Pending → Assigned → Picked Up → In Transit → Delivered)
+- **User Management**: Multi-role support (Admin, Customer, Delivery Agent) with JWT-based authentication and phone number support
+- **Shipment Lifecycle Management**: Complete shipment tracking from creation to delivery with status progression
 - **Delivery Agent Management**: Efficient assignment and performance tracking of delivery personnel
 - **Delivery Slot Scheduling**: Automated scheduling with intelligent slot assignment
 - **Complaint Management**: Handle and track customer complaints with resolution tracking
@@ -37,6 +38,7 @@ This is a production-ready logistics and delivery management backend that handle
 - **Notifications**: Real-time notifications for shipment events via Twilio integration
 - **Automated Workflows**: Cron jobs for delay detection and automated status updates
 - **Timeline Tracking**: Detailed event logs for each shipment milestone
+- **User Profile Management**: Update user profile including name and phone number
 
 ## Features
 
@@ -46,9 +48,10 @@ This is a production-ready logistics and delivery management backend that handle
 - **Password Security**: bcryptjs hashing for secure password storage
 - **Session Management**: Persistent session tracking
 - **HTTP-only Cookies**: Secure token storage with CORS support
+- **User Profile Updates**: Phone number and name management
 
 ### 📦 Shipment Management
-- **Complete Lifecycle Tracking**: 12 distinct shipment statuses (Pending, Assigned, Confirmed, Out for Pickup, Picked Up, In Transit, Out for Delivery, Delivered, Delayed, Completed, Cancelled)
+- **Complete Lifecycle Tracking**: Multiple shipment statuses (Pending, Assigned, Confirmed, Out for Pickup, Picked Up, In Transit, Out for Delivery, Delivered, Delayed, Completed, Cancelled)
 - **Multiple Shipment Types**: Standard, Express, Same-Day delivery options
 - **Automatic Agent Assignment**: Intelligent assignment logic based on availability and location
 - **OTP Verification**: Secure delivery confirmation with one-time passwords
@@ -73,6 +76,7 @@ This is a production-ready logistics and delivery management backend that handle
 - **Webhook Verification**: Secure webhook signature validation
 - **Payment Records**: Complete payment transaction history
 - **Multiple Payment Methods**: Credit card, debit card, UPI support via Razorpay
+- **Price Breakdown**: Clear cost breakdowns with paise to rupees conversion
 
 ### 📊 Analytics & Dashboard
 - **Revenue Analytics**: Daily, weekly, and monthly revenue breakdowns
@@ -96,13 +100,6 @@ This is a production-ready logistics and delivery management backend that handle
 - **Flexible Pricing Engine**: Calculate shipping costs based on various factors
 - **Price Optimization**: Base rates with adjustable multipliers
 - **Transparent Pricing**: Clear cost breakdowns for customers
-
-### ⚙️ Advanced Features
-- **Automated Cron Jobs**: Background tasks for delay detection and updates
-- **Comprehensive Validation**: Zod schema validation for all request bodies
-- **Error Handling**: Structured error responses with proper HTTP status codes
-- **Async Request Handling**: Non-blocking request processing
-- **Database Connection Pooling**: Optimized Sequelize configuration
 
 ## Tech Stack
 
@@ -135,8 +132,18 @@ This is a production-ready logistics and delivery management backend that handle
 - **TypeScript Compiler**: typescript v6.0.3
 - **Type Definitions**: @types/* for all major packages
 
-### API Versioning
-- **Current Version**: v1 (at /api/v1)
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- **Node.js** (v18 or higher)
+- **npm** (v9 or higher)
+- **MySQL** (v8 or higher)
+- **Git**
+
+Optional but recommended:
+- **Postman** or **Thunder Client** for API testing
+- **MySQL Workbench** for database management
 
 ## Quick Start
 
@@ -150,7 +157,7 @@ cd logisticsAndDeliveryManagementSystem
 # Install dependencies
 npm install
 
-# Configure environment (copy example file)
+# Configure environment
 cp .env.example .env
 # Edit .env with your database and API credentials
 
@@ -165,21 +172,6 @@ npm run dev
 ```
 
 Access the API at `http://localhost:3000/api/v1`
-
-See [SETUP_GUIDE.md](./SETUP_GUIDE.md) for detailed setup instructions.
-
-## Prerequisites
-
-Before you begin, ensure you have the following installed:
-
-- **Node.js** (v18 or higher)
-- **npm** (v9 or higher)
-- **MySQL** (v8 or higher)
-- **Git**
-
-Optional but recommended:
-- **Postman** or **Thunder Client** for API testing
-- **MySQL Workbench** for database management
 
 ## Installation
 
@@ -196,23 +188,15 @@ cd logisticsAndDeliveryManagementSystem
 npm install
 ```
 
-This will install all required packages listed in `package.json` including:
-- Express.js and related middleware
-- Sequelize ORM
-- TypeScript and development tools
-- External service SDKs (Razorpay, Twilio, Socket.io)
-
 ### 3. Install MySQL (if not already installed)
 
 **Windows:**
 ```bash
-# Using Chocolatey
 choco install mysql
 ```
 
 **macOS:**
 ```bash
-# Using Homebrew
 brew install mysql
 ```
 
@@ -285,12 +269,7 @@ FRONTEND_URL=http://localhost:5173
 ### 2. Create MySQL Database
 
 ```bash
-# Start MySQL service (if not already running)
-# Windows: MySQL should start automatically
-# macOS: brew services start mysql
-# Linux: sudo systemctl start mysql
-
-# Login to MySQL
+# Start MySQL service
 mysql -u root -p
 
 # Create the database
@@ -303,13 +282,11 @@ EXIT;
 ### 3. Generate Secure Secrets (Recommended)
 
 ```bash
-# Generate strong JWT secrets
+# Generate strong JWT secrets using Node.js
 node -e "console.log('JWT Secret:', require('crypto').randomBytes(32).toString('hex'))"
 node -e "console.log('Access Token Secret:', require('crypto').randomBytes(32).toString('hex'))"
 node -e "console.log('Refresh Token Secret:', require('crypto').randomBytes(32).toString('hex'))"
 ```
-
-Copy the generated values to your `.env` file.
 
 ## Running the Application
 
@@ -365,7 +342,7 @@ npx sequelize-cli db:migrate:status
 # Undo last migration
 npx sequelize-cli db:migrate:undo
 
-# Undo all migrations (careful!)
+# Undo all migrations
 npx sequelize-cli db:migrate:undo:all
 ```
 
@@ -374,7 +351,7 @@ npx sequelize-cli db:migrate:undo:all
 Populate initial data:
 
 ```bash
-# Seed the database with initial data (includes admin user)
+# Seed the database with initial data
 npx sequelize-cli db:seed:all
 
 # Undo all seeders
@@ -388,7 +365,7 @@ npx sequelize-cli db:seed:undo --seed name-of-seeder-file
 
 The application includes migrations that create the following tables:
 
-- **Users**: User authentication and profile data
+- **Users**: User authentication, profile data, and phone number
 - **Sessions**: JWT session management
 - **Shipments**: Shipment details and status tracking
 - **Delivery Agents**: Delivery agent information
@@ -399,20 +376,12 @@ The application includes migrations that create the following tables:
 - **Chat Messages**: Real-time messaging records
 - **Notifications**: Notification delivery records
 
-### 4. Default Admin User
-
-After running seeders, login with:
-- **Email**: admin@example.com
-- **Password**: (check the seeder file)
-
-You can create additional users via the `/auth/register` endpoint.
-
 ## Project Structure
 
 ```
 src/
 ├── app.ts                          # Express app configuration
-├── server.ts                       # Server entry point with Socket.io initialization
+├── server.ts                       # Server entry point with Socket.io
 ├── config/                         # Configuration management
 │   ├── config.json                # Sequelize configuration
 │   ├── dataBase.ts                # Database connection instance
@@ -420,125 +389,55 @@ src/
 ├── database/                       # Database layer
 │   ├── associations.ts            # Sequelize model associations
 │   ├── migrations/                # Database schema migrations
-│   └── seeders/                   # Database seeders (initial data)
+│   └── seeders/                   # Database seeders
 ├── cron/                          # Scheduled background jobs
 │   ├── index.ts                   # Cron job orchestration
 │   └── delayDetection.ts          # Delay detection job
 ├── socket/                        # Real-time communication
 │   └── socketInstance.ts          # Socket.io setup and handlers
-├── modules/                       # Feature modules (modular architecture)
+├── modules/                       # Feature modules
 │   ├── auth/                      # Authentication & Authorization
 │   │   ├── controllers/           # Request handlers
 │   │   ├── services/              # Business logic layer
 │   │   ├── repositories/          # Data access layer
 │   │   ├── routes/                # API routes
-│   │   ├── models/                # Sequelize models (User, Session)
-│   │   ├── middlewares/           # Auth & role validation middlewares
+│   │   ├── models/                # Sequelize models
+│   │   ├── middlewares/           # Auth validation
 │   │   ├── interfaces/            # TypeScript interfaces
 │   │   ├── constants/             # Role definitions
-│   │   ├── validations/           # Zod request schemas
-│   │   └── utils/                 # Utility functions (token generation, etc)
+│   │   ├── validations/           # Zod schemas
+│   │   └── utils/                 # Utility functions
 │   │
 │   ├── shipment/                  # Shipment management
-│   │   ├── controllers/           # Shipment endpoints
-│   │   ├── services/              # Shipment business logic & auto-assignment
-│   │   ├── repositories/          # Shipment data access
-│   │   ├── routes/                # API routes
-│   │   ├── models/                # Shipment database model
-│   │   ├── validations/           # Request validation schemas
-│   │   ├── constants/             # Shipment status & type constants
-│   │   ├── interfaces/            # TypeScript interfaces
-│   │   ├── dto/                   # Data transfer objects
-│   │   └── utils/                 # Tracking ID generation, etc
+│   │   ├── controllers/
+│   │   ├── services/              # Auto-assignment logic
+│   │   ├── repositories/
+│   │   ├── routes/
+│   │   ├── models/
+│   │   ├── validations/
+│   │   ├── constants/
+│   │   ├── interfaces/
+│   │   ├── dto/
+│   │   └── utils/
 │   │
 │   ├── deliveryAgent/             # Delivery agent management
-│   │   ├── controllers/           # Agent endpoints
-│   │   ├── services/              # Agent business logic
-│   │   ├── repositories/          # Agent data access
-│   │   ├── routes/                # API routes
-│   │   ├── models/                # Agent database model
-│   │   ├── validations/           # Request validation
-│   │   └── dto/                   # Data transfer objects
-│   │
 │   ├── deliverySlot/              # Delivery slot scheduling
-│   │   ├── controllers/           # Slot endpoints
-│   │   ├── services/              # Slot scheduling logic
-│   │   ├── repositories/          # Slot data access
-│   │   ├── routes/                # API routes
-│   │   └── models/                # Slot database model
-│   │
 │   ├── payment/                   # Payment processing
-│   │   ├── controllers/           # Payment endpoints & webhooks
-│   │   ├── services/              # Razorpay integration
-│   │   ├── repositories/          # Payment data access
-│   │   ├── routes/                # API routes
-│   │   └── models/                # Payment database model
-│   │
 │   ├── shipmentTimeline/          # Event tracking
-│   │   ├── controllers/           # Timeline endpoints
-│   │   ├── services/              # Timeline business logic
-│   │   ├── repositories/          # Timeline data access
-│   │   ├── routes/                # API routes
-│   │   └── models/                # Timeline database model
-│   │
 │   ├── complaints/                # Complaint management
-│   │   ├── controllers/           # Complaint endpoints
-│   │   ├── services/              # Complaint processing logic
-│   │   ├── repositories/          # Complaint data access
-│   │   ├── routes/                # API routes
-│   │   ├── models/                # Complaint database model
-│   │   ├── validations/           # Request validation
-│   │   ├── constants/             # Complaint status & subjects
-│   │   └── dto/                   # Data transfer objects
-│   │
 │   ├── chat/                      # Real-time messaging
-│   │   ├── controllers/           # Chat endpoints
-│   │   ├── services/              # Chat message logic
-│   │   ├── repositories/          # Chat data access
-│   │   ├── routes/                # API routes
-│   │   ├── models/                # Chat database model
-│   │   └── validations/           # Request validation
-│   │
 │   ├── notifications/             # Notification system
-│   │   ├── controllers/           # Notification endpoints
-│   │   ├── services/              # Notification dispatch (Twilio)
-│   │   ├── repositories/          # Notification data access
-│   │   ├── routes/                # API routes
-│   │   ├── models/                # Notification database model
-│   │   ├── constants/             # Notification types
-│   │   └── dto/                   # Data transfer objects
-│   │
 │   ├── dashboard/                 # Analytics dashboard
-│   │   ├── controllers/           # Dashboard endpoints
-│   │   ├── services/              # Analytics logic
-│   │   ├── repositories/          # Data aggregation
-│   │   └── routes/                # API routes
-│   │
 │   └── pricing/                   # Dynamic pricing engine
-│       ├── controllers/           # Pricing endpoints
-│       ├── services/              # Pricing calculation logic
-│       ├── routes/                # API routes
-│       └── utils/                 # Pricing utilities
 │
-├── shared/                        # Shared utilities & middlewares
-│   ├── handlers/                  # Response & async error handlers
-│   ├── middlewares/               # Global middlewares (CORS, error handling)
-│   └── utils/                     # Shared utilities (Razorpay, pricing, etc)
+├── shared/                        # Shared utilities
+│   ├── handlers/                  # Response & error handlers
+│   ├── middlewares/               # Global middlewares
+│   └── utils/                     # Shared utilities
 │
-└── types/                         # Custom TypeScript type definitions
-    └── express/                   # Express augmentation types
+└── types/                         # Custom TypeScript types
+    └── express/                   # Express augmentation
 ```
-
-### Module Architecture Pattern
-
-Each module follows the standard layered architecture:
-- **Controllers**: Handle HTTP requests/responses
-- **Services**: Core business logic
-- **Repositories**: Data access abstraction
-- **Models**: Sequelize ORM models
-- **Routes**: Express route definitions
-- **Validations**: Zod request body schemas
-- **Interfaces/DTOs**: TypeScript type safety
 
 ## API Endpoints
 
@@ -552,6 +451,8 @@ http://localhost:3000/api/v1
 - `POST /auth/login` - User login with credentials
 - `POST /auth/refresh` - Refresh expired access token
 - `POST /auth/logout` - User logout
+- `PUT /auth/profile` - Update user profile (name, phone number)
+- `PUT /auth/change-password` - Change user password
 
 ### 📦 Shipment Routes (`/shipments`)
 - `GET /shipments` - List all shipments (with filters)
@@ -579,16 +480,16 @@ http://localhost:3000/api/v1
 ### 💳 Payment Routes (`/payments`)
 - `POST /payments` - Initiate payment
 - `GET /payments/:id` - Get payment details
-- `POST /payments/webhook/razorpay` - Razorpay webhook handler (for payment verification)
+- `POST /payments/webhook/razorpay` - Razorpay webhook handler
 
 ### 📊 Dashboard Routes (`/dashboard`)
 - `GET /dashboard/stats` - Get overall system statistics
-- `GET /dashboard/revenue` - Get revenue analytics (with granularity: daily/weekly/monthly)
+- `GET /dashboard/revenue` - Get revenue analytics
 - `GET /dashboard/shipments` - Get shipment statistics
 - `GET /dashboard/agents` - Get agent performance metrics
 
 ### 🚨 Complaint Routes (`/complaints`)
-- `GET /complaints` - List all complaints (with filters)
+- `GET /complaints` - List all complaints
 - `POST /complaints` - Create new complaint
 - `GET /complaints/:id` - Get complaint details
 - `PUT /complaints/:id` - Update complaint status
@@ -627,13 +528,14 @@ Handles user registration, login, token management, and role-based access contro
 - Session management
 - Role-based middleware
 - Token refresh mechanism
+- User profile management with phone number support
 
 **Key Files:**
-- `authController.ts` - Handles register/login/refresh/logout endpoints
+- `authController.ts` - Handles register/login/refresh/logout/profile endpoints
 - `authService.ts` - Authentication business logic
 - `authMiddleware.ts` - JWT token validation middleware
 - `roleMiddleware.ts` - Role-based access control
-- `userModel.ts` - User database model
+- `userModel.ts` - User database model with phoneNumber field
 - `sessionModel.ts` - JWT session tracking
 - `tokenutils.ts` - Token generation utilities
 
@@ -670,11 +572,6 @@ Manages delivery personnel profiles and performance tracking.
 - Performance metrics
 - Availability status
 
-**Key Files:**
-- `deliveryAgentController.ts` - Agent endpoints
-- `deliveryAgentService.ts` - Agent business logic
-- `deliveryAgentModel.ts` - Agent database model
-
 ### ⏰ Delivery Slot Module
 Intelligent scheduling of delivery time slots.
 
@@ -684,10 +581,6 @@ Intelligent scheduling of delivery time slots.
 - Time-window based scheduling
 - Slot availability checking
 
-**Key Files:**
-- `deliverySlotController.ts` - Slot endpoints
-- `deliverySlotModel.ts` - Slot database model
-
 ### 💳 Payment Module
 Razorpay integration for secure payment processing.
 
@@ -696,11 +589,7 @@ Razorpay integration for secure payment processing.
 - Webhook verification for payment status updates
 - Payment status tracking (Pending, Paid, Failed)
 - Transaction history
-
-**Key Files:**
-- `paymentController.ts` - Payment endpoints and webhooks
-- `paymentService.ts` - Razorpay integration logic
-- `paymentModel.ts` - Payment database model
+- Price breakdown with rupee conversion
 
 ### 📅 Shipment Timeline Module
 Tracks all events and milestones for each shipment.
@@ -711,11 +600,6 @@ Tracks all events and milestones for each shipment.
 - Status transition history
 - Milestone recording
 
-**Key Files:**
-- `shipmentTimelineController.ts` - Timeline endpoints
-- `shipmentTimelineService.ts` - Timeline logic
-- `shipmentTimeLineModel.ts` - Timeline database model
-
 ### 🚨 Complaint Module
 Customer complaint management and resolution tracking.
 
@@ -725,12 +609,6 @@ Customer complaint management and resolution tracking.
 - Status management (Open, Resolved, Closed)
 - Complaint history per shipment
 
-**Key Files:**
-- `complaintController.ts` - Complaint endpoints
-- `complaintService.ts` - Complaint logic
-- `complaintModel.ts` - Complaint database model
-- `complaintConstants.ts` - Status and subject definitions
-
 ### 💬 Chat Module
 Real-time messaging between customers and delivery agents.
 
@@ -738,11 +616,6 @@ Real-time messaging between customers and delivery agents.
 - Shipment-specific chat rooms (Socket.io)
 - Message persistence
 - Real-time synchronization
-
-**Key Files:**
-- `chatController.ts` - Chat endpoints
-- `chatService.ts` - Message logic
-- `chatModel.ts` - Message database model
 
 ### 🔔 Notifications Module
 Handles push notifications and alerts via Twilio.
@@ -753,11 +626,6 @@ Handles push notifications and alerts via Twilio.
 - Event-based notification triggers
 - Notification history
 
-**Key Files:**
-- `notificationController.ts` - Notification endpoints
-- `notificationService.ts` - Twilio integration
-- `notificationModel.ts` - Notification database model
-
 ### 📊 Dashboard Module
 Analytics and reporting for system overview.
 
@@ -767,11 +635,6 @@ Analytics and reporting for system overview.
 - Agent performance metrics
 - Custom date range filtering
 
-**Key Files:**
-- `dashboardController.ts` - Dashboard endpoints
-- `dashboardService.ts` - Analytics calculations
-- `dashboardRepository.ts` - Data aggregation queries
-
 ### 💰 Pricing Module
 Dynamic pricing engine for shipment costs.
 
@@ -779,11 +642,6 @@ Dynamic pricing engine for shipment costs.
 - Cost calculation based on shipment characteristics
 - Flexible pricing rates
 - Rate management
-
-**Key Files:**
-- `pricingController.ts` - Pricing endpoints
-- `pricingService.ts` - Pricing logic
-- `pricingUtil.ts` - Pricing utilities
 
 ## Authentication & Authorization
 
@@ -805,6 +663,7 @@ The system supports three distinct user roles with granular permissions:
    - File complaints
    - Payment initiation
    - View personal dashboard
+   - Update profile (name, phone number)
 
 3. **DELIVERY_AGENT**
    - View assigned shipments
@@ -812,6 +671,7 @@ The system supports three distinct user roles with granular permissions:
    - Verify delivery with OTP
    - Participate in shipment chat
    - View personal performance metrics
+   - Update profile (name, phone number)
 
 ### JWT Token Management
 
@@ -877,59 +737,39 @@ Authorization: Bearer <access_token>
 
 | Variable | Description | Type | Required | Example |
 |----------|-------------|------|----------|---------|
-| **SERVER** |
 | PORT | Server listening port | Number | Yes | 3000 |
-| NODE_ENV | Environment (development/production) | String | Yes | development |
-| **DATABASE** |
+| NODE_ENV | Environment | String | Yes | development |
 | DB_HOST | MySQL host address | String | Yes | localhost |
 | DB_PORT | MySQL port | Number | Yes | 3306 |
 | DB_NAME | Database name | String | Yes | logistics_db |
 | DB_USER | Database username | String | Yes | root |
-| DB_PASSWORD | Database password | String | Yes | your_password |
-| **JWT & AUTHENTICATION** |
-| JWT_SECRET | Secret for JWT signing | String | Yes | min 32 chars, use `crypto.randomBytes(32).toString('hex')` |
+| DB_PASSWORD | Database password | String | Yes | password |
+| JWT_SECRET | Secret for JWT signing | String | Yes | min 32 chars |
 | ACCESS_TOKEN_SECRET | Access token secret | String | Yes | min 32 chars |
 | REFRESH_TOKEN_SECRET | Refresh token secret | String | Yes | min 32 chars |
-| ACCESS_TOKEN_EXPIRES_IN | Access token expiry time | String | Yes | 15m |
-| REFRESH_TOKEN_EXPIRES_IN | Refresh token expiry time | String | Yes | 7d |
-| **PAYMENT GATEWAY** |
-| RAZORPAY_KEY_ID | Razorpay public key | String | Yes | (from Razorpay dashboard) |
-| RAZORPAY_KEY_SECRET | Razorpay secret key | String | Yes | (from Razorpay dashboard) |
-| RAZORPAY_WEBHOOK_SECRET | Razorpay webhook secret | String | Yes | (from webhook settings) |
-| **NOTIFICATIONS** |
-| TWILIO_ACCOUNT_SID | Twilio account SID | String | No | (from Twilio console) |
-| TWILIO_AUTH_TOKEN | Twilio auth token | String | No | (from Twilio console) |
+| ACCESS_TOKEN_EXPIRES_IN | Access token expiry | String | Yes | 15m |
+| REFRESH_TOKEN_EXPIRES_IN | Refresh token expiry | String | Yes | 7d |
+| RAZORPAY_KEY_ID | Razorpay public key | String | Yes | (from dashboard) |
+| RAZORPAY_KEY_SECRET | Razorpay secret key | String | Yes | (from dashboard) |
+| RAZORPAY_WEBHOOK_SECRET | Webhook secret | String | Yes | (from settings) |
+| TWILIO_ACCOUNT_SID | Twilio account SID | String | No | (from console) |
+| TWILIO_AUTH_TOKEN | Twilio auth token | String | No | (from console) |
 | TWILIO_PHONE_NUMBER | Twilio phone number | String | No | +1234567890 |
-| **FRONTEND INTEGRATION** |
 | FRONTEND_URL | Frontend application URL | String | No | http://localhost:5173 |
-
-### Secret Generation Tips
-
-```bash
-# Generate secrets on Unix/Linux/macOS
-openssl rand -base64 32
-
-# Generate secrets on Windows (PowerShell)
-[Convert]::ToBase64String((1..32|ForEach-Object{Get-Random -Maximum 256}))
-
-# Generate using Node.js (cross-platform)
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-```
 
 ## Troubleshooting
 
 ### 🔴 Port Already in Use
 
 ```bash
-# Option 1: Change PORT in .env
+# Change PORT in .env
 PORT=3001 npm run dev
 
-# Option 2: On macOS/Linux, find and kill process using port 3000
+# On macOS/Linux, find and kill process
 lsof -ti:3000 | xargs kill -9
 
-# Option 3: On Windows, find process by port
+# On Windows
 netstat -ano | findstr :3000
-# Then kill it by PID
 taskkill /PID <PID> /F
 ```
 
@@ -951,7 +791,7 @@ mysql -u root -p -e "CREATE DATABASE logistics_db;"
 
 **Common Causes:**
 - MySQL service not running
-- Incorrect DB_HOST (use 127.0.0.1 instead of localhost if issues persist)
+- Incorrect DB_HOST (use 127.0.0.1 instead of localhost)
 - Wrong DB_PASSWORD
 - Database doesn't exist
 
@@ -969,7 +809,6 @@ grep JWT_SECRET .env
 - Ensure `.env` file exists in root directory
 - Copy from `.env.example` if needed
 - Restart server after updating `.env`
-- Check for typos in variable names
 
 ### 🔴 Module Not Found Errors
 
@@ -981,7 +820,7 @@ npm install
 # Check TypeScript compilation
 npx tsc --noEmit
 
-# Clear dist folder and rebuild
+# Clear dist and rebuild
 rm -rf dist
 npm run build
 ```
@@ -992,10 +831,7 @@ npm run build
 # Check migration status
 npx sequelize-cli db:migrate:status
 
-# View pending migrations
-npx sequelize-cli db:migrate:status | grep "down"
-
-# Reset and re-run migrations
+# Reset migrations
 npx sequelize-cli db:migrate:undo:all
 npx sequelize-cli db:migrate
 
@@ -1003,62 +839,21 @@ npx sequelize-cli db:migrate
 npx sequelize-cli db:seed:all
 ```
 
-**Common Issues:**
-- Migration files out of sync
-- Database already migrated, cannot re-apply
-- Foreign key constraints preventing undo
-
 ### 🔴 Razorpay Integration Not Working
-
-```
-RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET errors
-```
 
 **Solutions:**
 - Obtain keys from Razorpay dashboard (Settings → API Keys)
 - Ensure you're in test mode for development
-- Verify webhook secret matches in Razorpay settings
+- Verify webhook secret matches Razorpay settings
 - Check webhook URL is publicly accessible
 
 ### 🔴 Socket.io Connection Issues
 
-```
-Client cannot connect to real-time chat
-```
-
 **Solutions:**
-- Verify frontend URL in CORS_ALLOWED_ORIGINS
+- Verify frontend URL in CORS configuration
 - Ensure Socket.io server is initialized in server.ts
 - Check browser console for CORS errors
 - Verify WebSocket is not blocked by firewall
-
-### 🔴 TypeScript Compilation Errors
-
-```bash
-# Check TypeScript version
-npx tsc --version
-
-# Validate tsconfig.json
-npx tsc --noEmit
-
-# Recompile from scratch
-rm -rf dist node_modules
-npm install
-npm run build
-```
-
-### 🔴 JWT Token Issues
-
-```
-"Invalid token" or "Token expired" errors
-```
-
-**Solutions:**
-- Verify JWT_SECRET is set in .env
-- Check token expiry times in .env
-- Ensure refresh token is valid
-- Clear browser cookies and try again
-- Regenerate secrets if compromised
 
 ## Development Tips
 
@@ -1069,8 +864,7 @@ npm run build
 
 ### 🔒 Type Safety
 - Full TypeScript support with strict mode enabled
-- `tsconfig.json` configured for strict type checking
-- Run `npx tsc --noEmit` to check for type errors without compilation
+- Run `npx tsc --noEmit` to check for type errors
 
 ### 🛡️ Error Handling
 - `asyncHandler` wrapper catches async errors automatically
@@ -1082,11 +876,6 @@ npm run build
 - Validation errors return 400 with detailed field information
 - Type-safe DTOs for request/response payloads
 
-### 📝 Logging
-- Database query logging enabled in development mode
-- Console logs show database operations
-- Production deployments have logging disabled for performance
-
 ### 🔍 Debugging
 ```bash
 # Enable verbose logging
@@ -1094,35 +883,6 @@ DEBUG=* npm run dev
 
 # Debug specific module
 DEBUG=sequelize npm run dev
-
-# TypeScript source maps (if configured)
-npx ts-node --inspect src/server.ts
-```
-
-### 📊 Database Query Optimization
-```bash
-# Check migration files
-ls -la src/database/migrations/
-
-# Review Sequelize model definitions
-ls -la src/modules/*/models/
-
-# Check for N+1 queries
-# Look for eager loading in services
-```
-
-### 🧪 Testing Endpoints
-```bash
-# Test auth endpoints
-curl -X POST http://localhost:3000/api/v1/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"admin@example.com","password":"password"}'
-
-# Test with token
-curl -H "Authorization: Bearer YOUR_TOKEN" \
-  http://localhost:3000/api/v1/shipments
-
-# Use Postman/Thunder Client for complex requests
 ```
 
 ## Security Considerations
@@ -1130,24 +890,22 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
 ### 🔐 Authentication & Passwords
 - Passwords hashed with **bcryptjs** (8 salt rounds)
 - Never log or expose passwords
-- Enforce strong password policies at registration
-- Implement rate limiting on login attempts
+- Enforce strong password policies
 
 ### 🔑 JWT Token Security
-- Access tokens: Short-lived (15 minutes default)
-- Refresh tokens: Long-lived (7 days default), stored in HTTP-only cookies
-- Tokens signed with strong secrets (min 32 characters)
+- Access tokens: Short-lived (15 minutes)
+- Refresh tokens: Long-lived (7 days), HTTP-only cookies
+- Tokens signed with strong secrets (min 32 chars)
 - Implement token rotation on refresh
 
 ### 🍪 Cookie Configuration
 - HTTP-only cookies prevent XSS attacks
 - Secure flag for HTTPS only (production)
 - SameSite policy prevents CSRF attacks
-- Automatic cookie cleanup on logout
 
 ### 🔗 API Security
 - CORS configured with specific allowed origins
-- Input validation on all endpoints (Zod schemas)
+- Input validation on all endpoints
 - SQL injection prevention via Sequelize ORM
 - XSS protection via sanitized outputs
 
@@ -1155,64 +913,34 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
 - Razorpay webhook signature verification
 - Payment status verified server-side
 - PCI compliance via Razorpay handling
-- Webhook secrets never exposed to client
 
 ### 📨 Data Protection
-- Sensitive data encrypted in database where applicable
 - Environment variables for all secrets
 - No sensitive data in logs
 - Database backups with restricted access
 
-### 🔄 Database Security
-- SQL injection prevention via parameterized queries
-- Foreign key constraints for data integrity
-- Indexes on frequently queried columns
-- Regular backup procedures
-
 ## Performance Optimization
 
 ### ⚡ Database Optimization
-- **Connection Pooling**: Sequelize configured with optimized pool
-  ```javascript
-  pool: {
-    min: 5,
-    max: 10,
-    idle: 30000,
-    acquire: 30000
-  }
-  ```
-- **Query Logging**: Disabled in production for better performance
-- **Lazy Loading**: Models use associations for efficient queries
-- **Eager Loading**: Services load related data to prevent N+1 queries
+- **Connection Pooling**: Optimized Sequelize configuration
+- **Query Logging**: Disabled in production
+- **Eager Loading**: Services load related data efficiently
+- **Indexes**: On frequently queried columns
 
 ### 🚀 Request Processing
 - **Async/Await**: All I/O operations non-blocking
 - **Middleware Ordering**: Most efficient middlewares execute first
-- **Request Size Limits**: JSON and URL-encoded body limits set
-- **Compression**: gzip compression ready (configure as needed)
-
-### 🔍 Cron Job Optimization
-- **Delay Detection**: Runs on interval to check shipment delays
-- **Scheduled Tasks**: Non-blocking background execution
-- **Error Recovery**: Failed jobs logged without blocking main process
-
-### 📦 Code Optimization
-- **Layered Architecture**: Clear separation of concerns
-- **Service Layer**: Business logic centralized
-- **Repository Pattern**: Data access abstraction
-- **Minimal Middleware**: Only necessary middlewares per route
+- **Request Size Limits**: JSON and URL-encoded body limits
 
 ### 💾 Memory Management
 - **Connection Pooling**: Reuse database connections
 - **Garbage Collection**: Node.js automatic GC
-- **Stream Processing**: Large data sets handled incrementally
-- **Cache Headers**: HTTP caching for static responses
+- **Stream Processing**: Large data handled incrementally
 
 ## Support & Resources
 
 ### 📚 Documentation
 - [README.md](./README.md) - Full documentation (this file)
-- [SETUP_GUIDE.md](./SETUP_GUIDE.md) - Quick setup instructions
 - [Sequelize Documentation](https://sequelize.org/)
 - [Express.js Guide](https://expressjs.com/)
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/)
@@ -1226,17 +954,9 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
 ### ❓ Troubleshooting Steps
 1. Check [Troubleshooting](#troubleshooting) section above
 2. Review migration and seeder files
-3. Verify environment configuration with `.env.example`
+3. Verify environment configuration
 4. Check server logs on startup
-5. Review module-specific documentation
-6. Check git history for recent changes
-
-### 🆘 Getting Help
-1. Review error messages carefully
-2. Search GitHub issues
-3. Check Stack Overflow for similar issues
-4. Review Sequelize/Express documentation
-5. Enable debug logging: `DEBUG=* npm run dev`
+5. Check git history for recent changes
 
 ---
 
@@ -1244,25 +964,6 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
 **Version**: 1.0.0
 **Maintained By**: Copilot
 **License**: ISC
-
----
-
-## Quick Links
-
-- 📖 [Documentation](./README.md)
-- 🚀 [Quick Start Guide](./SETUP_GUIDE.md)
-- 📋 [API Endpoints](#api-endpoints)
-- 🏗️ [Project Structure](#project-structure)
-- 🔧 [Troubleshooting](#troubleshooting)
-
-## Repository Information
-
-- **Name**: logisticsAndDeliveryManagementSystem
-- **Type**: Backend REST API
-- **Status**: Active Development
-- **Node.js**: v18+
-- **MySQL**: v8+
-- **TypeScript**: v6+
 
 ---
 
