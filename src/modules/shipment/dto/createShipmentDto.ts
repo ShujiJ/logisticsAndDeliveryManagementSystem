@@ -25,7 +25,6 @@ export interface CreateShipmentDto {
   pickupPincode: string;
   receiverName: string;
   receiverPhone: string;
-  receiverEmail: string;
   deliveryAddress: string;
   deliveryCity: string;
   deliveryPincode: string;

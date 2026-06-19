@@ -12,7 +12,6 @@ export const createShipmentValidation = z.object({
   pickupPincode: z.string().min(4),
   receiverName: z.string().min(2),
   receiverPhone: z.string().min(10),
-  receiverEmail: z.string().email(),
   deliveryAddress: z.string().min(5),
   deliveryCity: z.string().min(2),
   deliveryPincode: z.string().min(4),

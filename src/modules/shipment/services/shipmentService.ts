@@ -15,7 +15,6 @@ import deliveryAgentRepository from "../../deliveryAgent/repositories/deliveryAg
 import ShipmentTimeline from "../../shipmentTimeline/models/shipmentTimeLineModel";
 import Notification from "../../notifications/models/notificationModel";
 import { NOTIFICATION_TYPE } from "../../notifications/constants/notificationConstants";
-import { sendOtpEmail } from "../../../shared/utils/emailUtil";
 
 class ShipmentService {
   // CREATE SHIPMENT
@@ -455,9 +454,6 @@ class ShipmentService {
     const otpExpiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
 
     await shipmentRepository.saveOtp(shipmentId, hashedOtp, otpExpiresAt);
-
-    // Send OTP directly to receiver's email via Resend
-    await sendOtpEmail(shipment.receiverEmail, shipment.trackingId, otp);
 
     await Notification.create({
       userId: shipment.customerId,

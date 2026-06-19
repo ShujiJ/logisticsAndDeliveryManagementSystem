@@ -40,7 +40,6 @@ class Shipment extends Model<
   // Receiver details
   declare receiverName: string;
   declare receiverPhone: string;
-  declare receiverEmail: string;
 
   // Delivery details
   declare deliveryAddress: string;
@@ -146,11 +145,6 @@ Shipment.init(
     },
 
     receiverPhone: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-
-    receiverEmail: {
       type: DataTypes.STRING,
       allowNull: false,
     },
