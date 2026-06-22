@@ -10,6 +10,7 @@ import {
 } from "../constants/shipmentConstants";
 import ApiError from "../../../shared/utils/apiError";
 import { calculateShippingAmount } from "../../../shared/utils/pricingUtil";
+import { sendOtpEmail } from "../../../shared/utils/emailUtil";
 import deliverySlotRepository from "../../deliverySlot/repositories/deliverySlotRepository";
 import deliveryAgentRepository from "../../deliveryAgent/repositories/deliveryAgentRepository";
 import ShipmentTimeline from "../../shipmentTimeline/models/shipmentTimeLineModel";
@@ -458,10 +459,14 @@ class ShipmentService {
     await Notification.create({
       userId: shipment.customerId,
       shipmentId,
-      title: "Delivery OTP",
-      message: `Your delivery OTP for shipment ${shipment.trackingId} is ${otp}. Valid for 30 minutes.`,
+      title: "Delivery OTP Sent",
+      message: `An OTP has been generated for delivery of shipment ${shipment.trackingId}. It has been sent to the receiver.`,
       type: NOTIFICATION_TYPE.DELIVERY_OTP,
     });
+
+    if (shipment.receiverEmail) {
+      await sendOtpEmail(shipment.receiverEmail, otp, shipment.trackingId);
+    }
 
     return { shipmentId, otpExpiresAt };
   };

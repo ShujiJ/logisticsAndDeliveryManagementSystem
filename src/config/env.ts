@@ -17,6 +17,7 @@ export const env = {
   RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID as string,
   RAZORPAY_KEY_SECRET: process.env.RAZORPAY_KEY_SECRET as string,
   RAZORPAY_WEBHOOK_SECRET: process.env.RAZORPAY_WEBHOOK_SECRET as string,
+  RESEND_API_KEY: process.env.RESEND_API_KEY as string,
 };
 
 if (!env.JWT_SECRET) {

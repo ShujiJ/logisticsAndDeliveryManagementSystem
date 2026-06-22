@@ -31,6 +31,7 @@ class Shipment extends Model<
   // Sender details
   declare senderName: string;
   declare senderPhone: string;
+  declare senderEmail: CreationOptional<string | null>;
 
   // Pickup address details
   declare pickupAddress: string;
@@ -40,6 +41,7 @@ class Shipment extends Model<
   // Receiver details
   declare receiverName: string;
   declare receiverPhone: string;
+  declare receiverEmail: CreationOptional<string | null>;
 
   // Delivery details
   declare deliveryAddress: string;
@@ -124,6 +126,11 @@ Shipment.init(
       allowNull: false,
     },
 
+    senderEmail: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+
     pickupAddress: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -147,6 +154,11 @@ Shipment.init(
     receiverPhone: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+
+    receiverEmail: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
 
     deliveryAddress: {

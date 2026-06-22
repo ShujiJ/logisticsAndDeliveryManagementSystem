@@ -20,11 +20,13 @@ export interface CreateShipmentDto {
   description?: string;
   senderName: string;
   senderPhone: string;
+  senderEmail?: string;
   pickupAddress: string;
   pickupCity: string;
   pickupPincode: string;
   receiverName: string;
   receiverPhone: string;
+  receiverEmail?: string;
   deliveryAddress: string;
   deliveryCity: string;
   deliveryPincode: string;
