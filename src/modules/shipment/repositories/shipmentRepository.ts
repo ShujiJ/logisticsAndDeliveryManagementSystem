@@ -7,7 +7,7 @@ class ShipmentRepository {
     return await Shipment.create(payload);
   }
 
-  // added joins (DeliveryAgent, User, DeliverySlot) + findAndCountAll for pagination
+//getShipmentById
   async findShipmentsByCustomerId(
     customerId: number,
     limit: number,

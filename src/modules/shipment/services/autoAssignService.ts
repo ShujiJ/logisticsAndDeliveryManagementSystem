@@ -14,7 +14,7 @@ const MAX_AGENT_RETRIES = 5;
 class AutoAssignService {
   autoAssignAgentAndSlot = async (
     shipmentId: number,
-    systemUserId: number, // customer's userId — used as timeline actor
+    systemUserId: number, 
   ): Promise<void> => {
     try {
       const shipment = await Shipment.findOne({ where: { id: shipmentId } });
@@ -83,6 +83,16 @@ class AutoAssignService {
       }
 
       const { chosenAgent, date, startTime, endTime } = slotResult;
+
+      // Re-validate agent before assignment (race condition check)
+      const updatedAgent = await DeliveryAgent.findByPk(chosenAgent.id);
+
+      if (!updatedAgent || !updatedAgent.isActive || updatedAgent.availabilityStatus !== "AVAILABLE" || updatedAgent.shipmentCount >= MAX_AGENT_LOAD) {
+        console.warn(
+          `[AutoAssign] Agent ${chosenAgent.id} is no longer valid for shipment ${shipmentId}. isActive: ${updatedAgent?.isActive}, status: ${updatedAgent?.availabilityStatus}`,
+        );
+        return;
+      }
 
       //  Create the delivery slot (status: ASSIGNED immediately
       const slot = await DeliverySlot.create({

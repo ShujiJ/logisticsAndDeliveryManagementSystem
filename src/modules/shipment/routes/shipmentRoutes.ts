@@ -11,11 +11,6 @@ import roleMiddleware from "../../auth/middlewares/roleMiddleware";
 import shipmentTimelineRoutes from "../../shipmentTimeline/routes/shipmentTimelineRoutes";
 const router = express.Router();
 
-// router.use((req, res, next) => {
-//   console.log("SHIPMENT ROUTER HIT:", req.method, req.path);
-//   next();
-// });
-
 // CREATE SHIPMENT — customer or admin
 router.post(
   "/",
@@ -66,8 +61,6 @@ router.patch(
   shipmentController.updateShipment,
 );
 
-// Auto-assignment is now triggered automatically inside paymentService.payService()
-//  GET /api/v1/shipments/:id/timeline — full status history for a shipment
 router.use("/:id/timeline", shipmentTimelineRoutes);
 
 router.patch(
@@ -79,20 +72,20 @@ router.patch(
 );
 
 // SEND DELIVERY OTP — assigned agent or admin
-// router.post(
-//   "/:id/sendOtp",
-//   authMiddleware,
-//   roleMiddleware(Roles.DELIVERY_AGENT, Roles.ADMIN),
-//   shipmentController.sendOtp,
-// );
+router.post(
+  "/:id/sendOtp",
+  authMiddleware,
+  roleMiddleware(Roles.DELIVERY_AGENT, Roles.ADMIN),
+  shipmentController.sendOtp,
+);
 
-// // VERIFY DELIVERY OTP — assigned agent only
-// router.post(
-//   "/:id/verifyOtp",
-//   authMiddleware,
-//   roleMiddleware(Roles.DELIVERY_AGENT),
-//   validate(verifyOtpValidation),
-//   shipmentController.verifyOtp,
-// );
+// VERIFY DELIVERY OTP — assigned agent only
+router.post(
+  "/:id/verifyOtp",
+  authMiddleware,
+  roleMiddleware(Roles.DELIVERY_AGENT),
+  validate(verifyOtpValidation),
+  shipmentController.verifyOtp,
+);
 
 export default router;

@@ -423,11 +423,7 @@ class ShipmentService {
   };
 
   // AGENT / ADMIN — SEND DELIVERY OTP TO CUSTOMER
-  sendOtpService = async (
-    shipmentId: number,
-    userId: number,
-    role: string,
-  ) => {
+  sendOtpService = async (shipmentId: number, userId: number, role: string) => {
     const shipment = await shipmentRepository.findShipmentById(shipmentId);
 
     if (!shipment) throw new ApiError(404, "Shipment not found");
