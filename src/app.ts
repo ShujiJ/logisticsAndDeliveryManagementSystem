@@ -22,6 +22,7 @@ const allowedOrigins = [
   "https://ldms-lac.vercel.app",
   "http://localhost:3000",
   "http://localhost:5173",
+  "http://192.168.0.21:5173"
 ];
 
 app.use(

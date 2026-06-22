@@ -1,10 +1,8 @@
 import { Router } from "express";
-import { Roles } from "../constants/roles";
 import authMiddleware from "../middlewares/authMiddleware";
 import authController from "../controllers/authController";
 import validate from "../../../shared/middlewares/validateMiddleware";
 import { registerSchema, loginSchema, updateProfileSchema, changePasswordSchema } from "../validations/authValidation";
-import roleMiddleware from "../middlewares/roleMiddleware";
 
 const router = Router();
 
