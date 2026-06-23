@@ -50,7 +50,10 @@ class DeliveryAgentService {
   getAllDeliveryAgentsService = async (page: number, limit: number) => {
     const offset = (page - 1) * limit;
     const { rows, count } =
-      await deliveryAgentRepository.getAllDeliveryAgentsRepository(limit, offset);
+      await deliveryAgentRepository.getAllDeliveryAgentsRepository(
+        limit,
+        offset,
+      );
 
     return {
       agents: rows.map((agent: any) => {
@@ -75,7 +78,7 @@ class DeliveryAgentService {
   };
 
   //  Agent toggles their OWN availability from their dashboard
-  
+
   toggleMyAvailabilityService = async (userId: number) => {
     // Resolve userId to delivery_agents row
     const agent = await deliveryAgentRepository.findAgentByUserId(userId);
@@ -100,7 +103,10 @@ class DeliveryAgentService {
     if (!agent) throw new ApiError(404, "Delivery agent not found");
 
     const newStatus = !agent.isActive;
-    await deliveryAgentRepository.toggleAgentStatusRepository(agentId, newStatus);
+    await deliveryAgentRepository.toggleAgentStatusRepository(
+      agentId,
+      newStatus,
+    );
 
     return { id: agentId, isActive: newStatus };
   };
@@ -112,7 +118,7 @@ class DeliveryAgentService {
     newAgentId: number,
     adminUserId: number,
   ) => {
-    // Step 1: Validate shipment 
+    // Step 1: Validate shipment
     const shipment = await Shipment.findOne({ where: { id: shipmentId } });
     if (!shipment) throw new ApiError(404, "Shipment not found");
 
@@ -124,8 +130,9 @@ class DeliveryAgentService {
       );
     }
 
-    //  Validate new agent 
-    const newAgent = await deliveryAgentRepository.findDeliveryAgentById(newAgentId);
+    //  Validate new agent
+    const newAgent =
+      await deliveryAgentRepository.findDeliveryAgentById(newAgentId);
     if (!newAgent) throw new ApiError(404, "New delivery agent not found");
     if (!newAgent.isActive || newAgent.availabilityStatus !== "AVAILABLE") {
       throw new ApiError(400, "Selected agent is not available for assignment");
@@ -134,7 +141,10 @@ class DeliveryAgentService {
     // Prevent reassigning to the same agent already on the shipment
     const previousAgentId = shipment.deliveryAgentId;
     if (previousAgentId === newAgentId) {
-      throw new ApiError(400, "New agent is already assigned to this shipment");
+      throw new ApiError(
+        400,
+        "Cannot reassign to the same agent. This agent is already assigned to this shipment",
+      );
     }
 
     // Step 2: Mark old slot as MISSED
@@ -145,21 +155,25 @@ class DeliveryAgentService {
       );
     }
 
-    // Step 3: Clean up old agent 
+    // Step 3: Clean up old agent
     if (previousAgentId) {
       await deliveryAgentRepository.decrementShipmentCount(previousAgentId);
 
       // Restore availability if they were blocked due to max load
-      const oldAgent = await deliveryAgentRepository.findDeliveryAgentById(previousAgentId);
+      const oldAgent =
+        await deliveryAgentRepository.findDeliveryAgentById(previousAgentId);
       if (oldAgent && oldAgent.availabilityStatus === "UNAVAILABLE") {
         const refreshed = await DeliveryAgent.findByPk(previousAgentId);
         if (refreshed && refreshed.shipmentCount < 8) {
-          await deliveryAgentRepository.updateAvailabilityStatus(previousAgentId, "AVAILABLE");
+          await deliveryAgentRepository.updateAvailabilityStatus(
+            previousAgentId,
+            "AVAILABLE",
+          );
         }
       }
     }
 
-    //  Step 4: Generate a new slot for the new agent 
+    //  Step 4: Generate a new slot for the new agent
     const slotTimes = await findAvailableSlotForAgent(newAgent);
     if (!slotTimes) {
       throw new ApiError(
@@ -186,14 +200,17 @@ class DeliveryAgentService {
       { where: { id: shipmentId } },
     );
 
-    //  Step 6: Update new agent load and availability 
+    //  Step 6: Update new agent load and availability
     await deliveryAgentRepository.incrementShipmentCount(newAgentId);
     const refreshedNew = await DeliveryAgent.findByPk(newAgentId);
     if (refreshedNew && refreshedNew.shipmentCount >= 8) {
-      await deliveryAgentRepository.updateAvailabilityStatus(newAgentId, "UNAVAILABLE");
+      await deliveryAgentRepository.updateAvailabilityStatus(
+        newAgentId,
+        "UNAVAILABLE",
+      );
     }
 
-    //  Step 7: Write timeline entry 
+    //  Step 7: Write timeline entry
     await ShipmentTimeline.create({
       shipmentId,
       updatedByUserId: adminUserId,
@@ -213,7 +230,8 @@ class DeliveryAgentService {
         endTime: slotTimes.endTime,
       },
       shipmentStatus: "ASSIGNED",
-      message: "Shipment successfully reassigned to new agent with a fresh delivery slot",
+      message:
+        "Shipment successfully reassigned to new agent with a fresh delivery slot",
     };
   };
 }

@@ -252,7 +252,7 @@ class DashboardService {
       assignedDeliveries: counts.assigned,
       activeShipments: counts.active,
       completedDeliveries: counts.completed,
-      pendingAssignments: counts.pending,
+      delayedDeliveries: counts.delayed,
       todaysSchedule,
       customerMessages,
     };

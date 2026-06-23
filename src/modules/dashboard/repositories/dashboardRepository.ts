@@ -222,13 +222,13 @@ class DashboardRepository {
   }
 
   async getAgentShipmentCounts(agentId: number) {
-    const [assigned, active, completed, pending] = await Promise.all([
+    const [assigned, active, completed, delayed] = await Promise.all([
       Shipment.count({ where: { deliveryAgentId: agentId } }),
       Shipment.count({
         where: {
           deliveryAgentId: agentId,
           shipmentStatus: {
-            [Op.in]: ["PICKED_UP", "IN_TRANSIT", "OUT_FOR_DELIVERY"],
+            [Op.in]: ["ASSIGNED", "CONFIRMED", "OUT_FOR_PICKUP", "PICKED_UP", "IN_TRANSIT", "OUT_FOR_DELIVERY"],
           },
         },
       }),
@@ -241,11 +241,11 @@ class DashboardRepository {
       Shipment.count({
         where: {
           deliveryAgentId: agentId,
-          shipmentStatus: { [Op.in]: ["ASSIGNED", "OUT_FOR_PICKUP"] },
+          shipmentStatus: "DELAYED",
         },
       }),
     ]);
-    return { assigned, active, completed, pending };
+    return { assigned, active, completed, delayed };
   }
 
   async getAgentTodaysSchedule(agentId: number) {
