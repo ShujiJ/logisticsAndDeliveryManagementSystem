@@ -82,6 +82,13 @@ class PaymentRepository {
     );
   };
 
+  markAsRefunded = async (paymentId: number) => {
+    return await Payment.update(
+      { paymentStatus: "REFUNDED" },
+      { where: { id: paymentId } },
+    );
+  };
+
   //  Delete payment record (used when customer restarts payment)
 deletePayment = async (paymentId: number) => {
 return await Payment.destroy({

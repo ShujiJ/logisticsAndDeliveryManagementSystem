@@ -108,6 +108,18 @@ class RazorpayUtil {
     }
   };
 
+  refundPayment = async (razorpayPaymentId: string, amountInRupees: number) => {
+    try {
+      const refund = await razorpayInstance.payments.refund(razorpayPaymentId, {
+        amount: Math.round(amountInRupees * 100), // convert rupees to paise
+      });
+      return refund;
+    } catch (error) {
+      console.error("Error processing Razorpay refund:", error);
+      throw error;
+    }
+  };
+
   capturePayment = async (paymentId: string, amount: number) => {
     try {
       // Amount must be in paise (multiply by 100)
