@@ -14,7 +14,7 @@ export interface RegisterUserInput {
   name: string;
   email: string;
   password: string;
-  // phoneNumber: string;
+  phoneNumber?: string;
 }
 
 export interface RegisterDeliveryAgentInput {

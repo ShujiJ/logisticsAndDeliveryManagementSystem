@@ -24,7 +24,7 @@ class AuthService {
       name: data.name,
       email: data.email,
       password: hashedPassword,
-
+      phoneNumber: data.phoneNumber,
       role: "customer",
     });
 
@@ -32,6 +32,7 @@ class AuthService {
       id: newUser.id,
       name: newUser.name,
       email: newUser.email,
+      phoneNumber: newUser.phoneNumber,
       role: newUser.role,
     };
   }

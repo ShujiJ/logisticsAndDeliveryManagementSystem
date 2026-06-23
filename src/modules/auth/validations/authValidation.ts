@@ -4,7 +4,7 @@ export const registerSchema = z.object({
   name: z.string().min(3),
   email: z.string().email(),
   password: z.string().min(6),
-  // phoneNumber: z.string().min(10),
+  phoneNumber: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits").optional(),
 });
 
 export const loginSchema = z.object({
