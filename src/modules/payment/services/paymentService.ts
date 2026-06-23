@@ -41,7 +41,7 @@ class PaymentService {
       if (existingPayment.paymentStatus === "PENDING" && existingPayment.razorpayOrderId) {
         return {
           orderId: existingPayment.razorpayOrderId,
-          amount: existingPayment.amount, // rupees
+          amount: shipment.amount, // rupees
           currency: "INR",
           keyId: env.RAZORPAY_KEY_ID,
           shipmentId,
