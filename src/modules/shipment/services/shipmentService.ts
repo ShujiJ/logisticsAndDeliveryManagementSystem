@@ -17,6 +17,7 @@ import deliveryAgentRepository from "../../deliveryAgent/repositories/deliveryAg
 import ShipmentTimeline from "../../shipmentTimeline/models/shipmentTimeLineModel";
 import Notification from "../../notifications/models/notificationModel";
 import { NOTIFICATION_TYPE } from "../../notifications/constants/notificationConstants";
+import refundService from "../../payment/services/refundService";
 
 class ShipmentService {
   // CREATE SHIPMENT
@@ -541,6 +542,75 @@ class ShipmentService {
       shipmentId,
       shipmentStatus: SHIPMENT_STATUS.DELIVERED,
       deliveredAt,
+    };
+  };
+
+  cancelShipmentService = async (shipmentId: number, customerId: number) => {
+    const shipment = await shipmentRepository.findShipmentById(shipmentId);
+    if (!shipment) throw new ApiError(404, "Shipment not found");
+
+    if (shipment.customerId !== customerId) {
+      throw new ApiError(403, "You can only cancel your own shipments");
+    }
+
+    const nonCancellableStatuses = [
+      SHIPMENT_STATUS.PICKED_UP,
+      SHIPMENT_STATUS.IN_TRANSIT,
+      SHIPMENT_STATUS.OUT_FOR_DELIVERY,
+      SHIPMENT_STATUS.DELIVERED,
+      SHIPMENT_STATUS.COMPLETED,
+      SHIPMENT_STATUS.CANCELLED,
+    ];
+
+    if (nonCancellableStatuses.includes(shipment.shipmentStatus as any)) {
+      throw new ApiError(
+        400,
+        `Shipment cannot be cancelled once it is ${shipment.shipmentStatus}`,
+      );
+    }
+
+    if (shipment.deliverySlotId) {
+      await deliverySlotRepository.updateSlotStatus(
+        shipment.deliverySlotId,
+        "MISSED",
+      );
+    }
+
+    if (shipment.deliveryAgentId) {
+      await deliveryAgentRepository.decrementShipmentCount(
+        shipment.deliveryAgentId,
+      );
+    }
+
+    // refund — if customer already paid, trigger Razorpay refund
+    await refundService.refundPaymentService(shipmentId);
+
+    await shipmentRepository.updateShipmentStatus(
+      shipmentId,
+      SHIPMENT_STATUS.CANCELLED,
+      "Cancelled by customer",
+    );
+
+    await ShipmentTimeline.create({
+      shipmentId,
+      updatedByUserId: customerId,
+      fromStatus: shipment.shipmentStatus,
+      toStatus: SHIPMENT_STATUS.CANCELLED,
+      remarks: "Cancelled by customer",
+    });
+
+    await Notification.create({
+      userId: customerId,
+      shipmentId,
+      title: "Shipment Cancelled",
+      message: `Your shipment ${shipment.trackingId} has been cancelled`,
+      type: NOTIFICATION_TYPE.SHIPMENT_CANCELLED,
+    });
+
+    return {
+      shipmentId,
+      trackingId: shipment.trackingId,
+      shipmentStatus: SHIPMENT_STATUS.CANCELLED,
     };
   };
 

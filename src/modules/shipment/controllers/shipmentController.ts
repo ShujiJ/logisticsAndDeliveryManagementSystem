@@ -96,6 +96,16 @@ class ShipmentController {
     return responseHandler(res, 200, "Delivery verified successfully", result);
   });
 
+  cancelShipment = asyncHandler(async (req: Request, res: Response) => {
+    const shipmentId = Number(req.params.id);
+    const customerId = (req as any).user.id;
+    const result = await shipmentService.cancelShipmentService(
+      shipmentId,
+      customerId,
+    );
+    return responseHandler(res, 200, "Shipment cancelled successfully", result);
+  });
+
   getMyDeliveries = asyncHandler(async (req: Request, res: Response) => {
     const agentId = (req as any).user.id;
     const page = parseInt(req.query.page as string) || 1;

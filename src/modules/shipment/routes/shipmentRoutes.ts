@@ -44,6 +44,14 @@ router.get(
   shipmentController.getAllShipments,
 );
 
+// CANCEL SHIPMENT — customer only, allowed before PICKED_UP
+router.post(
+  "/:id/cancel",
+  authMiddleware,
+  roleMiddleware(Roles.CUSTOMER),
+  shipmentController.cancelShipment,
+);
+
 // GET SHIPMENT BY ID — admin or customer (customer can only access their own)
 router.get(
   "/:id",
