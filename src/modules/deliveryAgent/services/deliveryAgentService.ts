@@ -8,6 +8,8 @@ import ShipmentTimeline from "../../shipmentTimeline/models/shipmentTimeLineMode
 import DeliverySlot from "../../deliverySlot/models/deliverySlotModel";
 import DeliveryAgent from "../models/deliveryAgentModel";
 import { findAvailableSlotForAgent } from "../../../shared/utils/findAvailableSlot";
+import Notification from "../../notifications/models/notificationModel";
+import { NOTIFICATION_TYPE } from "../../notifications/constants/notificationConstants";
 
 class DeliveryAgentService {
   createDeliveryAgentService = async (
@@ -218,6 +220,14 @@ class DeliveryAgentService {
       fromStatus: shipment.shipmentStatus,
       toStatus: "ASSIGNED",
       remarks: `Admin reassigned from agent ${previousAgentId ?? "none"} to agent ${newAgentId}. New slot: ${slotTimes.date} ${slotTimes.startTime}–${slotTimes.endTime}`,
+    });
+
+    await Notification.create({
+      userId: shipment.customerId,
+      shipmentId,
+      title: "Delivery Agent Reassigned",
+      message: `The delivery agent for your shipment ${shipment.trackingId} has been reassigned`,
+      type: NOTIFICATION_TYPE.AGENT_REASSIGNED,
     });
 
     return {
