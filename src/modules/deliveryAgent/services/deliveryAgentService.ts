@@ -19,6 +19,7 @@ class DeliveryAgentService {
       name: payload.name,
       email: payload.email,
       password: hashedPassword,
+      phoneNumber: payload.phoneNumber,
       role: Roles.DELIVERY_AGENT,
     });
 
