@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { Roles } from "../../auth/constants/roles";
 import { CreateShipmentDto } from "../dto/createShipmentDto";
+import { UpdateShipmentDto } from "../dto/updateShipmentDto";
 import shipmentRepository from "../repositories/shipmentRepository";
 import generateTrackingId from "../utils/generateTrackingId";
 import {
@@ -211,7 +212,7 @@ class ShipmentService {
   updateShipmentService = async (
     shipmentId: number,
     customerId: number,
-    payload: Record<string, any>,
+    payload: UpdateShipmentDto,
   ) => {
     const shipment = await shipmentRepository.findShipmentById(shipmentId);
 
@@ -244,7 +245,7 @@ class ShipmentService {
     if (pricingTouched) {
       const result = calculateShippingAmount(
         payload.packageWeight ?? shipment.packageWeight,
-        payload.shipmentPriority ?? shipment.shipmentPriority ?? "STANDARD",
+        (payload.shipmentPriority ?? shipment.shipmentPriority ?? "STANDARD") as "STANDARD" | "EXPRESS" | "SAME_DAY",
         payload.isFragile ?? shipment.isFragile ?? false,
       );
       updatedAmount = result.total;
