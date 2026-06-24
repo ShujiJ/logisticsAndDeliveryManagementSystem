@@ -102,6 +102,7 @@ class DeliveryAgentRepository {
       {
         where: {
           id: agentId,
+          shipmentCount: { [Op.gt]: 0 },
         },
       },
     );
