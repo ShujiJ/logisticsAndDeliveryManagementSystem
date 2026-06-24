@@ -18,6 +18,9 @@ A comprehensive, feature-rich backend system for managing end-to-end logistics o
 - [Core Modules](#core-modules)
 - [Authentication & Authorization](#authentication--authorization)
 - [Real-Time Features](#real-time-features)
+  - [Socket.io Integration](#socketio-integration)
+  - [Client Events](#client-events-emit-to-server)
+  - [Server Events](#server-events-listen)
 - [Background Jobs](#background-jobs)
 - [Environment Variables](#environment-variables)
 - [Troubleshooting](#troubleshooting)
@@ -76,6 +79,7 @@ This is a production-ready logistics and delivery management backend that handle
 - **Webhook Verification**: Secure webhook signature validation
 - **Payment Records**: Complete payment transaction history
 - **Multiple Payment Methods**: Credit card, debit card, UPI support via Razorpay
+- **Automatic Refunds**: Full refund via Razorpay triggered on shipment cancellation
 - **Price Breakdown**: Clear cost breakdowns with paise to rupees conversion
 
 ### 📊 Analytics & Dashboard
@@ -447,75 +451,65 @@ http://localhost:3000/api/v1
 ```
 
 ### 🔐 Authentication Routes (`/auth`)
-- `POST /auth/register` - Register new user (Customer/Delivery Agent)
-- `POST /auth/login` - User login with credentials
-- `POST /auth/refresh` - Refresh expired access token
-- `POST /auth/logout` - User logout
-- `PUT /auth/profile` - Update user profile (name, phone number)
-- `PUT /auth/change-password` - Change user password
+- `POST /auth/register` - Register new user (customer or delivery agent)
+- `POST /auth/login` - Login with credentials
+- `POST /auth/refreshToken` - Refresh expired access token
+- `POST /auth/logout` - Logout current session
+- `PATCH /auth/updateProfile` - Update name or phone number (authenticated)
+- `PATCH /auth/changePassword` - Change password (authenticated)
 
 ### 📦 Shipment Routes (`/shipments`)
-- `GET /shipments` - List all shipments (with filters)
-- `POST /shipments` - Create new shipment
-- `GET /shipments/:id` - Get shipment details
-- `PUT /shipments/:id` - Update shipment information
-- `PUT /shipments/:id/status` - Update shipment status
-- `DELETE /shipments/:id` - Cancel/delete shipment
-- `POST /shipments/:id/verify-otp` - Verify delivery OTP
+- `POST /shipments` - Create new shipment (customer, admin)
+- `GET /shipments` - List all shipments (admin only)
+- `GET /shipments/myShipments` - Customer's own shipments (customer)
+- `GET /shipments/myDeliveries` - Agent's assigned shipments (delivery agent)
+- `GET /shipments/:id` - Get shipment details (admin, customer — customer sees own only)
+- `PATCH /shipments/:id` - Update shipment details (customer, only while PENDING)
+- `PATCH /shipments/status/:id` - Update shipment status (delivery agent, admin)
+- `POST /shipments/:id/cancel` - Cancel shipment (customer, only before PICKED_UP)
+- `POST /shipments/:id/sendOtp` - Send delivery OTP to customer (delivery agent, admin)
+- `POST /shipments/:id/verifyOtp` - Verify delivery OTP to confirm delivery (delivery agent)
+- `GET /shipments/:id/timeline` - Get all timeline events for a shipment (all roles)
 
 ### 👥 Delivery Agent Routes (`/deliveryAgents`)
-- `GET /deliveryAgents` - List all delivery agents
-- `POST /deliveryAgents` - Create new delivery agent
-- `GET /deliveryAgents/:id` - Get agent profile details
-- `PUT /deliveryAgents/:id` - Update agent information
-- `DELETE /deliveryAgents/:id` - Deactivate delivery agent
-
-### ⏰ Delivery Slot Routes (`/deliverySlots`)
-- `GET /deliverySlots` - Get available delivery slots
-- `POST /deliverySlots` - Create new delivery slot
-- `GET /deliverySlots/:id` - Get slot details
-- `PUT /deliverySlots/:id` - Update delivery slot
-- `DELETE /deliverySlots/:id` - Remove delivery slot
+- `POST /deliveryAgents` - Create new delivery agent (admin)
+- `GET /deliveryAgents` - List all delivery agents (admin)
+- `PATCH /deliveryAgents/myAvailability` - Toggle own availability on/off (delivery agent)
+- `PATCH /deliveryAgents/:id/toggleStatus` - Activate or deactivate an agent (admin)
+- `PATCH /deliveryAgents/reassign/:shipmentId` - Reassign a different agent to a shipment (admin)
 
 ### 💳 Payment Routes (`/payments`)
-- `POST /payments` - Initiate payment
-- `GET /payments/:id` - Get payment details
-- `POST /payments/webhook/razorpay` - Razorpay webhook handler
+- `POST /payments/initiate/:shipmentId` - Create Razorpay order for checkout (customer)
+- `POST /payments/verify/:shipmentId` - Verify payment signature after Razorpay checkout (customer)
+- `GET /payments/myPayments` - Get customer's payment history with pagination (customer)
+- `GET /payments/:shipmentId` - Get payment details for a shipment (customer, admin)
+- `POST /payments/pay/:shipmentId` - Direct payment without Razorpay — simulation mode (customer)
 
 ### 📊 Dashboard Routes (`/dashboard`)
-- `GET /dashboard/stats` - Get overall system statistics
-- `GET /dashboard/revenue` - Get revenue analytics
-- `GET /dashboard/shipments` - Get shipment statistics
-- `GET /dashboard/agents` - Get agent performance metrics
+- `GET /dashboard/admin` - Admin dashboard with system-wide stats (admin)
+- `GET /dashboard/customer` - Customer dashboard with personal shipment summary (customer)
+- `GET /dashboard/deliveryAgent` - Agent dashboard with delivery stats (delivery agent)
 
 ### 🚨 Complaint Routes (`/complaints`)
-- `GET /complaints` - List all complaints
-- `POST /complaints` - Create new complaint
-- `GET /complaints/:id` - Get complaint details
-- `PUT /complaints/:id` - Update complaint status
-- `DELETE /complaints/:id` - Delete complaint
+- `POST /complaints/:shipmentId` - Raise a complaint for a shipment (customer)
+- `GET /complaints` - List all complaints (admin)
+- `GET /complaints/me` - Get customer's own complaints (customer)
+- `PATCH /complaints/:complaintId/status` - Update complaint status (admin)
 
 ### 💬 Chat Routes (`/chat`)
-- `GET /chat/shipment/:shipmentId` - Get chat history for shipment
-- `POST /chat` - Send new message
-- `PUT /chat/:messageId` - Update message
-- `DELETE /chat/:messageId` - Delete message
+- `POST /chat/:shipmentId` - Send a message (customer, delivery agent)
+- `GET /chat/:shipmentId` - Get messages for a shipment with pagination (all roles)
+- `GET /chat/:shipmentId/history` - Get full chat history with shipment info (admin only)
 
 ### 🔔 Notification Routes (`/notifications`)
-- `GET /notifications` - Get user notifications
-- `GET /notifications/:id` - Get notification details
-- `PUT /notifications/:id/read` - Mark notification as read
-- `POST /notifications/send` - Send notification (admin only)
+- `GET /notifications/me` - Get current user's notifications (customer)
+- `PATCH /notifications/read/:id` - Mark a notification as read (customer)
+- `PATCH /notifications/readAll` - Mark all notifications as read (customer)
 
 ### 💰 Pricing Routes (`/pricing`)
-- `POST /pricing/calculate` - Calculate shipping cost
-- `GET /pricing/rates` - Get current pricing rates
-- `PUT /pricing/rates` - Update pricing rates (admin only)
+- `GET /pricing/rates` - Get current pricing rates (public)
 
-### 📅 Shipment Timeline Routes (`/shipmentTimeline`)
-- `GET /shipmentTimeline/:shipmentId` - Get timeline events for shipment
-- `POST /shipmentTimeline` - Create timeline event
-- `GET /shipmentTimeline` - Get all timeline events
+> **Note:** Delivery slots have no public API. They are managed internally by the auto-assignment service when a shipment is created and payment is confirmed.
 
 ## Core Modules
 
@@ -582,13 +576,15 @@ Intelligent scheduling of delivery time slots.
 - Slot availability checking
 
 ### 💳 Payment Module
-Razorpay integration for secure payment processing.
+Razorpay integration for secure payment processing with automatic refund support.
 
 **Key Features:**
-- Payment creation and initialization
-- Webhook verification for payment status updates
-- Payment status tracking (Pending, Paid, Failed)
-- Transaction history
+- Razorpay order creation and checkout flow
+- Payment signature verification after checkout
+- Direct payment simulation (without Razorpay, for testing)
+- Payment status tracking (`PENDING`, `PAID`, `FAILED`, `REFUNDED`)
+- Automatic refund triggered on shipment cancellation
+- Customer payment history with pagination
 - Price breakdown with rupee conversion
 
 ### 📅 Shipment Timeline Module
@@ -610,12 +606,14 @@ Customer complaint management and resolution tracking.
 - Complaint history per shipment
 
 ### 💬 Chat Module
-Real-time messaging between customers and delivery agents.
+Real-time messaging between customers and delivery agents using Socket.io.
 
 **Key Features:**
-- Shipment-specific chat rooms (Socket.io)
-- Message persistence
-- Real-time synchronization
+- Shipment-specific chat rooms (`chat:{shipmentId}` rooms via Socket.io)
+- `new_message` event broadcast to all room members on send
+- Message persistence in database
+- Role-based access (only the assigned customer and agent can participate)
+- Chat automatically locked when shipment reaches a terminal status
 
 ### 🔔 Notifications Module
 Handles push notifications and alerts via Twilio.
@@ -702,18 +700,56 @@ Authorization: Bearer <access_token>
 ## Real-Time Features
 
 ### Socket.io Integration
-- **Server**: Initialized with HTTP server in production mode
-- **Chat Rooms**: Shipment-specific channels (format: `chat:${shipmentId}`)
-- **Events**:
-  - `join_chat`: Client joins shipment chat room
-  - `leave_chat`: Client leaves shipment chat room
-  - Custom message events for real-time messaging
+
+**Production URL:** `https://logisticsanddeliverymanagementsystem.onrender.com`
+**Local URL:** `http://localhost:3000`
+
+Chat is powered by Socket.io and scoped to individual shipments. Clients must join a room before receiving messages for that shipment.
+
+---
+
+#### Client Events (Emit to Server)
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `join_chat` | `{ "shipmentId": number }` | Join the chat room for a specific shipment |
+| `leave_chat` | `{ "shipmentId": number }` | Leave the chat room for a specific shipment |
+
+---
+
+#### Server Events (Listen)
+
+##### `new_message`
+
+Emitted to all clients in the room whenever a message is sent via `POST /api/v1/chat/:shipmentId`.
+
+```json
+{
+  "id": number,
+  "shipmentId": number,
+  "senderId": number,
+  "senderName": "string | null",
+  "senderRole": "CUSTOMER | DELIVERY_AGENT | ADMIN",
+  "message": "string",
+  "createdAt": "ISO 8601 datetime"
+}
+```
+
+---
+
+#### Connection Notes
+- Rooms are scoped per shipment using the pattern `chat:{shipmentId}`
+- Chat is only active for shipments not in `COMPLETED`, `CANCELLED`, or `DELIVERED` status
+- Only the customer assigned to the shipment and the assigned delivery agent can send messages (admin can also participate)
 
 ### CORS Configuration
-- Allowed Origins:
-  - Production: https://ldms-lac.vercel.app
-  - Development: http://localhost:3000, http://localhost:5173
-- Credentials: Enabled for cross-origin requests
+
+| Environment | Allowed Origins |
+|-------------|----------------|
+| Production | `https://ldms-lac.vercel.app` |
+| Development | `http://localhost:5173`, `http://localhost:3000` |
+
+Credentials are enabled for all cross-origin requests.
 
 ## Background Jobs
 
@@ -962,7 +998,7 @@ DEBUG=sequelize npm run dev
 
 **Last Updated**: June 2026
 **Version**: 1.0.0
-**Maintained By**: Copilot
+**Maintained By**: Shuji Jagadeesan
 **License**: ISC
 
 ---

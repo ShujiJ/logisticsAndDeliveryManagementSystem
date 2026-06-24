@@ -1,0 +1,3839 @@
+{
+  "info": {
+    "_postman_id": "7d704e22-2df7-444c-90ff-2eac147f5012",
+    "name": "logistics and delivery management system",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "48535086",
+    "_collection_link": "https://go.postman.co/collection/48535086-7d704e22-2df7-444c-90ff-2eac147f5012?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Sandhiya\",\r\n  \"email\": \"sandhiya@gmail.com\",\r\n  \"password\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "register",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Sandhiya\",\r\n  \"email\": \"sandhiya@gmail.com\",\r\n  \"password\": \"123456\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/register",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "139"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"8b-CezgqWxu/8h3uvz+4PiqL2oMcTE\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 15 Jun 2026 09:55:34 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"success\": true,\n    \"message\": \"User registered successfully\",\n    \"data\": {\n        \"id\": 23,\n        \"name\": \"Sandhiya\",\n        \"email\": \"sandhiya@gmail.com\",\n        \"role\": \"customer\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"preethi@gmail.com\",\r\n  \"password\": \"admin@123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "login",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"email\": \"sandhiya@gmail.com\",\r\n  \"password\": \"123456\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Set-Cookie",
+                  "value": "refreshToken=REDACTED_JWT_TOKEN; Max-Age=604800; Path=/; Expires=Mon, 22 Jun 2026 09:58:17 GMT; HttpOnly; Secure; SameSite=None"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "316"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"13c-8taaJ8hSqo68gvs87PCnd0AEKOY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 15 Jun 2026 09:58:17 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Login successful\",\n    \"data\": {\n        \"user\": {\n            \"id\": 23,\n            \"name\": \"Sandhiya\",\n            \"email\": \"sandhiya@gmail.com\",\n            \"role\": \"customer\"\n        },\n        \"accessToken\": \"REDACTED\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/refreshToken",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "refreshToken"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "refresh Token",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"email\": \"sandhiya@gmail.com\",\r\n  \"password\": \"123456\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/refreshToken",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "refreshToken"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "322"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"142-FnccXrC9ArnNQi6CKFR1DAVAFeI\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 15 Jun 2026 09:59:54 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Access token refreshed\",\n    \"data\": {\n        \"accessToken\": \"REDACTED_JWT_TOKEN\",\n        \"user\": {\n            \"id\": 23,\n            \"name\": \"Sandhiya\",\n            \"email\": \"sandhiya@gmail.com\",\n            \"role\": \"customer\"\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "logout",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/logout",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Set-Cookie",
+                  "value": "refreshToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "46"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"2e-8bQArK4vV5vz6XC3Afw/zYzWAnM\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 15 Jun 2026 10:01:27 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Logout successful\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "user update their profile",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"phoneNumber\": \"9876543210\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/updateProfile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "updateProfile"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "user edit profile",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"phoneNumber\": \"9876543210\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/profile",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "profile"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "159"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"9f-JqxEn3jHINvcRYSH3pxkNI3ETCY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 18 Jun 2026 15:01:14 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Profile updated successfully\",\n    \"data\": {\n        \"id\": 3,\n        \"name\": \"Surya\",\n        \"email\": \"surya@gmail.com\",\n        \"role\": \"customer\",\n        \"phoneNumber\": \"9876543210\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "change password",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"currentPassword\": \"123456\",\r\n    \"newPassword\": \"123456\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/changePassword",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "changePassword"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "change password",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"currentPassword\": \"123456\",\r\n    \"newPassword\": \"123456\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/changePassword",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "changePassword"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "58"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"3a-q68W5NWhqX5poAtHZphYySdDRQ8\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 18 Jun 2026 15:06:30 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Password changed successfully\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "shipments",
+      "item": [
+        {
+          "name": "create shipment by customer or admin",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"itemName\": \"Laptop\",\r\n    \"quantity\": 1,\r\n    \"packageWeight\": 2.5,\r\n    \"description\": \"Handle with care\",\r\n    \"senderName\": \"Jane\",\r\n    \"senderPhone\": \"9876543210\",\r\n    \"pickupAddress\": \"12 MG Road\",\r\n    \"pickupCity\": \"Chennai\",\r\n    \"pickupPincode\": \"600001\",\r\n    \"receiverName\": \"John\",\r\n    \"receiverPhone\": \"9123456789\",\r\n    \"deliveryAddress\": \"45 Anna Nagar\",\r\n    \"deliveryCity\": \"Chennai\",\r\n    \"deliveryPincode\": \"600040\",\r\n    \"shipmentPriority\": \"STANDARD\",\r\n    \"isFragile\": false,\r\n    \"receiverEmail\": \"shujilogisticstest@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shipments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "shipments"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "create shipment by customer or admin",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"itemName\": \"Laptop\",\r\n  \"quantity\": 1,\r\n  \"packageWeight\": 2.5,\r\n  \"description\": \"Handle with care\",\r\n  \"senderName\": \"Jane\",\r\n  \"senderPhone\": \"9876543210\",\r\n  \"pickupAddress\": \"12 MG Road\",\r\n  \"pickupCity\": \"Chennai\",\r\n  \"pickupPincode\": \"600001\",\r\n  \"receiverName\": \"John\",\r\n  \"receiverPhone\": \"9123456789\",\r\n  \"deliveryAddress\": \"45 Anna Nagar\",\r\n  \"deliveryCity\": \"Chennai\",\r\n  \"deliveryPincode\": \"600040\",\r\n  \"shipmentPriority\": \"STANDARD\",\r\n  \"isFragile\": false\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/shipments",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "shipments"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "806"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"326-gN0uXnLbeCMZfjnClKzhaajyuak\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 15 Jun 2026 10:09:46 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Shipment created successfully\",\n    \"data\": {\n        \"shipmentId\": 26,\n        \"itemName\": \"Laptop\",\n        \"quantity\": 1,\n        \"packageWeight\": 2.5,\n        \"description\": \"Handle with care\",\n        \"senderName\": \"Jane\",\n        \"senderPhone\": \"9876543210\",\n        \"pickupAddress\": \"12 MG Road\",\n        \"pickupCity\": \"Chennai\",\n        \"pickupPincode\": \"600001\",\n        \"receiverName\": \"John\",\n        \"receiverPhone\": \"9123456789\",\n        \"deliveryAddress\": \"45 Anna Nagar\",\n        \"deliveryCity\": \"Chennai\",\n        \"deliveryPincode\": \"600040\",\n        \"shipmentPriority\": \"STANDARD\",\n        \"isFragile\": false,\n        \"customerId\": 21,\n        \"trackingId\": \"TRK-1781518186296-QXD374\",\n        \"amount\": 177,\n        \"paymentStatus\": \"PENDING\",\n        \"shipmentStatus\": \"PENDING\",\n        \"updatedAt\": \"2026-06-15T10:09:46.297Z\",\n        \"createdAt\": \"2026-06-15T10:09:46.297Z\",\n        \"priceBreakdown\": {\n            \"platformFee\": 50,\n            \"weightCharge\": 100,\n            \"priorityCharge\": 0,\n            \"fragileCharge\": 0,\n            \"subtotal\": 150,\n            \"gst\": 27,\n            \"total\": 177\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "get all shipments by admin only",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/shipments?limit=3",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "shipments"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "get all shipments by admin only",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/shipments?limit=3",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "shipments"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "3"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "2663"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"a67-5JVwb2Wj5+xeJeYmsuRh7pbzxoE\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 15 Jun 2026 10:14:11 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"All shipments fetched successfully\",\n    \"data\": {\n        \"shipments\": [\n            {\n                \"shipmentId\": 26,\n                \"trackingId\": \"TRK-1781518186296-QXD374\",\n                \"itemName\": \"Laptop\",\n                \"quantity\": 1,\n                \"packageWeight\": 2.5,\n                \"isFragile\": false,\n                \"description\": \"Handle with care\",\n                \"senderName\": \"Jane\",\n                \"senderPhone\": \"9876543210\",\n                \"pickupAddress\": \"12 MG Road\",\n                \"pickupCity\": \"Chennai\",\n                \"pickupPincode\": \"600001\",\n                \"deliveryAddress\": \"45 Anna Nagar\",\n                \"deliveryCity\": \"Chennai\",\n                \"deliveryPincode\": \"600040\",\n                \"receiverName\": \"John\",\n                \"receiverPhone\": \"9123456789\",\n                \"shipmentPriority\": \"STANDARD\",\n                \"shipmentStatus\": \"PENDING\",\n                \"amount\": 177,\n                \"paymentStatus\": \"PENDING\",\n                \"customer\": {\n                    \"customerId\": 21,\n                    \"name\": \"harina\",\n                    \"email\": \"harina@gmail.com\",\n                    \"phoneNumber\": null\n                },\n                \"assignedAgent\": null,\n                \"assignedSlotStart\": null,\n                \"assignedSlotEnd\": null,\n                \"assignedDate\": null,\n                \"createdAt\": \"2026-06-15T10:09:46.000Z\",\n                \"updatedAt\": \"2026-06-15T10:09:46.000Z\"\n            },\n            {\n                \"shipmentId\": 25,\n                \"trackingId\": \"TRK-1781501005558-NJAKCT\",\n                \"itemName\": \"Gift boxes\",\n                \"quantity\": 176,\n                \"packageWeight\": 34,\n                \"isFragile\": true,\n                \"description\": \"\",\n                \"senderName\": \"Shamili\",\n                \"senderPhone\": \"9876543210\",\n                \"pickupAddress\": \"12A,Maruthi layout road\",\n                \"pickupCity\": \"Chennai\",\n                \"pickupPincode\": \"600001\",\n                \"deliveryAddress\": \"Thiru Vi Ka street\",\n                \"deliveryCity\": \"Trichy\",\n                \"deliveryPincode\": \"620001\",\n                \"receiverName\": \"Varun\",\n                \"receiverPhone\": \"9123456780\",\n                \"shipmentPriority\": \"EXPRESS\",\n                \"shipmentStatus\": \"DELAYED\",\n                \"amount\": 10927,\n                \"paymentStatus\": \"PAID\",\n                \"customer\": {\n                    \"customerId\": 21,\n                    \"name\": \"harina\",\n                    \"email\": \"harina@gmail.com\",\n                    \"phoneNumber\": null\n                },\n                \"assignedAgent\": {\n                    \"agentId\": 5,\n                    \"name\": \"Shrini\",\n                    \"email\": \"shrini@logistics.com\",\n                    \"phoneNumber\": null,\n                    \"vehicleType\": \"BIKE\",\n                    \"vehicleNumber\": \"TN32EF9012\",\n                    \"serviceZone\": \"Coimbatore\"\n                },\n                \"assignedSlotStart\": \"13:00:00\",\n                \"assignedSlotEnd\": \"14:00:00\",\n                \"assignedDate\": \"2026-06-15\",\n                \"createdAt\": \"2026-06-15T05:23:25.000Z\",\n                \"updatedAt\": \"2026-06-15T09:00:00.000Z\"\n            },\n            {\n                \"shipmentId\": 24,\n                \"trackingId\": \"TRK-1781239155288-7D2KDY\",\n                \"itemName\": \"Gift boxes\",\n                \"quantity\": 176,\n                \"packageWeight\": 34,\n                \"isFragile\": true,\n                \"description\": \"\",\n                \"senderName\": \"Shamili\",\n                \"senderPhone\": \"9876543210\",\n                \"pickupAddress\": \"12A,Maruthi layout road\",\n                \"pickupCity\": \"Chennai\",\n                \"pickupPincode\": \"600001\",\n                \"deliveryAddress\": \"Thiru Vi Ka street\",\n                \"deliveryCity\": \"Trichy\",\n                \"deliveryPincode\": \"620001\",\n                \"receiverName\": \"Varun\",\n                \"receiverPhone\": \"9123456780\",\n                \"shipmentPriority\": \"EXPRESS\",\n                \"shipmentStatus\": \"DELAYED\",\n                \"amount\": 10927,\n                \"paymentStatus\": \"PAID\",\n                \"customer\": {\n                    \"customerId\": 21,\n                    \"name\": \"harina\",\n                    \"email\": \"harina@gmail.com\",\n                    \"phoneNumber\": null\n                },\n                \"assignedAgent\": null,\n                \"assignedSlotStart\": null,\n                \"assignedSlotEnd\": null,\n                \"assignedDate\": null,\n                \"createdAt\": \"2026-06-12T04:39:15.000Z\",\n                \"updatedAt\": \"2026-06-15T04:15:00.000Z\"\n            }\n        ],\n        \"pagination\": {\n            \"total\": 26,\n            \"page\": 1,\n            \"limit\": 3,\n            \"totalPages\": 9\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "get my shipments by a logged in customer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/shipments/myShipments?limit=3",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "shipments",
+                "myShipments"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "get my shipments by a logged in customer",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/shipments/myShipments?limit=3",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "shipments",
+                    "myShipments"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "3"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "2450"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"992-kCV9TY1LJCnhHpuOwX+8UgxXUoI\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 15 Jun 2026 10:15:54 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Shipments fetched successfully\",\n    \"data\": {\n        \"shipments\": [\n            {\n                \"shipmentId\": 26,\n                \"trackingId\": \"TRK-1781518186296-QXD374\",\n                \"customerId\": 21,\n                \"itemName\": \"Laptop\",\n                \"quantity\": 1,\n                \"packageWeight\": 2.5,\n                \"isFragile\": false,\n                \"description\": \"Handle with care\",\n                \"senderName\": \"Jane\",\n                \"senderPhone\": \"9876543210\",\n                \"pickupAddress\": \"12 MG Road\",\n                \"pickupCity\": \"Chennai\",\n                \"pickupPincode\": \"600001\",\n                \"deliveryAddress\": \"45 Anna Nagar\",\n                \"deliveryCity\": \"Chennai\",\n                \"deliveryPincode\": \"600040\",\n                \"receiverName\": \"John\",\n                \"receiverPhone\": \"9123456789\",\n                \"shipmentPriority\": \"STANDARD\",\n                \"shipmentStatus\": \"PENDING\",\n                \"amount\": 177,\n                \"paymentStatus\": \"PENDING\",\n                \"assignedSlotStart\": null,\n                \"assignedSlotEnd\": null,\n                \"assignedDate\": null,\n                \"assignedAgent\": null,\n                \"createdAt\": \"2026-06-15T10:09:46.000Z\",\n                \"updatedAt\": \"2026-06-15T10:09:46.000Z\"\n            },\n            {\n                \"shipmentId\": 25,\n                \"trackingId\": \"TRK-1781501005558-NJAKCT\",\n                \"customerId\": 21,\n                \"itemName\": \"Gift boxes\",\n                \"quantity\": 176,\n                \"packageWeight\": 34,\n                \"isFragile\": true,\n                \"description\": \"\",\n                \"senderName\": \"Shamili\",\n                \"senderPhone\": \"9876543210\",\n                \"pickupAddress\": \"12A,Maruthi layout road\",\n                \"pickupCity\": \"Chennai\",\n                \"pickupPincode\": \"600001\",\n                \"deliveryAddress\": \"Thiru Vi Ka street\",\n                \"deliveryCity\": \"Trichy\",\n                \"deliveryPincode\": \"620001\",\n                \"receiverName\": \"Varun\",\n                \"receiverPhone\": \"9123456780\",\n                \"shipmentPriority\": \"EXPRESS\",\n                \"shipmentStatus\": \"DELAYED\",\n                \"amount\": 10927,\n                \"paymentStatus\": \"PAID\",\n                \"assignedSlotStart\": \"13:00:00\",\n                \"assignedSlotEnd\": \"14:00:00\",\n                \"assignedDate\": \"2026-06-15\",\n                \"assignedAgent\": {\n                    \"agentId\": 5,\n                    \"agentName\": \"Shrini\",\n                    \"agentPhone\": \"9876543212\",\n                    \"agentEmail\": \"shrini@logistics.com\",\n                    \"vehicleType\": \"BIKE\",\n                    \"vehicleNumber\": \"TN32EF9012\",\n                    \"serviceZone\": \"Coimbatore\"\n                },\n                \"createdAt\": \"2026-06-15T05:23:25.000Z\",\n                \"updatedAt\": \"2026-06-15T09:00:00.000Z\"\n            },\n            {\n                \"shipmentId\": 24,\n                \"trackingId\": \"TRK-1781239155288-7D2KDY\",\n                \"customerId\": 21,\n                \"itemName\": \"Gift boxes\",\n                \"quantity\": 176,\n                \"packageWeight\": 34,\n                \"isFragile\": true,\n                \"description\": \"\",\n                \"senderName\": \"Shamili\",\n                \"senderPhone\": \"9876543210\",\n                \"pickupAddress\": \"12A,Maruthi layout road\",\n                \"pickupCity\": \"Chennai\",\n                \"pickupPincode\": \"600001\",\n                \"deliveryAddress\": \"Thiru Vi Ka street\",\n                \"deliveryCity\": \"Trichy\",\n                \"deliveryPincode\": \"620001\",\n                \"receiverName\": \"Varun\",\n                \"receiverPhone\": \"9123456780\",\n                \"shipmentPriority\": \"EXPRESS\",\n                \"shipmentStatus\": \"DELAYED\",\n                \"amount\": 10927,\n                \"paymentStatus\": \"PAID\",\n                \"assignedSlotStart\": null,\n                \"assignedSlotEnd\": null,\n                \"assignedDate\": null,\n                \"assignedAgent\": null,\n                \"createdAt\": \"2026-06-12T04:39:15.000Z\",\n                \"updatedAt\": \"2026-06-15T04:15:00.000Z\"\n            }\n        ],\n        \"pagination\": {\n            \"total\": 5,\n            \"page\": 1,\n            \"limit\": 3,\n            \"totalPages\": 2\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "delivery agent see all his deliveries list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/shipments/myDeliveries",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "shipments",
+                "myDeliveries"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "delivery agent see all his deliveries list",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/shipments/myDeliveries",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "shipments",
+                    "myDeliveries"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "845"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"34d-RuAj+OYeSBJQqJZRYbXB5Ks3xvk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 15 Jun 2026 10:26:14 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Your deliveries fetched successfully\",\n    \"data\": [\n        {\n            \"shipmentId\": 12,\n            \"trackingId\": \"TRK-1780914363215-H6KDPB\",\n            \"customerId\": 3,\n            \"senderName\": \"Priya\",\n            \"senderPhone\": \"9876543210\",\n            \"quantity\": 1,\n            \"itemName\": \"Glass bottle set\",\n            \"packageWeight\": 2,\n            \"isFragile\": false,\n            \"description\": \"\",\n            \"pickupAddress\": \"12A,Maruthi layout road\",\n            \"pickupCity\": \"Chennai\",\n            \"pickupPincode\": \"600001\",\n            \"deliveryAddress\": \"Thiru Vi Ka street\",\n            \"deliveryCity\": \"Trichy\",\n            \"deliveryPincode\": \"620001\",\n            \"receiverName\": \"Varunika\",\n            \"receiverPhone\": \"9123456780\",\n            \"shipmentPriority\": \"STANDARD\",\n            \"shipmentStatus\": \"DELAYED\",\n            \"amount\": 200,\n            \"paymentStatus\": \"PAID\",\n            \"assignedSlotStart\": \"17:00:00\",\n            \"assignedSlotEnd\": \"18:00:00\",\n            \"assignedDate\": \"2026-06-08\",\n            \"createdAt\": \"2026-06-08T10:26:03.000Z\",\n            \"updatedAt\": \"2026-06-12T04:45:00.000Z\"\n        }\n    ],\n    \"pagination\": {\n        \"total\": 1,\n        \"page\": 1,\n        \"limit\": 10,\n        \"totalPages\": 1\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "get shipment by id customer or admin",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/shipments/24",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "shipments",
+                "24"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "get shipment by id customer or admin",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/shipments/24",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "shipments",
+                    "24"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "819"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"333-AlZXbhwEYYp8qRUAJZWSWLO7l5o\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 15 Jun 2026 10:35:16 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Shipment fetched successfully\",\n    \"data\": {\n        \"id\": 24,\n        \"customerId\": 21,\n        \"deliveryAgentId\": null,\n        \"trackingId\": \"TRK-1781239155288-7D2KDY\",\n        \"itemName\": \"Gift boxes\",\n        \"quantity\": 176,\n        \"packageWeight\": 34,\n        \"description\": \"\",\n        \"senderName\": \"Shamili\",\n        \"senderPhone\": \"9876543210\",\n        \"pickupAddress\": \"12A,Maruthi layout road\",\n        \"pickupCity\": \"Chennai\",\n        \"pickupPincode\": \"600001\",\n        \"receiverName\": \"Varun\",\n        \"receiverPhone\": \"9123456780\",\n        \"deliveryAddress\": \"Thiru Vi Ka street\",\n        \"deliveryCity\": \"Trichy\",\n        \"deliveryPincode\": \"620001\",\n        \"shipmentPriority\": \"EXPRESS\",\n        \"isFragile\": true,\n        \"preferredDeliveryFrom\": null,\n        \"preferredDeliveryTo\": null,\n        \"amount\": 10927,\n        \"paymentStatus\": \"PAID\",\n        \"shipmentStatus\": \"DELAYED\",\n        \"deliverySlotId\": 8,\n        \"deliveryRemarks\": null,\n        \"createdAt\": \"2026-06-12T04:39:15.000Z\",\n        \"updatedAt\": \"2026-06-15T04:15:00.000Z\",\n        \"deliveryAgent\": null\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "update shipment status by delivery agent",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"status\": \"OUT_FOR_PICKUP\",\r\n  \"remarks\": \"Picked up from sender\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shipments/status/12",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "shipments",
+                "status",
+                "12"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "update shipment status by delivery agent",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"status\": \"OUT_FOR_PICKUP\",\r\n  \"remarks\": \"Picked up from sender\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/shipments/status/12",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "shipments",
+                    "status",
+                    "12"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "337"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"151-8g2Z4G5TUf9PNcOh2A8LwsdrPcU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 15 Jun 2026 10:55:05 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Shipment status updated successfully\",\n    \"data\": {\n        \"shipmentId\": 12,\n        \"trackingId\": \"TRK-1780914363215-H6KDPB\",\n        \"paymentStatus\": \"PAID\",\n        \"shipmentStatus\": \"OUT_FOR_PICKUP\",\n        \"deliverySlotId\": 7,\n        \"deliveryRemarks\": \"Picked up from sender\",\n        \"deliveryAgentId\": 3,\n        \"deliveryAgentName\": \"Ravi\",\n        \"deliveryAgentEmail\": \"ravi@logistics.com\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "update shipment details by a customer ",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"senderName\": \"Priya\",\r\n    \"senderPhone\": \"9876543210\",\r\n    \"pickupAddress\": \"12A, Maruthi layout road\",\r\n    \"pickupCity\": \"Chennai\",\r\n    \"pickupPincode\": \"600001\",\r\n    \"receiverName\": \"Varunika\",\r\n    \"receiverPhone\": \"9123456780\",\r\n    \"deliveryAddress\": \"Thiru Vi Ka street\",\r\n    \"deliveryCity\": \"Trichy\",\r\n    \"deliveryPincode\": \"620001\",\r\n    \"itemName\": \"Glass bottle set\",\r\n    \"quantity\": 2,\r\n    \"packageWeight\": 3,\r\n    \"shipmentPriority\": \"EXPRESS\",\r\n    \"isFragile\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shipments/27",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "shipments",
+                "27"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "update shipment details by a customer",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"senderName\": \"Priya\",\r\n    \"senderPhone\": \"9876543210\",\r\n    \"pickupAddress\": \"12A, Maruthi layout road\",\r\n    \"pickupCity\": \"Chennai\",\r\n    \"pickupPincode\": \"600001\",\r\n    \"receiverName\": \"Varunika\",\r\n    \"receiverPhone\": \"9123456780\",\r\n    \"deliveryAddress\": \"Thiru Vi Ka street\",\r\n    \"deliveryCity\": \"Trichy\",\r\n    \"deliveryPincode\": \"620001\",\r\n    \"itemName\": \"Glass bottle set\",\r\n    \"quantity\": 2,\r\n    \"packageWeight\": 3,\r\n    \"shipmentPriority\": \"EXPRESS\",\r\n    \"isFragile\": true\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/shipments/27",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "shipments",
+                    "27"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "982"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"3d6-WQlSt5DV0WtW7eNHDijijGULYjU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 15 Jun 2026 11:01:31 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Shipment updated successfully\",\n    \"data\": {\n        \"shipmentId\": 27,\n        \"customerId\": 23,\n        \"deliveryAgentId\": null,\n        \"trackingId\": \"TRK-1781521274108-ZAMWIE\",\n        \"itemName\": \"Glass bottle set\",\n        \"quantity\": 2,\n        \"packageWeight\": 3,\n        \"description\": \"Handle with care\",\n        \"senderName\": \"Priya\",\n        \"senderPhone\": \"9876543210\",\n        \"pickupAddress\": \"12A, Maruthi layout road\",\n        \"pickupCity\": \"Chennai\",\n        \"pickupPincode\": \"600001\",\n        \"receiverName\": \"Varunika\",\n        \"receiverPhone\": \"9123456780\",\n        \"deliveryAddress\": \"Thiru Vi Ka street\",\n        \"deliveryCity\": \"Trichy\",\n        \"deliveryPincode\": \"620001\",\n        \"shipmentPriority\": \"EXPRESS\",\n        \"isFragile\": true,\n        \"preferredDeliveryFrom\": null,\n        \"preferredDeliveryTo\": null,\n        \"amount\": 264,\n        \"paymentStatus\": \"PENDING\",\n        \"shipmentStatus\": \"PENDING\",\n        \"deliverySlotId\": null,\n        \"deliveryRemarks\": null,\n        \"createdAt\": \"2026-06-15T11:01:14.000Z\",\n        \"updatedAt\": \"2026-06-15T11:01:31.000Z\",\n        \"deliveryAgent\": null,\n        \"priceBreakdown\": {\n            \"platformFee\": 50,\n            \"weightCharge\": 120,\n            \"priorityCharge\": 24,\n            \"fragileCharge\": 30,\n            \"subtotal\": 224,\n            \"gst\": 40,\n            \"total\": 264\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "shipment cancel and payment refunded",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shipments/94/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "shipments",
+                "94",
+                "cancel"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "shipment cancel and payment refunded",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/shipments/94/cancel",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "shipments",
+                    "94",
+                    "cancel"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "181"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"b5-TVja9jUp4VVtPISl9x5DawJuv6w\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 24 Jun 2026 02:00:44 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Shipment cancelled successfully\",\n    \"data\": {\n        \"shipmentId\": 96,\n        \"trackingId\": \"TRK-1782287227885-YBADQP\",\n        \"shipmentStatus\": \"CANCELLED\",\n        \"paymentStatus\": \"REFUNDED\",\n        \"refundId\": \"rfnd_T5OVJGCDNKO0Xt\",\n        \"refundedAt\": \"2026-06-24T07:58:27.000Z\"\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "shipment timeline",
+      "item": [
+        {
+          "name": "get timelines of how shipment status change",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/shipments/1/timeline",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "shipments",
+                "1",
+                "timeline"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "get timelines of how shipment status change",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/shipments/1/timeline",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "shipments",
+                    "1",
+                    "timeline"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "379"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"17b-j0pDLuYClPYUzFD4HDVfPPGj46Y\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 15 Jun 2026 11:09:15 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Shipment timeline fetched successfully\",\n    \"data\": {\n        \"shipmentId\": 1,\n        \"trackingId\": \"TRK-1780391786049-PHKKYX\",\n        \"currentStatus\": \"OUT_FOR_PICKUP\",\n        \"timeline\": [\n            {\n                \"timelineId\": 42,\n                \"fromStatus\": \"ASSIGNED\",\n                \"toStatus\": \"OUT_FOR_PICKUP\",\n                \"remarks\": \"Picked up from sender\",\n                \"updatedAt\": \"2026-06-15T10:52:56.000Z\",\n                \"updatedBy\": {\n                    \"id\": 18,\n                    \"name\": \"Ravi\",\n                    \"role\": \"deliveryAgent\"\n                }\n            }\n        ]\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "delivery agents",
+      "item": [
+        {
+          "name": "create delivery agent by admin",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Sriya\",\r\n  \"email\": \"sriya@logistics.com\",\r\n  \"password\": \"123456\",\r\n  \"phoneNumber\": \"9876543210\",\r\n  \"vehicleType\": \"Bike\",\r\n  \"vehicleNumber\": \"TN01AB1234\",\r\n  \"licenseNumber\": \"DL123456\",\r\n  \"serviceZone\": \"Chennai\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/deliveryAgents",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "deliveryAgents"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "create delivery agent by admin",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Sriya\",\r\n  \"email\": \"sriya@logistics.com\",\r\n  \"password\": \"123456\",\r\n  \"phoneNumber\": \"9876543210\",\r\n  \"vehicleType\": \"Bike\",\r\n  \"vehicleNumber\": \"TN01AB1234\",\r\n  \"licenseNumber\": \"DL123456\",\r\n  \"serviceZone\": \"Chennai\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/deliveryAgents",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "deliveryAgents"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "529"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"211-yUtPq2Zqi8wAU8WzXAYa6OsGcno\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 16 Jun 2026 09:18:49 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Delivery agent created successfully\",\n    \"data\": {\n        \"user\": {\n            \"id\": 25,\n            \"name\": \"Sriya\",\n            \"email\": \"sriya@logistics.com\",\n            \"role\": \"deliveryAgent\",\n            \"createdAt\": \"2026-06-16T09:18:49.088Z\"\n        },\n        \"deliveryAgent\": {\n            \"isActive\": true,\n            \"id\": 7,\n            \"userId\": 25,\n            \"phoneNumber\": \"9876543210\",\n            \"vehicleType\": \"Bike\",\n            \"vehicleNumber\": \"TN01AB1234\",\n            \"licenseNumber\": \"DL123456\",\n            \"serviceZone\": \"Chennai\",\n            \"availabilityStatus\": \"AVAILABLE\",\n            \"shipmentCount\": 0,\n            \"createdByAdminId\": 14,\n            \"updatedAt\": \"2026-06-16T09:18:49.102Z\",\n            \"createdAt\": \"2026-06-16T09:18:49.102Z\"\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "get all delivery agents by admin only",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/deliveryAgents",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "deliveryAgents"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "get all delivery agents by admin only",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Neharika\",\r\n  \"email\": \"neharika@logistics.com\",\r\n  \"password\": \"123456\",\r\n  \"phoneNumber\": \"9876543210\",\r\n  \"vehicleType\": \"Bike\",\r\n  \"vehicleNumber\": \"TN01AB1234\",\r\n  \"licenseNumber\": \"DL123456\",\r\n  \"serviceZone\": \"Chennai\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/deliveryAgents",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "deliveryAgents"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "1033"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"409-URklRBy7SfMEj4pbtZlkGugkwUA\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 15 Jun 2026 11:15:01 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Delivery agents fetched successfully\",\n    \"data\": [\n        {\n            \"id\": 3,\n            \"phoneNumber\": \"9876543210\",\n            \"vehicleType\": \"BIKE\",\n            \"shipmentCount\": 1,\n            \"availabilityStatus\": \"AVAILABLE\",\n            \"isActive\": true,\n            \"serviceZone\": \"Coimbatore\",\n            \"createdAt\": \"2026-06-08T07:06:40.000Z\",\n            \"deliveredCount\": 0,\n            \"delayedCount\": 1,\n            \"agentId\": 18,\n            \"agentName\": \"Ravi\",\n            \"agentEmail\": \"ravi@logistics.com\"\n        },\n        {\n            \"id\": 5,\n            \"phoneNumber\": \"9876543212\",\n            \"vehicleType\": \"BIKE\",\n            \"shipmentCount\": 1,\n            \"availabilityStatus\": \"AVAILABLE\",\n            \"isActive\": true,\n            \"serviceZone\": \"Coimbatore\",\n            \"createdAt\": \"2026-06-08T07:06:40.000Z\",\n            \"deliveredCount\": 0,\n            \"delayedCount\": 1,\n            \"agentId\": 20,\n            \"agentName\": \"Shrini\",\n            \"agentEmail\": \"shrini@logistics.com\"\n        },\n        {\n            \"id\": 6,\n            \"phoneNumber\": \"9876543210\",\n            \"vehicleType\": \"Bike\",\n            \"shipmentCount\": 0,\n            \"availabilityStatus\": \"AVAILABLE\",\n            \"isActive\": true,\n            \"serviceZone\": \"Chennai\",\n            \"createdAt\": \"2026-06-15T11:13:07.000Z\",\n            \"deliveredCount\": 0,\n            \"delayedCount\": 0,\n            \"agentId\": 24,\n            \"agentName\": \"Neharika\",\n            \"agentEmail\": \"neharika@logistics.com\"\n        }\n    ],\n    \"pagination\": {\n        \"currentPage\": 1,\n        \"totalPages\": 1,\n        \"totalRecords\": 3,\n        \"limit\": 20\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "reassign agent manually by admin",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"newAgentId\": 5\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/deliveryAgents/reassign/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "deliveryAgents",
+                "reassign",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "reassign agent manually by admin",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"newAgentId\": 5\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/deliveryAgents/reassign/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "deliveryAgents",
+                    "reassign",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "321"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"141-foJYWVmY0Xnt5npEUnzXgZd6zmU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 15 Jun 2026 11:17:08 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Agent reassigned successfully\",\n    \"data\": {\n        \"shipmentId\": 1,\n        \"previousAgentId\": 3,\n        \"newAgentId\": 5,\n        \"newSlotId\": 12,\n        \"newSlot\": {\n            \"date\": \"2026-06-15\",\n            \"startTime\": \"17:00:00\",\n            \"endTime\": \"18:00:00\"\n        },\n        \"shipmentStatus\": \"ASSIGNED\",\n        \"message\": \"Shipment successfully reassigned to new agent with a fresh delivery slot\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "update agent activate or deactivate by admin only",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/deliveryAgents/3/toggleStatus",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "deliveryAgents",
+                "3",
+                "toggleStatus"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "update agent activate or deactivate by admin only",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/deliveryAgents/3/toggleStatus",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "deliveryAgents",
+                    "3",
+                    "toggleStatus"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "101"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"65-PRyj6Fw61TjLacof/5F3+9rWKbc\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 15 Jun 2026 11:19:15 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Delivery agent deactivated successfully\",\n    \"data\": {\n        \"id\": 3,\n        \"isActive\": false\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "update availability status by agent",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/deliveryAgents/myAvailability",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "deliveryAgents",
+                "myAvailability"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "update availability status by agent",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/deliveryAgents/myAvailability",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "deliveryAgents",
+                    "myAvailability"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "164"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"a4-6oJshNe9fGsWvzeWE6efWDLOxOw\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 15 Jun 2026 11:21:45 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"You are now AVAILABLE\",\n    \"data\": {\n        \"agentId\": 3,\n        \"previousStatus\": \"UNAVAILABLE\",\n        \"currentStatus\": \"AVAILABLE\",\n        \"message\": \"You are now AVAILABLE\"\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "chat",
+      "item": [
+        {
+          "name": "send chat message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"message\": \"Hello, please confirm delivery time\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/chat/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "chat",
+                "1"
+              ]
+            },
+            "description": "Send a chat message for a specific shipment. Replace :shipmentId in the URL (currently '1') with the actual shipment ID."
+          },
+          "response": []
+        },
+        {
+          "name": "chats of single shipment id only one person",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/chat/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "chat",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "chats of single shipment id only one person",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"message\": \"Where is my package?\"\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/chat/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "chat",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "427"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"1ab-64xvjz2wdbc7vKZAlPJJqzZqArw\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 16 Jun 2026 04:35:29 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Chat fetched successfully\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"senderId\": 3,\n            \"senderName\": \"Test\",\n            \"senderRole\": \"CUSTOMER\",\n            \"message\": \"Where is my package?\",\n            \"createdAt\": \"2026-06-16T03:47:17.000Z\"\n        },\n        {\n            \"id\": 2,\n            \"senderId\": 3,\n            \"senderName\": \"Test\",\n            \"senderRole\": \"CUSTOMER\",\n            \"message\": \"Where is my package?\",\n            \"createdAt\": \"2026-06-16T03:57:43.000Z\"\n        }\n    ],\n    \"pagination\": {\n        \"total\": 2,\n        \"page\": 1,\n        \"limit\": 20,\n        \"totalPages\": 1\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "chat history of a shipment by admin",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/chat/1/history",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "chat",
+                "1",
+                "history"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "chat history of a shipment by admin",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/chat/1/history",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "chat",
+                    "1",
+                    "history"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "542"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"21e-U4UwsSjjLh5BlFWuwUOl7WkDTZU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 16 Jun 2026 10:01:15 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Chat history fetched successfully\",\n    \"data\": [\n        {\n            \"id\": 2,\n            \"senderId\": 3,\n            \"senderName\": \"Test\",\n            \"senderRole\": \"CUSTOMER\",\n            \"message\": \"Where is my package?\",\n            \"createdAt\": \"2026-06-16T03:57:43.000Z\"\n        },\n        {\n            \"id\": 1,\n            \"senderId\": 3,\n            \"senderName\": \"Test\",\n            \"senderRole\": \"CUSTOMER\",\n            \"message\": \"Where is my package?\",\n            \"createdAt\": \"2026-06-16T03:47:17.000Z\"\n        }\n    ],\n    \"shipmentInfo\": {\n        \"shipmentId\": 1,\n        \"shipmentStatus\": \"DELAYED\",\n        \"customer\": {\n            \"id\": 3,\n            \"name\": \"Test\"\n        },\n        \"assignedAgent\": {\n            \"id\": 20,\n            \"name\": \"Shrini\"\n        }\n    },\n    \"pagination\": {\n        \"total\": 2,\n        \"page\": 1,\n        \"limit\": 50,\n        \"totalPages\": 1\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "dashboard",
+      "item": [
+        {
+          "name": "admin dashboard",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/admin",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dashboard",
+                "admin"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "admin dashboard",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"message\": \"Where is my package?\"\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/dashboard/admin",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "dashboard",
+                    "admin"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "2260"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"8d4-H83sOvM9btWjfFYoowAs6XENm6E\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 17 Jun 2026 09:43:43 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Admin dashboard fetched successfully\",\n    \"data\": {\n        \"totalShipments\": 88,\n        \"deliveredShipments\": 11,\n        \"activeDeliveries\": 8,\n        \"delayedShipments\": 0,\n        \"totalRevenue\": 118950,\n        \"granularity\": \"weekly\",\n        \"revenueStats\": [\n            {\n                \"period\": \"2026-05-01\",\n                \"revenue\": 0\n            },\n            {\n                \"period\": \"2026-05-08\",\n                \"revenue\": 0\n            },\n            {\n                \"period\": \"2026-05-15\",\n                \"revenue\": 0\n            },\n            {\n                \"period\": \"2026-05-22\",\n                \"revenue\": 30750\n            },\n            {\n                \"period\": \"2026-05-29\",\n                \"revenue\": 88200\n            },\n            {\n                \"period\": \"2026-06-05\",\n                \"revenue\": 0\n            },\n            {\n                \"period\": \"2026-06-12\",\n                \"revenue\": 0\n            }\n        ],\n        \"paymentSummary\": {\n            \"paid\": 17,\n            \"pending\": 11,\n            \"failed\": 0\n        },\n        \"agentPerformance\": [\n            {\n                \"agentId\": 1,\n                \"agentName\": \"Ravi Kumar\",\n                \"totalDeliveries\": 12,\n                \"activeShipments\": 2,\n                \"completedShipments\": 11\n            },\n            {\n                \"agentId\": 2,\n                \"agentName\": \"Karthik\",\n                \"totalDeliveries\": 1,\n                \"activeShipments\": 0,\n                \"completedShipments\": 1\n            }\n        ],\n        \"complaints\": []\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "customer dashboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/customer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dashboard",
+                "customer"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "customer dashboard",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/dashboard/customer",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "dashboard",
+                    "customer"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "1110"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"456-bvqfIBKE9w57yxdPTR1tZ/fiLx4\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 17 Jun 2026 09:40:57 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Customer dashboard fetched successfully\",\n    \"data\": {\n        \"activeShipments\": 0,\n        \"totalShipments\": 2,\n        \"deliveredShipments\": 0,\n        \"pendingShipments\": 0,\n        \"pendingPayments\": 0,\n        \"unreadNotifications\": 2,\n        \"recentShipments\": [\n            {\n                \"shipmentId\": 27,\n                \"trackingId\": \"TRK-1781521274108-ZAMWIE\",\n                \"itemName\": \"Glass bottle set\",\n                \"shipmentStatus\": \"DELAYED\",\n                \"paymentStatus\": \"PAID\",\n                \"deliveryAddress\": \"Thiru Vi Ka street\",\n                \"deliveryCity\": \"Trichy\",\n                \"createdAt\": \"2026-06-15T11:01:14.000Z\"\n            },\n            {\n                \"shipmentId\": 26,\n                \"trackingId\": \"TRK-1781518186296-QXD374\",\n                \"itemName\": \"Laptop\",\n                \"shipmentStatus\": \"DELAYED\",\n                \"paymentStatus\": \"PAID\",\n                \"deliveryAddress\": \"45 Anna Nagar\",\n                \"deliveryCity\": \"Chennai\",\n                \"createdAt\": \"2026-06-15T10:09:46.000Z\"\n            }\n        ],\n        \"paymentHistory\": [\n            {\n                \"paymentId\": 16,\n                \"shipmentId\": 26,\n                \"amount\": 177,\n                \"paymentStatus\": \"PAID\",\n                \"paidAt\": \"2026-06-16T07:21:10.000Z\"\n            },\n            {\n                \"paymentId\": 15,\n                \"shipmentId\": 27,\n                \"amount\": 264,\n                \"paymentStatus\": \"PAID\",\n                \"paidAt\": \"2026-06-16T07:11:51.000Z\"\n            }\n        ],\n        \"recentSupportChats\": [\n            {\n                \"shipmentId\": 27,\n                \"trackingId\": \"TRK-1781521274108-ZAMWIE\",\n                \"lastMessage\": \"On the way to deliver\",\n                \"lastMessageBy\": \"DELIVERY_AGENT\",\n                \"updatedAt\": \"2026-06-17T07:28:03.000Z\"\n            }\n        ]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "delivery agent dashboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/deliveryAgent",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dashboard",
+                "deliveryAgent"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "delivery agent dashboard",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/dashboard/deliveryAgent",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "dashboard",
+                    "deliveryAgent"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "254"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"fe-NhLgqx36GZPjJkPgFK7tQocmSIk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 23 Jun 2026 08:56:45 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Agent dashboard fetched successfully\",\n    \"data\": {\n        \"isActive\": true,\n        \"availabilityStatus\": \"AVAILABLE\",\n        \"assignedDeliveries\": 1,\n        \"activeShipments\": 0,\n        \"completedDeliveries\": 0,\n        \"delayedDeliveries\": 1,\n        \"todaysSchedule\": [],\n        \"customerMessages\": []\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "payments",
+      "item": [
+        {
+          "name": "initiate payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payments/initiate/27",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "initiate",
+                "27"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "initiate payment",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/payments/initiate/27",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "payments",
+                    "initiate",
+                    "27"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "216"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"d8-HhMwzSarVU8ijy3q2c54sab8J+Q\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 16 Jun 2026 07:05:10 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Payment initiated. Proceed to Razorpay checkout.\",\n    \"data\": {\n        \"orderId\": \"order_T2DK3Ecr2qj6nJ\",\n        \"amount\": 264,\n        \"currency\": \"INR\",\n        \"keyId\": \"rzp_test_St3OS1VRS9pWap\",\n        \"shipmentId\": 27,\n        \"paymentId\": 15\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "verify payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"razorpayOrderId\": \"order_T2DK3Ecr2qj6nJ\",\r\n    \"razorpayPaymentId\": \"pay_T2DPH5LCq1JAni\",\r\n    \"razorpaySignature\": \"<paste_razorpay_signature_from_checkout_response>\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payments/verify/27",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "verify",
+                "27"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "verify payment",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"razorpayOrderId\": \"order_T2DK3Ecr2qj6nJ\",\r\n    \"razorpayPaymentId\": \"pay_T2DPH5LCq1JAni\",\r\n    \"razorpaySignature\": \"<paste_razorpay_signature_from_checkout_response>\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/payments/verify/27",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "payments",
+                    "verify",
+                    "27"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "368"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"170-lbgTRQ6Ech5jDyp5FKM1FMhyYs8\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 16 Jun 2026 07:11:51 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Payment verified successfully. Agent is being assigned to your shipment.\",\n    \"data\": {\n        \"id\": 15,\n        \"shipmentId\": 27,\n        \"customerId\": 23,\n        \"transactionId\": \"pay_T2DPH5LCq1JAni\",\n        \"amount\": 264,\n        \"paymentStatus\": \"PAID\",\n        \"paidAt\": \"2026-06-16T07:11:51.000Z\",\n        \"razorpayPaymentId\": \"pay_T2DPH5LCq1JAni\",\n        \"shipmentStatus\": \"ASSIGNED\",\n        \"deliveryAgentId\": 3,\n        \"deliverySlotId\": 13\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "get payments of a shipment by admin or customer",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "get payments of a shipment by admin or customer",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"razorpayOrderId\": \"order_T2DK3Ecr2qj6nJ\",\r\n    \"razorpayPaymentId\": \"pay_T2DPH5LCq1JAni\",\r\n    \"razorpaySignature\": \"<paste_razorpay_signature_from_checkout_response>\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/payments/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "payments",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "390"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"186-V/Kz9wmUnfxZJziOYX10N86vKjM\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Fri, 19 Jun 2026 05:20:33 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Payment details fetched\",\n    \"data\": {\n        \"id\": 1,\n        \"shipmentId\": 1,\n        \"customerId\": 13,\n        \"transactionId\": \"pay_Swi5WuD0YZTlGr\",\n        \"amount\": 800,\n        \"paymentStatus\": \"PAID\",\n        \"paidAt\": \"2026-06-02T09:17:11.000Z\",\n        \"razorpayOrderId\": \"order_Swi53iglvbFr13\",\n        \"razorpayPaymentId\": \"pay_Swi5WuD0YZTlGr\",\n        \"priceBreakdown\": null,\n        \"createdAt\": \"2026-06-02T09:16:26.000Z\",\n        \"updatedAt\": \"2026-06-02T09:17:11.000Z\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "payment simulation without razorpay",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/pay/90",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "pay",
+                "90"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "payment simulation without razorpay",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"razorpayOrderId\": \"order_T2DK3Ecr2qj6nJ\",\r\n    \"razorpayPaymentId\": \"pay_T2DPH5LCq1JAni\",\r\n    \"razorpaySignature\": \"<paste_razorpay_signature_from_checkout_response>\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/payments/pay/26",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "payments",
+                    "pay",
+                    "26"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "321"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"141-b86SEElCm/zH+gMNLtQUccEZxSA\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 16 Jun 2026 07:21:10 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Payment successful. Agent is being assigned to your shipment.\",\n    \"data\": {\n        \"id\": 16,\n        \"shipmentId\": 26,\n        \"customerId\": 23,\n        \"transactionId\": \"TXN-1781594470340-EIRT1\",\n        \"amount\": 177,\n        \"paymentStatus\": \"PAID\",\n        \"paidAt\": \"2026-06-16T07:21:10.000Z\",\n        \"shipmentStatus\": \"ASSIGNED\",\n        \"deliveryAgentId\": 6,\n        \"deliverySlotId\": 14\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "get all payments as a customer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/myPayments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "myPayments"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "get all payments as a customer",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/payments/myPayments",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "payments",
+                    "myPayments"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "516"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"204-OW+PZ+7c5FMboToZwcj6MDMUQXA\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 16 Jun 2026 07:22:22 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Payment history fetched successfully\",\n    \"data\": {\n        \"payments\": [\n            {\n                \"id\": 16,\n                \"shipmentId\": 26,\n                \"trackingId\": \"TRK-1781518186296-QXD374\",\n                \"amount\": 177,\n                \"paymentStatus\": \"PAID\",\n                \"transactionId\": \"TXN-1781594470340-EIRT1\",\n                \"paidAt\": \"2026-06-16T07:21:10.000Z\"\n            },\n            {\n                \"id\": 15,\n                \"shipmentId\": 27,\n                \"trackingId\": \"TRK-1781521274108-ZAMWIE\",\n                \"amount\": 264,\n                \"paymentStatus\": \"PAID\",\n                \"transactionId\": \"pay_T2DPH5LCq1JAni\",\n                \"paidAt\": \"2026-06-16T07:11:51.000Z\"\n            }\n        ],\n        \"pagination\": {\n            \"currentPage\": 1,\n            \"totalPages\": 1,\n            \"totalRecords\": 2,\n            \"limit\": 20\n        }\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "notifications",
+      "item": [
+        {
+          "name": "get user notifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/notifications/me?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "notifications",
+                "me"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "{{baseUrl}}/notifications/me",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/notifications/me?page=1&limit=10",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "notifications",
+                    "me"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "1468"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"5bc-kQJ8Nphpx15NGRYFtBMloCI4iPY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 16 Jun 2026 07:28:06 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Notifications fetched successfully\",\n    \"data\": {\n        \"unreadCount\": 5,\n        \"notifications\": [\n            {\n                \"notificationId\": 66,\n                \"shipmentId\": 26,\n                \"trackingId\": \"TRK-1781518186296-QXD374\",\n                \"title\": \"Agent Assigned\",\n                \"message\": \"Your shipment TRK-1781518186296-QXD374 has been assigned to Neharika\",\n                \"type\": \"AGENT_ASSIGNED\",\n                \"isRead\": false,\n                \"createdAt\": \"2026-06-16T07:21:10.000Z\"\n            },\n            {\n                \"notificationId\": 67,\n                \"shipmentId\": 26,\n                \"trackingId\": \"TRK-1781518186296-QXD374\",\n                \"title\": \"Payment Successful\",\n                \"message\": \"Payment for shipment TRK-1781518186296-QXD374 was successful\",\n                \"type\": \"PAYMENT_UPDATE\",\n                \"isRead\": false,\n                \"createdAt\": \"2026-06-16T07:21:10.000Z\"\n            },\n            {\n                \"notificationId\": 64,\n                \"shipmentId\": 27,\n                \"trackingId\": \"TRK-1781521274108-ZAMWIE\",\n                \"title\": \"Agent Assigned\",\n                \"message\": \"Your shipment TRK-1781521274108-ZAMWIE has been assigned to Ravi\",\n                \"type\": \"AGENT_ASSIGNED\",\n                \"isRead\": false,\n                \"createdAt\": \"2026-06-16T07:11:51.000Z\"\n            },\n            {\n                \"notificationId\": 65,\n                \"shipmentId\": 27,\n                \"trackingId\": \"TRK-1781521274108-ZAMWIE\",\n                \"title\": \"Payment Successful\",\n                \"message\": \"Payment for shipment TRK-1781521274108-ZAMWIE was successful\",\n                \"type\": \"PAYMENT_UPDATE\",\n                \"isRead\": false,\n                \"createdAt\": \"2026-06-16T07:11:51.000Z\"\n            },\n            {\n                \"notificationId\": 62,\n                \"shipmentId\": 27,\n                \"trackingId\": \"TRK-1781521274108-ZAMWIE\",\n                \"title\": \"Shipment Created\",\n                \"message\": \"Your shipment TRK-1781521274108-ZAMWIE has been created successfully\",\n                \"type\": \"SHIPMENT_CREATED\",\n                \"isRead\": false,\n                \"createdAt\": \"2026-06-15T11:01:14.000Z\"\n            }\n        ],\n        \"pagination\": {\n            \"total\": 5,\n            \"page\": 1,\n            \"limit\": 10,\n            \"totalPages\": 1\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "mark all notifications as read",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/notifications/readAll",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "notifications",
+                "readAll"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "mark all notifications as read",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/notifications/readAll",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "notifications",
+                    "readAll"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "75"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4b-l9MLBanjekRHxRCXrEAFZQYzvqc\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 16 Jun 2026 07:29:21 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Notifications updated successfully\",\n    \"data\": null\n}"
+            }
+          ]
+        },
+        {
+          "name": "mark one notification as read",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/notifications/read/64",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "notifications",
+                "read",
+                "64"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "mark one notification as read",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/notifications/read/64",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "notifications",
+                    "read",
+                    "64"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "68"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"44-LUAh2NGKkzyP13d1Byg8tmxGqXQ\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 16 Jun 2026 07:31:01 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Notification marked as read\",\n    \"data\": null\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "complaints",
+      "item": [
+        {
+          "name": "create a customer complaint for their shipment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"subject\": \"DELIVERY_DELAYED\",\r\n  \"description\": \"It is delayed, I want to know when it will be delivered\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/complaints/27",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "complaints",
+                "27"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "create a customer complaint for their shipment",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"subject\": \"DELIVERY_DELAYED\",\r\n  \"description\": \"It is delayed, I want to know when it will be delivered\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/complaints/27",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "complaints",
+                    "27"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "311"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"137-/Mr4fd5Z4dQ003TGhK1yPwwCM18\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 16 Jun 2026 08:17:41 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Complaint raised successfully\",\n    \"data\": {\n        \"complaintId\": 7,\n        \"shipmentId\": 27,\n        \"customerId\": 23,\n        \"trackingId\": \"TRK-1781521274108-ZAMWIE\",\n        \"subject\": \"DELIVERY_DELAYED\",\n        \"description\": \"It is delayed, I want to know when it will be delivered\",\n        \"status\": \"OPEN\",\n        \"createdAt\": \"2026-06-16T08:17:41.195Z\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "customer view their complaints",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseUrl}}/complaints/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "complaints",
+                "me"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "customer view their complaints",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/complaints/me",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "complaints",
+                    "me"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "418"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"1a2-GbCTO09CSHrM6EuT3umaVvt1gOw\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 16 Jun 2026 08:22:48 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Your complaints fetched successfully\",\n    \"data\": {\n        \"complaints\": [\n            {\n                \"complaintId\": 7,\n                \"shipmentId\": 27,\n                \"trackingId\": \"TRK-1781521274108-ZAMWIE\",\n                \"subject\": \"DELIVERY_DELAYED\",\n                \"description\": \"It is delayed, I want to know when it will be delivered\",\n                \"status\": \"OPEN\",\n                \"createdAt\": \"2026-06-16T08:17:41.000Z\",\n                \"updatedAt\": \"2026-06-16T08:17:41.000Z\"\n            }\n        ],\n        \"pagination\": {\n            \"total\": 1,\n            \"page\": 1,\n            \"limit\": 10,\n            \"totalPages\": 1\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "admin to view all the complaints",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/complaints?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "complaints"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "admin to view all the complaints",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/complaints?page=1&limit=10",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "complaints"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "3457"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"d81-mYyElEq+bodC7l+5BmMzWTmKf2k\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 16 Jun 2026 09:01:57 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Complaints fetched successfully\",\n    \"data\": {\n        \"complaints\": [\n            {\n                \"complaintId\": 7,\n                \"shipmentId\": 27,\n                \"trackingId\": \"TRK-1781521274108-ZAMWIE\",\n                \"subject\": \"DELIVERY_DELAYED\",\n                \"description\": \"It is delayed, I want to know when it will be delivered\",\n                \"status\": \"OPEN\",\n                \"customer\": {\n                    \"customerId\": 23,\n                    \"name\": \"Sandhiya\",\n                    \"email\": \"sandhiya@gmail.com\"\n                },\n                \"assignedAgent\": {\n                    \"agentId\": 3,\n                    \"name\": \"Ravi\",\n                    \"email\": \"ravi@logistics.com\",\n                    \"phoneNumber\": \"9876543210\",\n                    \"vehicleType\": \"BIKE\",\n                    \"serviceZone\": \"Coimbatore\"\n                },\n                \"createdAt\": \"2026-06-16T08:17:41.000Z\",\n                \"updatedAt\": \"2026-06-16T08:17:41.000Z\"\n            },\n            {\n                \"complaintId\": 6,\n                \"shipmentId\": 12,\n                \"trackingId\": \"TRK-1780914363215-H6KDPB\",\n                \"subject\": \"PACKAGE_NOT_DELIVERED\",\n                \"description\": \"My package was marked delivered but I never received it\",\n                \"status\": \"OPEN\",\n                \"customer\": {\n                    \"customerId\": 3,\n                    \"name\": \"Test\",\n                    \"email\": \"test@gmail.com\"\n                },\n                \"assignedAgent\": {\n                    \"agentId\": 3,\n                    \"name\": \"Ravi\",\n                    \"email\": \"ravi@logistics.com\",\n                    \"phoneNumber\": \"9876543210\",\n                    \"vehicleType\": \"BIKE\",\n                    \"serviceZone\": \"Coimbatore\"\n                },\n                \"createdAt\": \"2026-06-08T11:09:04.000Z\",\n                \"updatedAt\": \"2026-06-08T11:09:04.000Z\"\n            },\n            {\n                \"complaintId\": 5,\n                \"shipmentId\": 12,\n                \"trackingId\": \"TRK-1780914363215-H6KDPB\",\n                \"subject\": \"PACKAGE_NOT_DELIVERED\",\n                \"description\": \"My package was marked delivered but I never received it\",\n                \"status\": \"OPEN\",\n                \"customer\": {\n                    \"customerId\": 3,\n                    \"name\": \"Test\",\n                    \"email\": \"test@gmail.com\"\n                },\n                \"assignedAgent\": {\n                    \"agentId\": 3,\n                    \"name\": \"Ravi\",\n                    \"email\": \"ravi@logistics.com\",\n                    \"phoneNumber\": \"9876543210\",\n                    \"vehicleType\": \"BIKE\",\n                    \"serviceZone\": \"Coimbatore\"\n                },\n                \"createdAt\": \"2026-06-08T10:26:44.000Z\",\n                \"updatedAt\": \"2026-06-08T10:26:44.000Z\"\n            },\n            {\n                \"complaintId\": 4,\n                \"shipmentId\": 2,\n                \"trackingId\": \"TRK-1780392273675-H429TY\",\n                \"subject\": \"PACKAGE_NOT_DELIVERED\",\n                \"description\": \"My package was marked delivered but I never received it\",\n                \"status\": \"OPEN\",\n                \"customer\": {\n                    \"customerId\": 3,\n                    \"name\": \"Test\",\n                    \"email\": \"test@gmail.com\"\n                },\n                \"assignedAgent\": null,\n                \"createdAt\": \"2026-06-08T10:23:11.000Z\",\n                \"updatedAt\": \"2026-06-08T10:23:11.000Z\"\n            },\n            {\n                \"complaintId\": 3,\n                \"shipmentId\": 1,\n                \"trackingId\": \"TRK-1780391786049-PHKKYX\",\n                \"subject\": \"PACKAGE_NOT_DELIVERED\",\n                \"description\": \"My package was marked delivered but I never received it\",\n                \"status\": \"OPEN\",\n                \"customer\": {\n                    \"customerId\": 3,\n                    \"name\": \"Test\",\n                    \"email\": \"test@gmail.com\"\n                },\n                \"assignedAgent\": {\n                    \"agentId\": 5,\n                    \"name\": \"Shrini\",\n                    \"email\": \"shrini@logistics.com\",\n                    \"phoneNumber\": \"9876543212\",\n                    \"vehicleType\": \"BIKE\",\n                    \"serviceZone\": \"Coimbatore\"\n                },\n                \"createdAt\": \"2026-06-08T10:14:27.000Z\",\n                \"updatedAt\": \"2026-06-08T10:14:27.000Z\"\n            },\n            {\n                \"complaintId\": 2,\n                \"shipmentId\": 1,\n                \"trackingId\": \"TRK-1780391786049-PHKKYX\",\n                \"subject\": \"PACKAGE_NOT_DELIVERED\",\n                \"description\": \"My package was marked delivered but I never received it\",\n                \"status\": \"OPEN\",\n                \"customer\": {\n                    \"customerId\": 3,\n                    \"name\": \"Test\",\n                    \"email\": \"test@gmail.com\"\n                },\n                \"assignedAgent\": {\n                    \"agentId\": 5,\n                    \"name\": \"Shrini\",\n                    \"email\": \"shrini@logistics.com\",\n                    \"phoneNumber\": \"9876543212\",\n                    \"vehicleType\": \"BIKE\",\n                    \"serviceZone\": \"Coimbatore\"\n                },\n                \"createdAt\": \"2026-06-08T10:14:21.000Z\",\n                \"updatedAt\": \"2026-06-08T10:14:21.000Z\"\n            },\n            {\n                \"complaintId\": 1,\n                \"shipmentId\": 1,\n                \"trackingId\": \"TRK-1780391786049-PHKKYX\",\n                \"subject\": \"PACKAGE_NOT_DELIVERED\",\n                \"description\": \"My package was marked delivered but I never received it\",\n                \"status\": \"IN_REVIEW\",\n                \"customer\": {\n                    \"customerId\": 3,\n                    \"name\": \"Test\",\n                    \"email\": \"test@gmail.com\"\n                },\n                \"assignedAgent\": {\n                    \"agentId\": 5,\n                    \"name\": \"Shrini\",\n                    \"email\": \"shrini@logistics.com\",\n                    \"phoneNumber\": \"9876543212\",\n                    \"vehicleType\": \"BIKE\",\n                    \"serviceZone\": \"Coimbatore\"\n                },\n                \"createdAt\": \"2026-06-08T09:56:06.000Z\",\n                \"updatedAt\": \"2026-06-09T10:02:51.000Z\"\n            }\n        ],\n        \"pagination\": {\n            \"total\": 7,\n            \"page\": 1,\n            \"limit\": 10,\n            \"totalPages\": 1\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "change complaint status only by admin",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"status\": \"IN_REVIEW\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/complaints/2/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "complaints",
+                "2",
+                "status"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "change complaint status only by admin",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"status\": \"IN_REVIEW\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/complaints/2/status",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "complaints",
+                    "2",
+                    "status"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "271"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"10f-abT6oHqKqPFdYdOrrehZkY3KhjA\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 16 Jun 2026 09:11:45 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Complaint status updated successfully\",\n    \"data\": {\n        \"complaintId\": 2,\n        \"shipmentId\": 1,\n        \"trackingId\": \"TRK-1780391786049-PHKKYX\",\n        \"subject\": \"PACKAGE_NOT_DELIVERED\",\n        \"previousStatus\": \"OPEN\",\n        \"currentStatus\": \"IN_REVIEW\",\n        \"updatedAt\": \"2026-06-16T09:11:45.000Z\"\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pricing",
+      "item": [
+        {
+          "name": "display rates to all the users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pricing/rates",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pricing",
+                "rates"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "display rates to all the users",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/pricing/rates",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "pricing",
+                    "rates"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "345"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"159-3oEt3jAS9+V3ezAyLyufM3jy4no\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 16 Jun 2026 09:15:05 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Pricing rates fetched successfully\",\n    \"data\": {\n        \"platformFee\": 50,\n        \"weightSlabs\": [\n            {\n                \"upTo\": 0.5,\n                \"ratePerKg\": 20\n            },\n            {\n                \"upTo\": 2,\n                \"ratePerKg\": 30\n            },\n            {\n                \"upTo\": 5,\n                \"ratePerKg\": 40\n            },\n            {\n                \"upTo\": 10,\n                \"ratePerKg\": 50\n            },\n            {\n                \"upTo\": null,\n                \"ratePerKg\": 60\n            }\n        ],\n        \"priorityMultipliers\": {\n            \"STANDARD\": 1,\n            \"EXPRESS\": 1.2,\n            \"SAME_DAY\": 1.5\n        },\n        \"fragileSurcharge\": 30,\n        \"gstPercent\": 18\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "otp",
+      "item": [
+        {
+          "name": "verify otp",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"otp\": \"5978\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shipments/1/verifyOtp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "shipments",
+                "1",
+                "verifyOtp"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "verify otp",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"otp\": \"5978\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/shipments/1/verifyOtp",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "shipments",
+                    "1",
+                    "verifyOtp"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "153"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"99-NIzt9uZ4PaTwlUWLTX5ghMz84So\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Fri, 19 Jun 2026 04:57:25 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Delivery verified successfully\",\n    \"data\": {\n        \"shipmentId\": 1,\n        \"shipmentStatus\": \"DELIVERED\",\n        \"deliveredAt\": \"2026-06-19T04:57:25.126Z\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "send otp",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/shipments/90/sendOtp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "shipments",
+                "90",
+                "sendOtp"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "send otp",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/shipments/1/sendOtp",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "shipments",
+                    "1",
+                    "sendOtp"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "124"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"7c-SM0QSS4kbc/Uu6XTID+VnG2zBlg\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Fri, 19 Jun 2026 04:54:25 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Delivery OTP sent to customer\",\n    \"data\": {\n        \"shipmentId\": 1,\n        \"otpExpiresAt\": \"2026-06-19T05:24:25.860Z\"\n    }\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  }
+}
