@@ -41,8 +41,12 @@ class ChatService {
       }
     }
 
-    if (shipment.shipmentStatus === "COMPLETED") {
-      throw new ApiError(403, "Chat is closed for completed shipments");
+    if (
+      shipment.shipmentStatus === "COMPLETED" ||
+      shipment.shipmentStatus === "CANCELLED" ||
+      shipment.shipmentStatus === "DELIVERED"
+    ) {
+      throw new ApiError(403, "Chat is closed for this shipment");
     }
 
     const mappedRole = mapRoleToSenderRole(senderRole);

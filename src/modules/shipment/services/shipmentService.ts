@@ -18,6 +18,7 @@ import ShipmentTimeline from "../../shipmentTimeline/models/shipmentTimeLineMode
 import Notification from "../../notifications/models/notificationModel";
 import { NOTIFICATION_TYPE } from "../../notifications/constants/notificationConstants";
 import refundService from "../../payment/services/refundService";
+import paymentRepository from "../../payment/repositories/paymentRepository";
 
 class ShipmentService {
   // CREATE SHIPMENT
@@ -607,10 +608,13 @@ class ShipmentService {
       type: NOTIFICATION_TYPE.SHIPMENT_CANCELLED,
     });
 
+    const updatedPayment = await paymentRepository.findPaymentByShipmentId(shipmentId);
+
     return {
       shipmentId,
       trackingId: shipment.trackingId,
       shipmentStatus: SHIPMENT_STATUS.CANCELLED,
+      paymentStatus: updatedPayment?.paymentStatus ?? shipment.paymentStatus,
     };
   };
 
