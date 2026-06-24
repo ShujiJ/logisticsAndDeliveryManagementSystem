@@ -1,4 +1,3 @@
-import ApiError from "../../../shared/utils/apiError";
 import razorpayUtil from "../../../shared/utils/razorpayUtil";
 import paymentRepository from "../repositories/paymentRepository";
 import shipmentRepository from "../../shipment/repositories/shipmentRepository";
@@ -8,7 +7,9 @@ import { NOTIFICATION_TYPE } from "../../notifications/constants/notificationCon
 class RefundService {
   refundPaymentService = async (shipmentId: number) => {
     const payment = await paymentRepository.findPaymentByShipmentId(shipmentId);
-    if (!payment) throw new ApiError(404, "Payment record not found");
+
+    // No payment record means customer never initiated payment — nothing to refund
+    if (!payment) return;
 
     // Only process refund if customer actually paid
     if (payment.paymentStatus !== "PAID") return;
