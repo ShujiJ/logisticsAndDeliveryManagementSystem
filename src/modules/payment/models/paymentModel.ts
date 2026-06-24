@@ -30,6 +30,8 @@ class Payment extends Model<
   declare razorpayOrderId: CreationOptional<string | null>;
   declare razorpayPaymentId: CreationOptional<string | null>;
   declare priceBreakdown: CreationOptional<object | null>; // price breakdown
+  declare razorpayRefundId: CreationOptional<string | null>;
+  declare refundedAt: CreationOptional<Date | null>;
 }
 
 Payment.init(
@@ -80,6 +82,14 @@ Payment.init(
     priceBreakdown: {
       type: DataTypes.JSON,
       allowNull: true, // price breakdown
+    },
+    razorpayRefundId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    refundedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
     createdAt: {
       type: DataTypes.DATE,

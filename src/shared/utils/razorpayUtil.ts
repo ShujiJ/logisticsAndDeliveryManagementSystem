@@ -1,16 +1,16 @@
-// NEW: Razorpay payment gateway integration
+// Razorpay payment gateway integration
 import Razorpay from "razorpay";
 import crypto from "crypto";
 import { env } from "../../config/env";
 
-// NEW: Initialize Razorpay instance with credentials
+//  Initialize Razorpay instance with credentials
 const razorpayInstance = new Razorpay({
   key_id: env.RAZORPAY_KEY_ID,
   key_secret: env.RAZORPAY_KEY_SECRET,
 });
 
 class RazorpayUtil {
-  // NEW: Create a Razorpay order for a shipment payment
+  // Create a Razorpay order for a shipment payment
   // Returns order details that frontend can use to open Razorpay checkout
   createOrder = async (
     amount: number, // Amount in paise (multiply by 100 for actual amount)
@@ -61,7 +61,7 @@ class RazorpayUtil {
   //   }
   // };
 
-  // NEW: Verify payment signature sent from frontend after checkout
+  //  Verify payment signature sent from frontend after checkout
   // Called after successful checkout on frontend
   verifyPaymentSignature = (
     orderId: string,
@@ -69,7 +69,7 @@ class RazorpayUtil {
     signature: string,
   ): boolean => {
     try {
-      // NEW: Create HMAC SHA256 hash of orderId|paymentId with key secret
+      // Create HMAC SHA256 hash of orderId|paymentId with key secret
       const body = `${orderId}|${paymentId}`;
       const expectedSignature = crypto
         .createHmac("sha256", env.RAZORPAY_KEY_SECRET)
@@ -84,7 +84,7 @@ class RazorpayUtil {
     }
   };
 
-  // NEW: Fetch payment details from Razorpay using payment ID
+  //  Fetch payment details from Razorpay using payment ID
   // Used to get complete payment info for logging and verification
   fetchPaymentDetails = async (paymentId: string) => {
     try {
@@ -96,7 +96,7 @@ class RazorpayUtil {
     }
   };
 
-  // NEW: Fetch order details from Razorpay using order ID
+  // Fetch order details from Razorpay using order ID
   // Used to verify order status and details
   fetchOrderDetails = async (orderId: string) => {
     try {

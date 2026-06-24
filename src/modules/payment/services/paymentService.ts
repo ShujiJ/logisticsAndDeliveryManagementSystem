@@ -37,16 +37,21 @@ class PaymentService {
         throw new ApiError(400, "Payment is already completed for this shipment");
       }
 
-      // PENDING — return existing Razorpay order, no need to recreate
+      // PENDING — reuse existing Razorpay order only if amount hasn't changed
       if (existingPayment.paymentStatus === "PENDING" && existingPayment.razorpayOrderId) {
-        return {
-          orderId: existingPayment.razorpayOrderId,
-          amount: shipment.amount, // rupees
-          currency: "INR",
-          keyId: env.RAZORPAY_KEY_ID,
-          shipmentId,
-          paymentId: existingPayment.id,
-        };
+        if (Number(existingPayment.amount) !== Number(shipment.amount)) {
+          // Shipment was edited after order was created — delete stale payment record and fall through to create fresh order
+          await paymentRepository.deletePayment(existingPayment.id);
+        } else {
+          return {
+            orderId: existingPayment.razorpayOrderId,
+            amount: shipment.amount, // rupees
+            currency: "INR",
+            keyId: env.RAZORPAY_KEY_ID,
+            shipmentId,
+            paymentId: existingPayment.id,
+          };
+        }
       }
 
       // FAILED — delete and allow a fresh Razorpay order to be created below
@@ -98,6 +103,19 @@ class PaymentService {
         await paymentRepository.findPaymentByRazorpayOrderId(razorpayOrderId);
       if (!payment) {
         throw new ApiError(404, "Payment record not found");
+      }
+
+      // Ensure the order ID belongs to the shipment in the URL
+      if (payment.shipmentId !== shipmentId) {
+        throw new ApiError(400, "Order ID does not belong to this shipment");
+      }
+
+      // Block re-processing payments that are already settled
+      if (payment.paymentStatus === "PAID") {
+        throw new ApiError(400, "Payment is already completed for this shipment");
+      }
+      if (payment.paymentStatus === "REFUNDED") {
+        throw new ApiError(400, "Payment has already been refunded");
       }
 
       // Verify customer is authorized to complete this payment

@@ -82,9 +82,9 @@ class PaymentRepository {
     );
   };
 
-  markAsRefunded = async (paymentId: number) => {
+  markAsRefunded = async (paymentId: number, razorpayRefundId: string, refundedAt: Date) => {
     return await Payment.update(
-      { paymentStatus: "REFUNDED" },
+      { paymentStatus: "REFUNDED", razorpayRefundId, refundedAt },
       { where: { id: paymentId } },
     );
   };

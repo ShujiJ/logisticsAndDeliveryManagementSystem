@@ -584,6 +584,7 @@ class ShipmentService {
     }
 
     // refund — if customer already paid, trigger Razorpay refund
+    const payment = await paymentRepository.findPaymentByShipmentId(shipmentId);
     await refundService.refundPaymentService(shipmentId);
 
     await shipmentRepository.updateShipmentStatus(
@@ -591,6 +592,15 @@ class ShipmentService {
       SHIPMENT_STATUS.CANCELLED,
       "Cancelled by customer",
     );
+
+    // Sync shipment's paymentStatus column to REFUNDED so list endpoints stay accurate
+    if (payment && payment.paymentStatus === "PAID") {
+      await shipmentRepository.updatePaymentAndStatus(
+        shipmentId,
+        "REFUNDED",
+        SHIPMENT_STATUS.CANCELLED,
+      );
+    }
 
     await ShipmentTimeline.create({
       shipmentId,
@@ -615,6 +625,8 @@ class ShipmentService {
       trackingId: shipment.trackingId,
       shipmentStatus: SHIPMENT_STATUS.CANCELLED,
       paymentStatus: updatedPayment?.paymentStatus ?? shipment.paymentStatus,
+      refundId: updatedPayment?.razorpayRefundId ?? null,
+      refundedAt: updatedPayment?.refundedAt ?? null,
     };
   };
 

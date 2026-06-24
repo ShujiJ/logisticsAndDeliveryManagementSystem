@@ -18,13 +18,18 @@ class RefundService {
 
     // Razorpay refund — money is returned to customer's original payment method
     if (payment.razorpayPaymentId) {
-      await razorpayUtil.refundPayment(
+      const refund = await razorpayUtil.refundPayment(
         payment.razorpayPaymentId,
         Number(payment.amount),
       );
+      await paymentRepository.markAsRefunded(
+        payment.id,
+        refund.id,
+        new Date((refund.created_at as number) * 1000),
+      );
+    } else {
+      await paymentRepository.markAsRefunded(payment.id, "", new Date());
     }
-
-    await paymentRepository.markAsRefunded(payment.id);
 
     await Notification.create({
       userId: payment.customerId,
