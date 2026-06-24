@@ -211,6 +211,8 @@ sudo apt-get install mysql-server
 
 ## Configuration
 
+> **Note:** The `.env` file is not included in the repository (it is gitignored). You must create it yourself before running the application.
+
 ### 1. Create Environment File
 
 ```bash
