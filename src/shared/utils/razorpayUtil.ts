@@ -1,4 +1,3 @@
-// Razorpay payment gateway integration
 import Razorpay from "razorpay";
 import crypto from "crypto";
 import { env } from "../../config/env";
@@ -21,10 +20,10 @@ class RazorpayUtil {
   ) => {
     try {
       const order = await razorpayInstance.orders.create({
-        amount: amount * 100, // NEW: Convert to paise (Razorpay uses smallest currency unit)
+        amount: amount * 100, //  Convert to paise (Razorpay uses smallest currency unit)
         currency: "INR",
-        receipt: `shipment_${shipmentId}`, // NEW: Unique receipt ID for tracking
-        // NEW: Metadata to link order to shipment and customer
+        receipt: `shipment_${shipmentId}`, // Unique receipt ID for tracking
+        //  Metadata to link order to shipment and customer
         notes: {
           shipmentId: shipmentId.toString(),
           customerId: customerId.toString(),
@@ -41,28 +40,12 @@ class RazorpayUtil {
         shipmentId,
       };
     } catch (error) {
-      // NEW: Catch and log Razorpay API errors
+      //  Catch and log Razorpay API errors
       console.error("Error creating Razorpay order:", error);
       throw error;
     }
   };
 
-  // webhooks -
-  // validateWebhookSignature = (body: string, signature: string): boolean => {
-  //   try {
-  //     const hash = crypto
-  //       .createHmac("sha256", env.RAZORPAY_WEBHOOK_SECRET)
-  //       .update(body)
-  //       .digest("hex");
-  //     return hash === signature;
-  //   } catch (error) {
-  //     console.error("Error validating webhook signature:", error);
-  //     return false;
-  //   }
-  // };
-
-  //  Verify payment signature sent from frontend after checkout
-  // Called after successful checkout on frontend
   verifyPaymentSignature = (
     orderId: string,
     paymentId: string,
@@ -76,7 +59,7 @@ class RazorpayUtil {
         .update(body)
         .digest("hex");
 
-      // NEW: Compare signature from frontend with expected signature
+      //  Compare signature from frontend with expected signature
       return expectedSignature === signature;
     } catch (error) {
       console.error("Error verifying payment signature:", error);
@@ -96,18 +79,6 @@ class RazorpayUtil {
     }
   };
 
-  // Fetch order details from Razorpay using order ID
-  // Used to verify order status and details
-  fetchOrderDetails = async (orderId: string) => {
-    try {
-      const order = await razorpayInstance.orders.fetch(orderId);
-      return order;
-    } catch (error) {
-      console.error("Error fetching order details:", error);
-      throw error;
-    }
-  };
-
   refundPayment = async (razorpayPaymentId: string, amountInRupees: number) => {
     try {
       const refund = await razorpayInstance.payments.refund(razorpayPaymentId, {
@@ -116,23 +87,6 @@ class RazorpayUtil {
       return refund;
     } catch (error) {
       console.error("Error processing Razorpay refund:", error);
-      throw error;
-    }
-  };
-
-  capturePayment = async (paymentId: string, amount: number) => {
-    try {
-      // Amount must be in paise (multiply by 100)
-      const captureAmount = Math.round(amount * 100);
-      // Call Razorpay API with correct parameters
-      const payment = await razorpayInstance.payments.capture(
-        paymentId, // Payment ID from Razorpay
-        captureAmount, // Amount in paise
-        "INR", // Currency code (REQUIRED - was missing!)
-      );
-      return payment;
-    } catch (error) {
-      console.error("Error capturing payment:", error);
       throw error;
     }
   };

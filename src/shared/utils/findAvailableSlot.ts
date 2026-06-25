@@ -18,19 +18,7 @@ function generateAllSlots(): { date: string; startTime: string; endTime: string 
     return `${year}-${month}-${day}`;
   };
 
-  if (startHour >= WORK_END_HOUR) {
-    const tomorrow = new Date(now);
-    tomorrow.setDate(now.getDate() + 1);
-    const tomorrowDate = toLocalDateString(tomorrow);
-
-    for (let hour = WORK_START_HOUR; hour + SLOT_DURATION_HOURS <= WORK_END_HOUR; hour++) {
-      slots.push({
-        date: tomorrowDate,
-        startTime: `${String(hour).padStart(2, "0")}:00:00`,
-        endTime: `${String(hour + SLOT_DURATION_HOURS).padStart(2, "0")}:00:00`,
-      });
-    }
-  } else {
+  if (startHour < WORK_END_HOUR) {
     const todayDate = toLocalDateString(now);
     const firstHour = Math.max(startHour, WORK_START_HOUR);
 
@@ -41,6 +29,18 @@ function generateAllSlots(): { date: string; startTime: string; endTime: string 
         endTime: `${String(hour + SLOT_DURATION_HOURS).padStart(2, "0")}:00:00`,
       });
     }
+  }
+
+  const tomorrow = new Date(now);
+  tomorrow.setDate(now.getDate() + 1);
+  const tomorrowDate = toLocalDateString(tomorrow);
+
+  for (let hour = WORK_START_HOUR; hour + SLOT_DURATION_HOURS <= WORK_END_HOUR; hour++) {
+    slots.push({
+      date: tomorrowDate,
+      startTime: `${String(hour).padStart(2, "0")}:00:00`,
+      endTime: `${String(hour + SLOT_DURATION_HOURS).padStart(2, "0")}:00:00`,
+    });
   }
 
   return slots;
