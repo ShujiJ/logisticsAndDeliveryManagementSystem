@@ -2,6 +2,7 @@ import express from "express";
 import "./database/associations";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import morgan from "morgan";
 import authRoutes from "./modules/auth/routes/authRoutes";
 import shipmentRoutes from "./modules/shipment/routes/shipmentRoutes";
 import deliveryAgentRoutes from "./modules/deliveryAgent/routes/deliveryAgentRoutes";
@@ -13,6 +14,8 @@ import errorMiddleware from "./shared/middlewares/errorMiddleware";
 import complaintRoutes from "./modules/complaints/routes/complaintRoutes";
 import chatRoutes from "./modules/chat/routes/chatRoutes";
 import pricingRoutes from "./modules/pricing/routes/pricingRoutes";
+import logger from "./shared/utils/logger";
+import { generalLimiter, authLimiter } from "./shared/middlewares/rateLimiterMiddleware";
 
 
 const app = express();
@@ -38,6 +41,9 @@ app.use(
   }),
 );
 app.use(cookieParser());
+app.use(morgan("dev", { stream: (logger as any).stream }));
+app.use("/api/v1", generalLimiter);
+app.use("/api/v1/auth", authLimiter);
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/shipments", shipmentRoutes);
