@@ -1,7 +1,6 @@
 <img width="1359" height="775" alt="image" src="https://github.com/user-attachments/assets/c624a942-a2c7-491f-ac08-b5815fad4d63" /># Logistics and Delivery Management System
 
-A comprehensive, feature-rich backend system for managing end-to-end logistics operations. Built with Express.js, TypeScript, and MySQL, this system handles shipment tracking, real-time delivery updates, agent management, customer complaints, and payment processing with an integrated dashboard for analytics.https://github.com/dharaneeswaranhubino/LDMS<img width="1359" height="775" alt="image" src="https://github.com/user-attachments/assets/e2c39d74-1e5c-400e-868b-69c09512f474" />
-
+A comprehensive, feature-rich backend system for managing end-to-end logistics operations. Built with Express.js, TypeScript, and MySQL, this system handles shipment tracking, real-time delivery updates, agent management, customer complaints, and payment processing with an integrated dashboard for analytics.
 
 ## Frontend deployment URL
 https://github.com/dharaneeswaranhubino/LDMS
