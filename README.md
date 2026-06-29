@@ -3,7 +3,7 @@
 A comprehensive, feature-rich backend system for managing end-to-end logistics operations. Built with Express.js, TypeScript, and MySQL, this system handles shipment tracking, real-time delivery updates, agent management, customer complaints, and payment processing with an integrated dashboard for analytics.
 
 ## Frontend deployment URL
-https://github.com/dharaneeswaranhubino/LDMS
+https://ldms-lac.vercel.app/
 
 ## 📋 Table of Contents
 
