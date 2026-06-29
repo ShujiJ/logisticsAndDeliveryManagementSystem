@@ -1,4 +1,4 @@
-<img width="1359" height="775" alt="image" src="https://github.com/user-attachments/assets/c624a942-a2c7-491f-ac08-b5815fad4d63" /># Logistics and Delivery Management System
+# Logistics and Delivery Management System
 
 A comprehensive, feature-rich backend system for managing end-to-end logistics operations. Built with Express.js, TypeScript, and MySQL, this system handles shipment tracking, real-time delivery updates, agent management, customer complaints, and payment processing with an integrated dashboard for analytics.
 
