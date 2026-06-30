@@ -21,7 +21,7 @@ import refundService from "../../payment/services/refundService";
 import paymentRepository from "../../payment/repositories/paymentRepository";
 
 class ShipmentService {
-  // CREATE SHIPMENT
+  // Create shipment
   createShipmentService = async (
     payload: CreateShipmentDto,
     customerId: number,
@@ -45,7 +45,7 @@ class ShipmentService {
 
     const shipment = await shipmentRepository.createShipment(shipmentPayload);
 
-    // NOTIFY CUSTOMER — SHIPMENT CREATED
+    // Notification for customers
     await Notification.create({
       userId: customerId,
       shipmentId: shipment.id,
@@ -59,7 +59,7 @@ class ShipmentService {
     return { shipmentId: id, ...rest, priceBreakdown: breakdown };
   };
 
-  // CUSTOMER — GET MY SHIPMENTS
+  // customer - get their shipments
 
   getMyShipmentsService = async (
     customerId: number,
@@ -125,7 +125,7 @@ class ShipmentService {
     };
   };
 
-  // GET SHIPMENT BY ID
+  // Get shipment by id
   getShipmentByIdService = async (
     shipmentId: number,
     userId: number,
@@ -137,7 +137,7 @@ class ShipmentService {
       throw new ApiError(404, "Shipment not found");
     }
 
-    // CUSTOMER CAN ONLY VIEW THEIR OWN SHIPMENT
+    // Customer can only view their own shipment
     if (role !== Roles.ADMIN && shipment.customerId !== userId) {
       throw new ApiError(403, "You are not authorized to access this shipment");
     }
@@ -145,7 +145,7 @@ class ShipmentService {
     return shipment;
   };
 
-  // ADMIN — GET ALL SHIPMENTS
+  // admin to get all shipments
   getAllShipmentsService = async (page: number, limit: number) => {
     const offset = (page - 1) * limit;
     const { count, rows: shipments } =
@@ -210,7 +210,7 @@ class ShipmentService {
     };
   };
 
-  // CUSTOMER — UPDATE SHIPMENT (only while both statuses are PENDING)
+  // can update shipment only when both shipment status and payment status are PENDING
   updateShipmentService = async (
     shipmentId: number,
     customerId: number,
@@ -247,7 +247,9 @@ class ShipmentService {
     if (pricingTouched) {
       const result = calculateShippingAmount(
         payload.packageWeight ?? shipment.packageWeight,
-        (payload.shipmentPriority ?? shipment.shipmentPriority ?? "STANDARD") as "STANDARD" | "EXPRESS" | "SAME_DAY",
+        (payload.shipmentPriority ??
+          shipment.shipmentPriority ??
+          "STANDARD") as "STANDARD" | "EXPRESS" | "SAME_DAY",
         payload.isFragile ?? shipment.isFragile ?? false,
       );
       updatedAmount = result.total;
@@ -271,7 +273,7 @@ class ShipmentService {
     };
   };
 
-  // AGENT / ADMIN — UPDATE SHIPMENT STATUS
+  // agent updating shipment status
   updateShipmentStatusService = async (
     shipmentId: number,
     newStatus: string,
@@ -281,12 +283,12 @@ class ShipmentService {
   ) => {
     const shipment = await shipmentRepository.findShipmentById(shipmentId);
 
-    // CHECK SHIPMENT EXISTS
+    // check if shipment exists
     if (!shipment) {
       throw new ApiError(404, "Shipment not found");
     }
 
-    // DELIVERY AGENT CAN ONLY UPDATE SHIPMENTS ASSIGNED TO THEM
+    // delivery agent can only update shipments assigned to them
 
     if (role === Roles.DELIVERY_AGENT) {
       const agentProfile =
@@ -299,7 +301,7 @@ class ShipmentService {
       }
     }
 
-    // FULL WORKFLOW ORDER
+    // workflow order validation
     const workflowOrder = [
       SHIPMENT_STATUS.PENDING,
       SHIPMENT_STATUS.CONFIRMED,
@@ -312,18 +314,18 @@ class ShipmentService {
       SHIPMENT_STATUS.COMPLETED,
     ];
 
-    // CURRENT STATUS INDEX
+    // current status index
     const currentIndex = workflowOrder.indexOf(shipment.shipmentStatus as any);
 
-    // NEW STATUS INDEX
+    // new status index
     const newIndex = workflowOrder.indexOf(newStatus as any);
 
-    // INVALID STATUS CHECK
+    // invalid status
     if (newIndex === -1) {
       throw new ApiError(400, `Invalid status: ${newStatus}`);
     }
 
-    // CANNOT SKIP OR GO BACKWARD
+    // cannot skip workflow steps or go backwards
     if (newIndex !== currentIndex + 1) {
       throw new ApiError(
         400,
@@ -331,19 +333,19 @@ class ShipmentService {
       );
     }
 
-    // ONLY ADMIN CAN MARK COMPLETED
+    // only admin can mark shipment as COMPLETED
     if (newStatus === SHIPMENT_STATUS.COMPLETED && role !== Roles.ADMIN) {
       throw new ApiError(403, "Only admin can mark shipment as COMPLETED");
     }
 
-    // UPDATE SHIPMENT STATUS
+    // update shipment status
     await shipmentRepository.updateShipmentStatus(
       shipmentId,
       newStatus,
       remarks,
     );
 
-    // WRITE TIMELINE ENTRY
+    // write timeline entry
     await ShipmentTimeline.create({
       shipmentId,
       updatedByUserId: userId,
@@ -352,7 +354,7 @@ class ShipmentService {
       remarks,
     });
 
-    // IF DELIVERED  SLOT COMPLETED
+    // if delivered mark as completed
     if (newStatus === SHIPMENT_STATUS.DELIVERED && shipment.deliverySlotId) {
       await deliverySlotRepository.updateSlotStatus(
         shipment.deliverySlotId,
@@ -360,7 +362,7 @@ class ShipmentService {
       );
     }
 
-    // IF DELIVERED  DECREASE AGENT ACTIVE LOAD
+    // If delivered decrease agent shipment count
     if (newStatus === SHIPMENT_STATUS.DELIVERED && shipment.deliveryAgentId) {
       await deliveryAgentRepository.decrementShipmentCount(
         shipment.deliveryAgentId,
@@ -405,7 +407,7 @@ class ShipmentService {
       });
     }
 
-    // FETCH UPDATED SHIPMENT WITH AGENT DETAILS
+    // fetch updated shipment to return
     const updatedShipment =
       await shipmentRepository.findShipmentById(shipmentId);
 
@@ -425,7 +427,7 @@ class ShipmentService {
     };
   };
 
-  // AGENT / ADMIN — SEND DELIVERY OTP TO CUSTOMER
+  // agent sends OTP to customer for delivery verification
   sendOtpService = async (shipmentId: number, userId: number, role: string) => {
     const shipment = await shipmentRepository.findShipmentById(shipmentId);
 
@@ -618,7 +620,8 @@ class ShipmentService {
       type: NOTIFICATION_TYPE.SHIPMENT_CANCELLED,
     });
 
-    const updatedPayment = await paymentRepository.findPaymentByShipmentId(shipmentId);
+    const updatedPayment =
+      await paymentRepository.findPaymentByShipmentId(shipmentId);
 
     return {
       shipmentId,

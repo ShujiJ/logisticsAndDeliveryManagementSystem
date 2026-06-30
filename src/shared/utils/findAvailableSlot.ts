@@ -47,7 +47,6 @@ function generateAllSlots(): { date: string; startTime: string; endTime: string 
 }
 
 // Finds the next conflict-free 1-hour slot for a specific agent.
-// Pass agent=null to search across the top 5 available agents (used by auto-assign).
 export async function findAvailableSlotForAgent(agent: DeliveryAgent): Promise<{
   date: string;
   startTime: string;

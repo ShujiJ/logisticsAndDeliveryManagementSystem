@@ -14,7 +14,7 @@ const MAX_AGENT_RETRIES = 5;
 class AutoAssignService {
   autoAssignAgentAndSlot = async (
     shipmentId: number,
-    systemUserId: number, 
+    systemUserId: number,
   ): Promise<void> => {
     try {
       const shipment = await Shipment.findOne({ where: { id: shipmentId } });
@@ -32,26 +32,13 @@ class AutoAssignService {
       let agent = await this.findAgent(deliveryCity);
 
       if (!agent) {
-        // Fallback: any active available agent regardless of zone
+        // any active available agent regardless of zone
         agent = await this.findAgent(null);
       }
 
       if (!agent) {
         console.warn(
           `[AutoAssign] No available agent for shipment ${shipmentId}. Will retry later.`,
-        );
-
-        const allAgents = await DeliveryAgent.findAll();
-
-        console.log(
-          "[DEBUG] All delivery agents:",
-          allAgents.map((a) => ({
-            id: a.id,
-            isActive: a.isActive,
-            availabilityStatus: a.availabilityStatus,
-            shipmentCount: a.shipmentCount,
-            serviceZone: a.serviceZone,
-          })),
         );
 
         return;
@@ -65,29 +52,20 @@ class AutoAssignService {
           `[AutoAssign] Could not find a free slot after ${MAX_AGENT_RETRIES} retries for shipment ${shipmentId}.`,
         );
 
-        const allSlots = await DeliverySlot.findAll();
-
-        console.log(
-          "[DEBUG] Existing slots:",
-          allSlots.map((s) => ({
-            id: s.id,
-            deliveryAgentId: s.deliveryAgentId,
-            date: s.date,
-            startTime: s.startTime,
-            endTime: s.endTime,
-            slotStatus: s.slotStatus,
-          })),
-        );
-
         return;
       }
 
       const { chosenAgent, date, startTime, endTime } = slotResult;
 
-      // Re-validate agent before assignment (race condition check)
+      // Re-validate agent before assignment
       const updatedAgent = await DeliveryAgent.findByPk(chosenAgent.id);
 
-      if (!updatedAgent || !updatedAgent.isActive || updatedAgent.availabilityStatus !== "AVAILABLE" || updatedAgent.shipmentCount >= MAX_AGENT_LOAD) {
+      if (
+        !updatedAgent ||
+        !updatedAgent.isActive ||
+        updatedAgent.availabilityStatus !== "AVAILABLE" ||
+        updatedAgent.shipmentCount >= MAX_AGENT_LOAD
+      ) {
         console.warn(
           `[AutoAssign] Agent ${chosenAgent.id} is no longer valid for shipment ${shipmentId}. isActive: ${updatedAgent?.isActive}, status: ${updatedAgent?.availabilityStatus}`,
         );
@@ -130,7 +108,7 @@ class AutoAssignService {
         remarks: `Auto-assigned to agent ${chosenAgent.id} (zone: ${chosenAgent.serviceZone ?? "any"}). Slot: ${date} ${startTime}–${endTime}`,
       });
 
-      // NOTIFY CUSTOMER — AGENT ASSIGNED
+      // Notification to the customer — AGENT ASSIGNED
       const agentUser = await User.findByPk(chosenAgent.userId, {
         attributes: ["name"],
       });
