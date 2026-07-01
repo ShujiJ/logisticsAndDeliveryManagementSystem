@@ -45,7 +45,7 @@ class AutoAssignService {
       }
 
       // Find a non-conflicting slot with retry across agents
-      const slotResult = await findAvailableSlotAcrossAgents(MAX_AGENT_RETRIES);
+      const slotResult = await findAvailableSlotAcrossAgents(MAX_AGENT_RETRIES, deliveryCity);
 
       if (!slotResult) {
         console.warn(

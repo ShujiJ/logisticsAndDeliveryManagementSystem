@@ -74,21 +74,34 @@ export async function findAvailableSlotForAgent(agent: DeliveryAgent): Promise<{
 }
 
 // Finds a conflict-free slot across up to `limit` available agents (auto-assign use case).
-export async function findAvailableSlotAcrossAgents(limit: number): Promise<{
+// Prefers agents in `zone` when provided; falls back to any agent if no zoned agent has a free slot.
+export async function findAvailableSlotAcrossAgents(limit: number, zone?: string | null): Promise<{
   chosenAgent: DeliveryAgent;
   date: string;
   startTime: string;
   endTime: string;
 } | null> {
-  const candidates = await DeliveryAgent.findAll({
-    where: {
-      isActive: true,
-      availabilityStatus: "AVAILABLE",
-      shipmentCount: { [Op.lt]: 8 },
-    },
-    order: [["shipmentCount", "ASC"]],
-    limit,
-  });
+  const baseWhere: any = {
+    isActive: true,
+    availabilityStatus: "AVAILABLE",
+    shipmentCount: { [Op.lt]: 8 },
+  };
+
+  const zonedCandidates = zone
+    ? await DeliveryAgent.findAll({
+        where: { ...baseWhere, serviceZone: zone },
+        order: [["shipmentCount", "ASC"]],
+        limit,
+      })
+    : [];
+
+  const candidates = zonedCandidates.length > 0
+    ? zonedCandidates
+    : await DeliveryAgent.findAll({
+        where: baseWhere,
+        order: [["shipmentCount", "ASC"]],
+        limit,
+      });
 
   const slots = generateAllSlots();
 
