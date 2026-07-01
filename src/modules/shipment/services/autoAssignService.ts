@@ -105,7 +105,8 @@ class AutoAssignService {
         updatedByUserId: actorId,
         fromStatus: actualFromStatus,
         toStatus: "ASSIGNED",
-        remarks: `Auto-assigned to agent ${chosenAgent.id} (zone: ${chosenAgent.serviceZone ?? "any"}). Slot: ${date} ${startTime}–${endTime}`,
+        // remarks: `Auto-assigned to agent ${chosenAgent.id} (zone: ${chosenAgent.serviceZone ?? "any"}). Slot: ${date} ${startTime}–${endTime}`,
+        remarks: `Auto-assigned to agent ${chosenAgent.id}. Slot: ${date} ${startTime}–${endTime}`,
       });
 
       // Notification to the customer — AGENT ASSIGNED
