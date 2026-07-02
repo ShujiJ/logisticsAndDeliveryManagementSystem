@@ -3,9 +3,10 @@
 A comprehensive, feature-rich backend system for managing end-to-end logistics operations. Built with Express.js, TypeScript, and MySQL, this system handles shipment tracking, real-time delivery updates, agent management, customer complaints, and payment processing with an integrated dashboard for analytics.
 
 ## Backend deployment URL
+
 https://logisticsanddeliverymanagementsystem.onrender.com
-**Example endpoint:**
-[GET /api/v1/pricing/rates] (https://logisticsanddeliverymanagementsystem.onrender.com/api/v1/pricing/rates)
+
+**Example endpoint:** [GET /api/v1/pricing/rates](https://logisticsanddeliverymanagementsystem.onrender.com/api/v1/pricing/rates)
 
 ## 📋 Table of Contents
 
