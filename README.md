@@ -4,7 +4,8 @@ A comprehensive, feature-rich backend system for managing end-to-end logistics o
 
 ## Backend deployment URL
 https://logisticsanddeliverymanagementsystem.onrender.com
-**Example endpoint:** [GET /api/v1/pricing/rates](https://logisticsanddeliverymanagementsystem.onrender.com/api/v1/pricing/rates)
+**Example endpoint:**
+[GET /api/v1/pricing/rates] (https://logisticsanddeliverymanagementsystem.onrender.com/api/v1/pricing/rates)
 
 ## 📋 Table of Contents
 
